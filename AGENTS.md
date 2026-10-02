@@ -8,3 +8,9 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## CV platform architecture
+- CV data model lives in `src/lib/cv/types.ts`; templates render from it only, so new features (ATS score, application pack, interview simulator) plug in as new modules reading the same `CV` type.
+- Guest mode persists the document and AI credits in localStorage (`src/lib/cv/storage.ts`) — no account required to create/export.
+- AI calls go through server functions in `src/lib/ai.functions.ts` → `src/lib/ai/gateway.server.ts`; never call the model from the browser.
+- PDF export uses the browser print engine with A4 `@page` CSS so text stays vector/selectable (ATS-friendly).
