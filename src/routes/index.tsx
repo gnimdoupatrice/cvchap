@@ -70,7 +70,7 @@ function Home() {
               className={`group rounded-2xl border bg-card p-3 text-left shadow-soft transition ${template === t.id ? "ring-2 ring-primary" : "hover:-translate-y-0.5"}`}
             >
               <div className="relative h-64 overflow-hidden rounded-lg border bg-muted/40">
-                <div className="cv-paper pointer-events-none absolute left-1/2 top-3 origin-top -translate-x-1/2" style={{ width: 794, transform: "translateX(-50%) scale(0.3)", fontSize: 13, lineHeight: 1.5, ["--cv-gap" as string]: "1.3em", ["--cv-pad" as string]: "56px", minHeight: 1123 }}>
+                <div className="cv-paper pointer-events-none absolute left-1/2 top-3 origin-top" style={{ width: 794, transform: "translateX(-50%) scale(0.3)", fontSize: 13, lineHeight: 1.5, ["--cv-gap" as string]: "1.3em", ["--cv-pad" as string]: "56px", minHeight: 1123 }}>
                   <CVTemplate cv={samples[0].cv} template={t.id} />
                 </div>
               </div>
