@@ -113,7 +113,7 @@ function Corporate({ cv }: { cv: CV }) {
 function Modern({ cv }: { cv: CV }) {
   const t = "cv-title-mod";
   return (
-    <div className="flex min-h-full font-cv-sans">
+    <div className="flex min-h-[1123px] font-cv-sans">
       <aside className="w-[34%] bg-paper-tint px-[1.6em] py-[2.4em]">
         <h1 className="text-[1.9em] font-bold leading-tight">{cv.personal.name || "Votre nom"}</h1>
         {cv.title && <p className="cv-accent mt-[0.4em] font-medium">{cv.title}</p>}
