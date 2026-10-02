@@ -29,7 +29,7 @@ export function CoachEditor({
   const [draft, setDraft] = useState({ role: "", company: "", start: "", end: "" });
   const role = exp?.role ?? draft.role;
   const company = exp?.company ?? draft.company;
-  const current = QUESTIONS[step];
+  const current = QUESTIONS[step] ?? QUESTIONS[0];
 
   const apply = (t: string) => {
     const bullets = t.split("\n").map((l) => l.replace(/^[-•*]\s*/, "").trim()).filter(Boolean);

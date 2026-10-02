@@ -71,7 +71,7 @@ function Home() {
             >
               <div className="relative h-64 overflow-hidden rounded-lg border bg-muted/40">
                 <div className="cv-paper pointer-events-none absolute left-1/2 top-3 origin-top" style={{ width: 794, transform: "translateX(-50%) scale(0.3)", fontSize: 13, lineHeight: 1.5, ["--cv-gap" as string]: "1.3em", ["--cv-pad" as string]: "56px", minHeight: 1123 }}>
-                  <CVTemplate cv={samples[0].cv} template={t.id} />
+                  <CVTemplate cv={samples[0]!.cv} template={t.id} />
                 </div>
               </div>
               <p className="mt-3 font-medium">{t.name}</p>

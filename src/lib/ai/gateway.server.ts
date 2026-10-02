@@ -10,7 +10,7 @@ export class AiError extends Error {
 }
 
 export async function generateText(system: string, prompt: string): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
+  const key = process.env["LOVABLE_API_KEY"];
   if (!key) throw new AiError("Le service IA n'est pas configuré.", 401);
 
   let runId: string | undefined;
