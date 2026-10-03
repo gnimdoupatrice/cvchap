@@ -32,7 +32,9 @@ export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (c
   const readPhoto = (file?: File) => {
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => set("personal", { ...p, photo: typeof reader.result === "string" ? reader.result : undefined });
+    reader.onload = () => {
+      if (typeof reader.result === "string") set("personal", { ...p, photo: reader.result });
+    };
     reader.readAsDataURL(file);
   };
 
@@ -52,7 +54,7 @@ export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (c
                 <Button asChild variant="outline" size="sm">
                   <label><ImagePlus /> {p.photo ? "Changer" : "Choisir une photo"}<input className="sr-only" type="file" accept="image/*" onChange={(e) => readPhoto(e.target.files?.[0])} /></label>
                 </Button>
-                {p.photo && <Button type="button" variant="ghost" size="sm" onClick={() => set("personal", { ...p, photo: undefined })}>Retirer</Button>}
+                {p.photo && <Button type="button" variant="ghost" size="sm" onClick={() => { const { photo: _photo, ...withoutPhoto } = p; set("personal", withoutPhoto); }}>Retirer</Button>}
               </div>
             </Field>
           </div>
