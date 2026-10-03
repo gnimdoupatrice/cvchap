@@ -1,4 +1,4 @@
-export type TemplateId = "minimal" | "corporate" | "modern";
+export type TemplateId = "french-blue" | "minimal" | "corporate" | "modern";
 export type InputMode = "form" | "coach";
 
 export interface Experience {
@@ -19,12 +19,14 @@ export interface Education {
 }
 
 export interface CV {
-  personal: { name: string; email: string; phone: string; location: string; link: string };
+  personal: { name: string; email: string; phone: string; location: string; link: string; photo?: string };
   title: string;
   summary: string;
   experiences: Experience[];
   education: Education[];
   skills: string[];
+  languages: string[];
+  interests: string[];
 }
 
 export interface CVDocument {
@@ -44,4 +46,6 @@ export const emptyCV = (): CV => ({
   experiences: [{ id: uid(), role: "", company: "", start: "", end: "", bullets: [] }],
   education: [{ id: uid(), degree: "", school: "", start: "", end: "" }],
   skills: [],
+  languages: [],
+  interests: [],
 });

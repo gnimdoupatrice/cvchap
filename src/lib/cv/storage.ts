@@ -4,12 +4,26 @@ const DOC_KEY = "cvflow.doc.v1";
 const CREDITS_KEY = "cvflow.credits.v1";
 export const FREE_CREDITS = 5;
 
-export const defaultDoc = (): CVDocument => ({ cv: emptyCV(), template: "minimal", mode: "form", scale: 1 });
+export const defaultDoc = (): CVDocument => ({ cv: emptyCV(), template: "french-blue", mode: "form", scale: 1 });
 
 export function loadDoc(): CVDocument {
   try {
     const raw = localStorage.getItem(DOC_KEY);
-    if (raw) return { ...defaultDoc(), ...JSON.parse(raw) };
+    if (raw) {
+      const stored = JSON.parse(raw) as Partial<CVDocument>;
+      const fallback = defaultDoc();
+      return {
+        ...fallback,
+        ...stored,
+        cv: {
+          ...fallback.cv,
+          ...stored.cv,
+          personal: { ...fallback.cv.personal, ...stored.cv?.personal },
+          languages: stored.cv?.languages ?? [],
+          interests: stored.cv?.interests ?? [],
+        },
+      };
+    }
   } catch {}
   return defaultDoc();
 }

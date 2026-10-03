@@ -68,6 +68,8 @@
   --color-paper: var(--paper);
   --color-paper-ink: var(--paper-ink);
   --color-paper-tint: var(--paper-tint);
+  --color-cv-blue: var(--cv-blue);
+  --color-cv-blue-soft: var(--cv-blue-soft);
   --color-highlight: var(--highlight);
   --shadow-soft: 0 1px 2px oklch(0 0 0 / 4%), 0 4px 16px -4px oklch(0 0 0 / 6%);
   --shadow-paper: 0 2px 4px oklch(0 0 0 / 5%), 0 24px 48px -16px oklch(0 0 0 / 18%);
@@ -100,6 +102,8 @@
   --paper-muted: oklch(0.48 0.01 260);
   --paper-accent: oklch(0.45 0.13 255);
   --paper-tint: oklch(0.96 0.012 250);
+  --cv-blue: oklch(0.35 0.095 245);
+  --cv-blue-soft: oklch(0.5 0.09 240);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -202,6 +206,91 @@
   font-size: 0.85em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--paper-accent); margin-bottom: 0.5em;
 }
+
+/* Français Simple Moderne Bleu — proportions fixed to the A4 canvas. */
+.cv-blue-layout {
+  display: grid;
+  grid-template-columns: 275px 1fr;
+  min-height: 1123px;
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+.cv-blue-sidebar {
+  position: relative;
+  background: var(--cv-blue);
+  color: var(--primary-foreground);
+  min-height: 1123px;
+  padding: 38px 30px 52px;
+}
+.cv-blue-sidebar::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 210px;
+  right: -55px;
+  width: 112px;
+  height: 210px;
+  border-radius: 0 100% 100% 0;
+  background: var(--paper);
+}
+.cv-blue-portrait-wrap { position: relative; z-index: 1; display: flex; justify-content: center; min-height: 245px; }
+.cv-blue-portrait {
+  display: grid;
+  place-items: center;
+  width: 184px;
+  height: 210px;
+  overflow: hidden;
+  border: 8px solid color-mix(in oklab, var(--paper) 94%, transparent);
+  border-radius: 50% 50% 44% 44%;
+  background: var(--paper-tint);
+  color: var(--cv-blue);
+  font-size: 38px;
+  font-weight: 700;
+}
+.cv-blue-portrait img { width: 100%; height: 100%; object-fit: cover; }
+.cv-blue-sidebar-content { position: relative; z-index: 1; display: grid; gap: 34px; margin-top: 28px; }
+.cv-blue-sidebar-content h2 {
+  margin-bottom: 15px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.cv-blue-sidebar-content ul { display: grid; gap: 7px; font-size: 12.5px; line-height: 1.35; }
+.cv-blue-contacts { display: grid; gap: 14px; }
+.cv-blue-contacts p { display: grid; grid-template-columns: 22px 1fr; align-items: center; gap: 9px; font-size: 11.5px; overflow-wrap: anywhere; }
+.cv-blue-contacts svg { width: 18px; height: 18px; stroke-width: 2.5; }
+.cv-blue-main { padding: 72px 54px 56px 58px; }
+.cv-blue-header { min-height: 142px; }
+.cv-blue-header h1 {
+  color: var(--cv-blue);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.cv-blue-header p { margin-top: 13px; color: var(--cv-blue-soft); font-size: 19px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.cv-blue-summary { margin: -18px 0 30px; color: var(--paper-muted); font-size: 12px; line-height: 1.5; }
+.cv-blue-section + .cv-blue-section { margin-top: 35px; }
+.cv-blue-heading {
+  margin-bottom: 26px;
+  color: var(--cv-blue);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.cv-blue-timeline { position: relative; display: grid; gap: 24px; }
+.cv-blue-timeline::before { content: ""; position: absolute; top: 6px; bottom: 5px; left: -22px; width: 1.5px; background: var(--cv-blue); }
+.cv-blue-entry { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 90px; gap: 16px; }
+.cv-blue-dot { position: absolute; top: 5px; left: -26px; width: 9px; height: 9px; border-radius: 50%; background: var(--cv-blue); }
+.cv-blue-entry h3 { color: var(--cv-blue-soft); font-size: 13.5px; font-weight: 700; line-height: 1.25; }
+.cv-blue-entry p { color: var(--cv-blue-soft); font-size: 12.5px; line-height: 1.3; }
+.cv-blue-entry time { color: var(--cv-blue); font-size: 10.5px; font-style: italic; font-weight: 600; line-height: 1.25; text-align: right; }
+.cv-blue-company { font-style: italic; }
+.cv-blue-bullets { display: grid; gap: 3px; margin-top: 13px; padding-left: 17px; color: var(--cv-blue-soft); font-size: 12px; line-height: 1.35; list-style: disc; }
 
 @page { size: A4; margin: 0; }
 @media print {

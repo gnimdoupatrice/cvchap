@@ -14,3 +14,4 @@
 - Guest mode persists the document and AI credits in localStorage (`src/lib/cv/storage.ts`) — no account required to create/export.
 - AI calls go through server functions in `src/lib/ai.functions.ts` → `src/lib/ai/gateway.server.ts`; never call the model from the browser.
 - PDF export uses the browser print engine with A4 `@page` CSS so text stays vector/selectable (ATS-friendly).
+- Optional portrait images remain embedded as local data URLs so guest CVs and print exports work without remote storage.
