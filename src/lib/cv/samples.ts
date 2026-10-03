@@ -14,6 +14,8 @@ export const samples: { id: string; label: string; cv: CV }[] = [
       ],
       education: [{ id: uid(), degree: "Master Informatique", school: "INSA Lyon", start: "2013", end: "2018" }],
       skills: ["React", "TypeScript", "Node.js", "PostgreSQL", "AWS", "Docker", "CI/CD"],
+      languages: ["Français — langue maternelle", "Anglais — courant"],
+      interests: ["Veille technologique", "Mentorat", "Randonnée"],
     },
   },
   {
@@ -29,6 +31,8 @@ export const samples: { id: string; label: string; cv: CV }[] = [
       ],
       education: [{ id: uid(), degree: "Master Management de projet", school: "ESSEC", start: "2013", end: "2015" }],
       skills: ["Scrum", "Jira", "Gestion budgétaire", "Conduite du changement", "PMP"],
+      languages: ["Français — langue maternelle", "Anglais — professionnel"],
+      interests: ["Lecture", "Course à pied", "Voyages"],
     },
   },
   {
@@ -44,6 +48,8 @@ export const samples: { id: string; label: string; cv: CV }[] = [
       ],
       education: [{ id: uid(), degree: "Master Marketing digital", school: "KEDGE Business School", start: "2015", end: "2017" }],
       skills: ["SEO / SEA", "Google Analytics", "Meta Ads", "Brand content", "HubSpot"],
+      languages: ["Français — langue maternelle", "Anglais — courant", "Espagnol — intermédiaire"],
+      interests: ["Photographie", "Design", "Cyclisme"],
     },
   },
 ];

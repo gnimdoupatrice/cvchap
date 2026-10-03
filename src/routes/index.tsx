@@ -13,6 +13,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Générez un CV professionnel en quelques minutes : 3 modèles, Coach IA, aperçu A4 en direct et export PDF lisible par les ATS. Gratuit, sans inscription." },
       { property: "og:title", content: "CVflow — Le CV intelligent, prêt en quelques minutes" },
       { property: "og:description", content: "Coach IA, 3 modèles soignés et export PDF compatible ATS. Testez sans créer de compte." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Home,
@@ -20,7 +22,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const navigate = useNavigate();
-  const [template, setTemplate] = useState<TemplateId>("minimal");
+  const [template, setTemplate] = useState<TemplateId>("french-blue");
   const [mode, setMode] = useState<InputMode>("form");
 
   const start = (sampleId?: string) => {
@@ -62,7 +64,7 @@ function Home() {
 
       <section className="mx-auto max-w-6xl px-6 pb-12">
         <h2 className="mb-1 text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">1. Choisissez un modèle</h2>
-        <div className="mt-5 grid gap-5 sm:grid-cols-3">
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {templateMeta.map((t) => (
             <button
               key={t.id}
@@ -70,8 +72,8 @@ function Home() {
               className={`group rounded-2xl border bg-card p-3 text-left shadow-soft transition ${template === t.id ? "ring-2 ring-primary" : "hover:-translate-y-0.5"}`}
             >
               <div className="relative h-64 overflow-hidden rounded-lg border bg-muted/40">
-                <div className="cv-paper pointer-events-none absolute left-1/2 top-3 origin-top" style={{ width: 794, transform: "translateX(-50%) scale(0.3)", fontSize: 13, lineHeight: 1.5, ["--cv-gap" as string]: "1.3em", ["--cv-pad" as string]: "56px", minHeight: 1123 }}>
-                  <CVTemplate cv={samples[0]!.cv} template={t.id} />
+                 <div className="cv-paper pointer-events-none absolute left-1/2 top-3 origin-top" style={{ width: 794, transform: "translateX(-50%) scale(0.3)", fontSize: 13, lineHeight: 1.5, ["--cv-gap" as string]: "1.3em", ["--cv-pad" as string]: "56px", minHeight: 1123 }}>
+                   <CVTemplate cv={samples[0]?.cv ?? defaultDoc().cv} template={t.id} />
                 </div>
               </div>
               <p className="mt-3 font-medium">{t.name}</p>

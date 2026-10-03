@@ -20,6 +20,8 @@ export const Route = createFileRoute("/editor")({
       { name: "description", content: "Rédigez votre CV avec un formulaire ou le Coach IA, prévisualisez la page A4 en direct et exportez un PDF lisible par les ATS." },
       { property: "og:title", content: "Éditeur de CV — CVflow" },
       { property: "og:description", content: "Formulaire ou Coach IA, aperçu A4 en direct et export PDF compatible ATS." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Editor,

@@ -1,6 +1,7 @@
-import { Plus, Sparkles, Trash2 } from "lucide-react";
+import { ImagePlus, Plus, Sparkles, Trash2 } from "lucide-react";
 import { uid, type CV } from "@/lib/cv/types";
 import type { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 
 export type AskAI = (kind: "summary" | "bullets", text: string, context: string, apply: (t: string) => void) => void;
 
@@ -28,6 +29,12 @@ export function Section({ title, children, action }: { title: string; children: 
 export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (cv: CV) => void; askAI: AskAI; busy: boolean }) {
   const set = <K extends keyof CV>(k: K, v: CV[K]) => onChange({ ...cv, [k]: v });
   const p = cv.personal;
+  const readPhoto = (file?: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => set("personal", { ...p, photo: typeof reader.result === "string" ? reader.result : undefined });
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div className="space-y-4">
@@ -38,6 +45,17 @@ export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (c
           <Field label="Téléphone"><input className="input" value={p.phone} onChange={(e) => set("personal", { ...p, phone: e.target.value })} /></Field>
           <Field label="Ville"><input className="input" value={p.location} onChange={(e) => set("personal", { ...p, location: e.target.value })} /></Field>
           <div className="sm:col-span-2"><Field label="Lien (LinkedIn, portfolio…)"><input className="input" value={p.link} onChange={(e) => set("personal", { ...p, link: e.target.value })} /></Field></div>
+          <div className="sm:col-span-2">
+            <Field label="Photo de profil">
+              <div className="flex items-center gap-3">
+                {p.photo && <img src={p.photo} alt="Aperçu du portrait" className="h-14 w-14 rounded-full object-cover" />}
+                <Button asChild variant="outline" size="sm">
+                  <label><ImagePlus /> {p.photo ? "Changer" : "Choisir une photo"}<input className="sr-only" type="file" accept="image/*" onChange={(e) => readPhoto(e.target.files?.[0])} /></label>
+                </Button>
+                {p.photo && <Button type="button" variant="ghost" size="sm" onClick={() => set("personal", { ...p, photo: undefined })}>Retirer</Button>}
+              </div>
+            </Field>
+          </div>
         </div>
       </Section>
 
@@ -129,6 +147,26 @@ export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (c
           value={cv.skills.join(", ")}
           onChange={(e) => set("skills", e.target.value.split(",").map((s) => s.trimStart()))}
           onBlur={() => set("skills", cv.skills.map((s) => s.trim()).filter(Boolean))}
+        />
+      </Section>
+
+      <Section title="Langues">
+        <textarea
+          className="input min-h-20"
+          placeholder="Une langue par ligne, par exemple : Anglais — courant"
+          value={cv.languages.join("\n")}
+          onChange={(e) => set("languages", e.target.value.split("\n"))}
+          onBlur={() => set("languages", cv.languages.map((s) => s.trim()).filter(Boolean))}
+        />
+      </Section>
+
+      <Section title="Centres d’intérêt / Loisirs">
+        <input
+          className="input"
+          placeholder="Séparés par des virgules"
+          value={cv.interests.join(", ")}
+          onChange={(e) => set("interests", e.target.value.split(",").map((s) => s.trimStart()))}
+          onBlur={() => set("interests", cv.interests.map((s) => s.trim()).filter(Boolean))}
         />
       </Section>
     </div>
