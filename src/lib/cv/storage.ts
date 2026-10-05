@@ -15,6 +15,7 @@ export function loadDoc(): CVDocument {
       return {
         ...fallback,
         ...stored,
+        template: "french-blue",
         cv: {
           ...fallback.cv,
           ...stored.cv,
