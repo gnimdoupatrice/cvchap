@@ -8,7 +8,6 @@ import { A4Preview } from "@/components/cv/A4Preview";
 import { BeforeAfter } from "@/components/cv/BeforeAfter";
 import { CoachEditor } from "@/components/cv/CoachEditor";
 import { FormEditor, type AskAI } from "@/components/cv/FormEditor";
-import { templateMeta } from "@/components/cv/templates";
 import { coachExperience, improveText } from "@/lib/ai.functions";
 import { FREE_CREDITS, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
 import type { CVDocument } from "@/lib/cv/types";
@@ -102,9 +101,7 @@ function Editor() {
           <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground"><FileText className="h-4 w-4" /></span>
           <span className="hidden sm:inline">CVflow</span>
         </Link>
-        <select className="input ml-2 h-9 w-auto py-0 text-sm" value={doc.template} onChange={(e) => update({ template: e.target.value as CVDocument["template"] })}>
-          {templateMeta.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-        </select>
+        <span className="ml-2 hidden text-sm text-muted-foreground md:inline">Français Simple Moderne Bleu</span>
         <div className="ml-auto flex items-center gap-2">
           <span className="flex items-center gap-1 rounded-full border bg-card px-3 py-1 text-xs font-medium" title="Crédits d'optimisation IA offerts">
             <Sparkles className="h-3.5 w-3.5 text-primary" /> {credits}/{FREE_CREDITS}

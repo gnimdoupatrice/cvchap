@@ -10,9 +10,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "CVflow — Créez un CV percutant avec l'IA, sans compte" },
-      { name: "description", content: "Générez un CV professionnel en quelques minutes : 3 modèles, Coach IA, aperçu A4 en direct et export PDF lisible par les ATS. Gratuit, sans inscription." },
+      { name: "description", content: "Générez un CV professionnel en quelques minutes avec le modèle Français Simple Moderne Bleu, le Coach IA, un aperçu A4 en direct et un export PDF lisible par les ATS." },
       { property: "og:title", content: "CVflow — Le CV intelligent, prêt en quelques minutes" },
-      { property: "og:description", content: "Coach IA, 3 modèles soignés et export PDF compatible ATS. Testez sans créer de compte." },
+      { property: "og:description", content: "Modèle Français Simple Moderne Bleu, Coach IA et export PDF compatible ATS. Testez sans créer de compte." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -63,8 +63,8 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-12">
-        <h2 className="mb-1 text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">1. Choisissez un modèle</h2>
-        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <h2 className="mb-1 text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Le modèle principal</h2>
+        <div className="mx-auto mt-5 max-w-sm">
           {templateMeta.map((t) => (
             <button
               key={t.id}
@@ -84,7 +84,7 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 pb-16">
-        <h2 className="mb-5 text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">2. Choisissez votre façon d'écrire</h2>
+        <h2 className="mb-5 text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Choisissez votre façon d'écrire</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {([
             ["form", PenLine, "Formulaire classique", "Saisie structurée : coordonnées, titre, résumé, expériences, formations, compétences."],

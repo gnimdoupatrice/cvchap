@@ -15,3 +15,4 @@
 - AI calls go through server functions in `src/lib/ai.functions.ts` → `src/lib/ai/gateway.server.ts`; never call the model from the browser.
 - PDF export uses the browser print engine with A4 `@page` CSS so text stays vector/selectable (ATS-friendly).
 - Optional portrait images remain embedded as local data URLs so guest CVs and print exports work without remote storage.
+- The only active CV template is the editable HTML/CSS reproduction of “Français Simple Moderne Bleu”; keep its fixed 794 × 1123 A4 geometry so print and preview remain identical.
