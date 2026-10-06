@@ -40,6 +40,12 @@ export interface CV {
   skills: string[];
   languages: string[];
   interests: string[];
+  /** Champs optionnels utilisés par certains modèles. */
+  highlight?: string;
+  footnote?: string;
+  highlights?: { title: string; text: string }[];
+  certifications?: string[];
+  references?: { name: string; company: string; contact: string }[];
 }
 
 export interface CVDocument {
