@@ -5,6 +5,14 @@ const DOC_KEY = "cvflow.doc.v1";
 const CREDITS_KEY = "cvflow.credits.v1";
 export const FREE_CREDITS = 5;
 
+const VALID_TEMPLATES: TemplateId[] = [
+  "french-blue",
+  "emerald-tech",
+  "juriste-navy",
+  "alfred-bold",
+  "adeline-capsule",
+];
+
 export const defaultDoc = (): CVDocument => ({
   cv: sampleFrenchBlue,
   template: "french-blue",
@@ -19,7 +27,9 @@ export function loadDoc(): CVDocument {
       const stored = JSON.parse(raw) as Partial<CVDocument>;
       const fallback = defaultDoc();
       const validTemplate: TemplateId =
-        stored.template === "emerald-tech" ? "emerald-tech" : "french-blue";
+        stored.template && VALID_TEMPLATES.includes(stored.template as TemplateId)
+          ? (stored.template as TemplateId)
+          : "french-blue";
 
       return {
         ...fallback,
@@ -29,11 +39,26 @@ export function loadDoc(): CVDocument {
           ...fallback.cv,
           ...stored.cv,
           personal: { ...fallback.cv.personal, ...stored.cv?.personal },
-          experiences: stored.cv?.experiences && stored.cv.experiences.length > 0 ? stored.cv.experiences : fallback.cv.experiences,
-          education: stored.cv?.education && stored.cv.education.length > 0 ? stored.cv.education : fallback.cv.education,
-          skills: stored.cv?.skills && stored.cv.skills.length > 0 ? stored.cv.skills : fallback.cv.skills,
-          languages: stored.cv?.languages && stored.cv.languages.length > 0 ? stored.cv.languages : fallback.cv.languages,
-          interests: stored.cv?.interests && stored.cv.interests.length > 0 ? stored.cv.interests : fallback.cv.interests,
+          experiences:
+            stored.cv?.experiences && stored.cv.experiences.length > 0
+              ? stored.cv.experiences
+              : fallback.cv.experiences,
+          education:
+            stored.cv?.education && stored.cv.education.length > 0
+              ? stored.cv.education
+              : fallback.cv.education,
+          skills:
+            stored.cv?.skills && stored.cv.skills.length > 0
+              ? stored.cv.skills
+              : fallback.cv.skills,
+          languages:
+            stored.cv?.languages && stored.cv.languages.length > 0
+              ? stored.cv.languages
+              : fallback.cv.languages,
+          interests:
+            stored.cv?.interests && stored.cv.interests.length > 0
+              ? stored.cv.interests
+              : fallback.cv.interests,
         },
       };
     }

@@ -1,7 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AlertTriangle, Download, FileText, LayoutTemplate, Maximize2, PenLine, Sparkles, Wand2, X } from "lucide-react";
+import {
+  AlertTriangle,
+  Download,
+  FileText,
+  LayoutTemplate,
+  Maximize2,
+  PenLine,
+  Sparkles,
+  Wand2,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { A4Preview } from "@/components/cv/A4Preview";
@@ -17,9 +27,16 @@ export const Route = createFileRoute("/editor")({
   head: () => ({
     meta: [
       { title: "Éditeur de CV — Rédigez et exportez en PDF | CVflow" },
-      { name: "description", content: "Rédigez votre CV avec un formulaire ou le Coach IA, prévisualisez la page A4 en direct et exportez un PDF lisible par les ATS." },
+      {
+        name: "description",
+        content:
+          "Rédigez votre CV avec un formulaire ou le Coach IA, prévisualisez la page A4 en direct et exportez un PDF lisible par les ATS.",
+      },
       { property: "og:title", content: "Éditeur de CV — CVflow" },
-      { property: "og:description", content: "Formulaire ou Coach IA, aperçu A4 en direct et export PDF compatible ATS." },
+      {
+        property: "og:description",
+        content: "Formulaire ou Coach IA, aperçu A4 en direct et export PDF compatible ATS.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -45,6 +62,7 @@ function Editor() {
     setDoc(loadDoc());
     setCredits(loadCredits());
   }, []);
+
   useEffect(() => {
     if (doc) saveDoc(doc);
   }, [doc]);
@@ -65,12 +83,17 @@ function Editor() {
       return { ...d, scale: Math.round((d.scale - 0.03) * 100) / 100 };
     });
   }, []);
+
   const fitToPage = () => {
     fitting.current = true;
     update({ scale: doc && doc.scale > 0.72 ? Math.round((doc.scale - 0.03) * 100) / 100 : 0.72 });
   };
 
-  const spend = async (run: () => Promise<{ ok: true; text: string } | { ok: false; error: string; status: number }>, before: string, apply: (t: string) => void) => {
+  const spend = async (
+    run: () => Promise<{ ok: true; text: string } | { ok: false; error: string; status: number }>,
+    before: string,
+    apply: (t: string) => void
+  ) => {
     if (credits <= 0) return setUpsell(true);
     setBusy(true);
     try {
@@ -87,114 +110,208 @@ function Editor() {
     }
   };
 
-  const askAI: AskAI = (kind, text, context, apply) => spend(() => improve({ data: { kind, text, context } }), text, apply);
+  const askAI: AskAI = (kind, text, context, apply) =>
+    spend(() => improve({ data: { kind, text, context } }), text, apply);
 
-  if (!doc) return <div className="min-h-screen bg-background" />;
+  const print = () => window.print();
 
-  const preview = <A4Preview doc={doc} onOverflowChange={onOverflow} />;
+  if (!doc) return <div className="grid min-h-screen place-items-center">Chargement…</div>;
 
   return (
-    <div className="flex h-dvh flex-col bg-background">
-      <Toaster position="top-center" />
-      <header className="no-print flex h-14 shrink-0 items-center gap-3 border-b bg-card/80 px-4 backdrop-blur">
-        <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground"><FileText className="h-4 w-4" /></span>
-          <span className="hidden sm:inline">CVflow</span>
-        </Link>
-
-        {/* Sélecteur de modèle */}
-        <div className="flex items-center gap-2 ml-2">
-          <LayoutTemplate className="h-4 w-4 text-muted-foreground hidden sm:inline" />
-          <select
-            value={doc.template}
-            onChange={(e) => update({ template: e.target.value as TemplateId })}
-            className="rounded-lg border bg-background px-2.5 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary"
+    <div className="flex h-screen flex-col bg-background">
+      <Toaster />
+      {/* Barre supérieure */}
+      <header className="flex h-14 items-center justify-between border-b px-4 no-print sm:px-6">
+        <div className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="flex items-center gap-2 font-semibold tracking-tight text-foreground"
           >
-            {templateMeta.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </div>
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground">
+              <FileText className="h-3.5 w-3.5" />
+            </span>
+            <span className="hidden sm:inline">CVflow</span>
+          </Link>
+          <span className="text-muted-foreground/40">/</span>
 
-        <div className="ml-auto flex items-center gap-2">
-          <span className="flex items-center gap-1 rounded-full border bg-card px-3 py-1 text-xs font-medium" title="Crédits d'optimisation IA offerts">
-            <Sparkles className="h-3.5 w-3.5 text-primary" /> {credits}/{FREE_CREDITS}
-          </span>
-          <button onClick={() => window.print()} className="btn-primary hidden md:inline-flex"><Download className="h-4 w-4" /> Exporter en PDF</button>
-        </div>
-      </header>
-
-      <div className="no-print flex border-b bg-card md:hidden">
-        {(["write", "preview"] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)} className={`flex-1 py-3 text-sm font-medium ${tab === t ? "border-b-2 border-primary text-foreground" : "text-muted-foreground"}`}>
-            {t === "write" ? "Écrire" : "Aperçu A4"}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex min-h-0 flex-1">
-        <div className={`no-print min-h-0 w-full overflow-y-auto md:block md:w-[46%] md:max-w-[640px] md:border-r ${tab === "write" ? "block" : "hidden"}`}>
-          <div className="space-y-4 p-4 pb-28 md:p-6">
-            <div className="grid grid-cols-2 gap-1 rounded-xl bg-muted p-1">
-              {([["form", "Formulaire", PenLine], ["coach", "Coach IA", Wand2]] as const).map(([m, label, Icon]) => (
-                <button key={m} onClick={() => update({ mode: m })} className={`flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-medium transition ${doc.mode === m ? "bg-card shadow-soft" : "text-muted-foreground"}`}>
-                  <Icon className="h-4 w-4" /> {label}
-                </button>
+          {/* Sélecteur parmi les 5 modèles */}
+          <div className="flex items-center gap-1.5 rounded-lg border bg-card px-2 py-1 shadow-soft">
+            <LayoutTemplate className="h-3.5 w-3.5 text-primary" />
+            <select
+              value={doc.template}
+              onChange={(e) => update({ template: e.target.value as TemplateId })}
+              className="bg-transparent text-xs font-semibold focus:outline-none cursor-pointer"
+            >
+              {templateMeta.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
               ))}
-            </div>
-            {doc.mode === "form" ? (
-              <FormEditor cv={doc.cv} onChange={(cv) => update({ cv })} askAI={askAI} busy={busy} />
-            ) : (
-              <CoachEditor cv={doc.cv} onChange={(cv) => update({ cv })} busy={busy} askCoach={(input, before, apply) => spend(() => coach({ data: input }), before, apply)} />
-            )}
+            </select>
           </div>
         </div>
 
-        <div className={`min-h-0 flex-1 overflow-y-auto bg-muted/40 md:block ${tab === "preview" ? "block" : "hidden"}`}>
+        {/* Actions à droite */}
+        <div className="flex items-center gap-2">
           {overflow && (
-            <div className="no-print sticky top-0 z-10 mx-4 mt-4 flex items-center gap-3 rounded-xl border border-destructive/30 bg-card p-3 shadow-soft">
-              <AlertTriangle className="h-5 w-5 shrink-0 text-destructive" />
-              <p className="flex-1 text-sm">Votre CV dépasse une page A4.</p>
-              <button onClick={fitToPage} className="btn-primary text-xs"><Maximize2 className="h-3.5 w-3.5" /> Adapter à 1 page</button>
-            </div>
+            <button
+              onClick={fitToPage}
+              className="flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-700 hover:bg-amber-500/20"
+            >
+              <AlertTriangle className="h-3.5 w-3.5" />
+              <span className="hidden md:inline">Adapter à 1 page</span>
+            </button>
           )}
-          {!overflow && doc.scale < 1 && (
-            <div className="no-print flex justify-end px-4 pt-3">
-              <button className="btn-ghost text-xs" onClick={() => update({ scale: 1 })}>Rétablir l'espacement d'origine</button>
-            </div>
-          )}
-          <div className="px-2 pb-28 md:pb-6">{preview}</div>
+
+          <div className="hidden sm:flex items-center gap-1 rounded-full border bg-card px-2.5 py-1 text-xs text-muted-foreground">
+            <Sparkles className="h-3 w-3 text-primary" />
+            <span>
+              <b>{credits}</b> IA restantes
+            </span>
+          </div>
+
+          <button onClick={print} className="btn-primary text-xs py-1.5 px-3">
+            <Download className="h-3.5 w-3.5" />
+            <span>Exporter en PDF</span>
+          </button>
         </div>
+      </header>
+
+      {/* Onglets mobile */}
+      <div className="flex border-b bg-card sm:hidden no-print">
+        <button
+          onClick={() => setTab("write")}
+          className={`flex-1 py-2.5 text-center text-xs font-semibold ${
+            tab === "write" ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
+          }`}
+        >
+          Écrire
+        </button>
+        <button
+          onClick={() => setTab("preview")}
+          className={`flex-1 py-2.5 text-center text-xs font-semibold ${
+            tab === "preview" ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
+          }`}
+        >
+          Aperçu A4
+        </button>
       </div>
 
-      <div className="no-print fixed inset-x-0 bottom-0 z-20 flex gap-2 border-t bg-card/95 p-3 backdrop-blur md:hidden">
-        {overflow && <button onClick={fitToPage} className="btn-ghost flex-1 border">Adapter à 1 page</button>}
-        <button onClick={() => window.print()} className="btn-primary flex-1"><Download className="h-4 w-4" /> Exporter PDF</button>
+      {/* Corps Split Screen */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Colonne gauche : Saisie */}
+        <section
+          className={`w-full overflow-y-auto border-r p-4 sm:w-1/2 lg:w-5/12 sm:p-6 no-print ${
+            tab === "write" ? "block" : "hidden sm:block"
+          }`}
+        >
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex rounded-lg border bg-muted/40 p-0.5">
+              <button
+                onClick={() => update({ mode: "form" })}
+                className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-semibold ${
+                  doc.mode === "form" ? "bg-card shadow-soft text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                <PenLine className="h-3 w-3" /> Formulaire
+              </button>
+              <button
+                onClick={() => update({ mode: "coach" })}
+                className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-semibold ${
+                  doc.mode === "coach" ? "bg-card shadow-soft text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                <Wand2 className="h-3 w-3 text-primary" /> Coach IA
+              </button>
+            </div>
+          </div>
+
+          {doc.mode === "form" ? (
+            <FormEditor cv={doc.cv} onChange={(cv) => update({ cv })} askAI={askAI} busy={busy} />
+          ) : (
+            <CoachEditor
+              cv={doc.cv}
+              onChange={(cv) => update({ cv })}
+              onGenerateBullets={async (expId, answers) => {
+                await spend(
+                  () => coach({ data: answers }),
+                  "",
+                  (text) => {
+                    const bullets = text
+                      .split("\n")
+                      .map((s) => s.replace(/^[•\-\*]\s*/, "").trim())
+                      .filter(Boolean);
+                    update({
+                      cv: {
+                        ...doc.cv,
+                        experiences: doc.cv.experiences.map((e) =>
+                          e.id === expId ? { ...e, bullets } : e
+                        ),
+                      },
+                    });
+                  }
+                );
+              }}
+              busy={busy}
+            />
+          )}
+        </section>
+
+        {/* Colonne droite : Aperçu A4 en direct */}
+        <section
+          className={`flex-1 overflow-y-auto bg-muted/30 p-4 sm:p-6 flex justify-center ${
+            tab === "preview" ? "block" : "hidden sm:flex"
+          }`}
+        >
+          <A4Preview
+            cv={doc.cv}
+            template={doc.template}
+            scale={doc.scale}
+            onOverflowChange={onOverflow}
+          />
+        </section>
       </div>
 
+      {/* Modale avant/après IA */}
       {pending && (
         <BeforeAfter
           before={pending.before}
           after={pending.after}
-          onReject={() => setPending(null)}
-          onAccept={() => {
+          onApply={() => {
             pending.apply(pending.after);
             setPending(null);
-            toast.success("Suggestion appliquée");
+            toast.success("Optimisation appliquée.");
           }}
+          onDiscard={() => setPending(null)}
         />
       )}
 
+      {/* Modale Quota IA */}
       {upsell && (
-        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-6 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-2xl border bg-card p-6 text-center shadow-soft">
-            <button className="absolute right-3 top-3 text-muted-foreground" onClick={() => setUpsell(false)} aria-label="Fermer"><X className="h-4 w-4" /></button>
-            <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-primary/10"><Sparkles className="h-6 w-6 text-primary" /></div>
-            <h3 className="mt-4 text-lg font-semibold">Vos 5 optimisations offertes sont utilisées</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Votre CV reste modifiable et exportable gratuitement. Pour continuer avec l'IA, créez un compte ou passez à la formule Premium — bientôt disponibles.</p>
-            <button className="btn-primary mt-5 w-full justify-center" onClick={() => setUpsell(false)}>Continuer sans IA</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl">
+            <div className="flex justify-between items-start">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary/10 text-primary">
+                <Sparkles className="h-5 w-5" />
+              </span>
+              <button
+                onClick={() => setUpsell(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <h3 className="mt-4 text-lg font-bold">Vos 5 crédits IA offerts ont été utilisés</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Vous pouvez continuer à éditer manuellement votre CV et l'exporter en PDF sans aucune
+              limite. La formule Premium illimitée arrive très prochainement.
+            </p>
+            <button
+              onClick={() => setUpsell(false)}
+              className="mt-6 w-full btn-primary py-2.5 text-sm"
+            >
+              Continuer en mode gratuit
+            </button>
           </div>
         </div>
       )}

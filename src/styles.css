@@ -1,507 +1,64 @@
-@import "tailwindcss" source(none);
-@source "../src";
-@import "tw-animate-css";
+export type TemplateId =
+  | "french-blue"
+  | "emerald-tech"
+  | "juriste-navy"
+  | "alfred-bold"
+  | "adeline-capsule";
 
-@custom-variant dark (&:is(.dark *));
+export type InputMode = "form" | "coach";
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- */
-
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+export interface Experience {
+  id: string;
+  role: string;
+  company: string;
+  start: string;
+  end: string;
+  bullets: string[];
 }
 
-@theme inline {
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-cv-sans: "IBM Plex Sans", Arial, sans-serif;
-  --font-cv-serif: "Source Serif 4", Georgia, serif;
-  --color-paper: var(--paper);
-  --color-paper-ink: var(--paper-ink);
-  --color-paper-tint: var(--paper-tint);
-  --color-cv-blue: var(--cv-blue);
-  --color-cv-blue-soft: var(--cv-blue-soft);
-  --color-highlight: var(--highlight);
-  --shadow-soft: 0 1px 2px oklch(0 0 0 / 4%), 0 4px 16px -4px oklch(0 0 0 / 6%);
-  --shadow-paper: 0 2px 4px oklch(0 0 0 / 5%), 0 24px 48px -16px oklch(0 0 0 / 18%);
+export interface Education {
+  id: string;
+  degree: string;
+  school: string;
+  start: string;
+  end: string;
 }
 
-:root {
-  --radius: 0.75rem;
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.2 0.01 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.01 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.01 260);
-  --primary: oklch(0.52 0.19 258);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.965 0.003 260);
-  --secondary-foreground: oklch(0.2 0.01 260);
-  --muted: oklch(0.955 0.003 260);
-  --muted-foreground: oklch(0.52 0.012 260);
-  --accent: oklch(0.955 0.01 258);
-  --accent-foreground: oklch(0.2 0.01 260);
-  --destructive: oklch(0.6 0.21 27);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0.003 260);
-  --input: oklch(0.9 0.004 260);
-  --ring: oklch(0.52 0.19 258);
-  --highlight: oklch(0.94 0.08 95);
-  --paper: oklch(1 0 0);
-  --paper-ink: oklch(0.22 0.01 260);
-  --paper-muted: oklch(0.48 0.01 260);
-  --paper-accent: oklch(0.45 0.13 255);
-  --paper-tint: oklch(0.96 0.012 250);
-  --cv-blue: oklch(0.33115 0.07997 251.159);
-  --cv-blue-soft: oklch(0.48462 0.10417 249.453);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.2 0.01 260);
-  --sidebar-primary: oklch(0.52 0.19 258);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.955 0.003 260);
-  --sidebar-accent-foreground: oklch(0.2 0.01 260);
-  --sidebar-border: oklch(0.92 0.003 260);
-  --sidebar-ring: oklch(0.52 0.19 258);
+export interface CV {
+  personal: {
+    name: string;
+    email: string;
+    phone: string;
+    location: string;
+    link: string;
+    photo?: string;
+  };
+  title: string;
+  summary: string;
+  experiences: Experience[];
+  education: Education[];
+  skills: string[];
+  languages: string[];
+  interests: string[];
 }
 
-@layer base {
-  * {
-    border-color: var(--color-border);
-  }
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-  }
+export interface CVDocument {
+  cv: CV;
+  template: TemplateId;
+  mode: InputMode;
+  /** Facteur de densité A4 (1 = normal, inférieur = plus serré). */
+  scale: number;
 }
 
-@utility input {
-  width: 100%;
-  border-radius: 0.625rem;
-  border: 1px solid var(--color-input);
-  background: var(--color-card);
-  padding: 0.55rem 0.75rem;
-  font-size: 0.9rem;
-  outline: none;
-  transition: box-shadow 0.15s, border-color 0.15s;
-  &:focus {
-    border-color: var(--color-ring);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-ring) 18%, transparent);
-  }
-}
-@utility btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  border-radius: 0.625rem;
-  background: var(--color-primary);
-  color: var(--color-primary-foreground);
-  padding: 0.5rem 0.9rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: opacity 0.15s;
-  &:hover { opacity: 0.9; }
-  &:disabled { opacity: 0.45; cursor: not-allowed; }
-}
-@utility btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-radius: 0.625rem;
-  padding: 0.5rem 0.8rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  &:hover { background: var(--color-muted); }
-  &:disabled { opacity: 0.4; }
-}
-@utility btn-ai {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
-  color: var(--color-primary);
-  padding: 0.3rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  &:disabled { opacity: 0.4; cursor: not-allowed; }
-}
+export const uid = () => Math.random().toString(36).slice(2, 10);
 
-/* ---------- CV paper (independent of app theme, print-safe) ---------- */
-.cv-paper {
-  background: var(--paper);
-  color: var(--paper-ink);
-}
-.cv-pad { padding: var(--cv-pad); }
-.cv-muted { color: var(--paper-muted); }
-.cv-accent { color: var(--paper-accent); }
-.cv-section { margin-bottom: var(--cv-gap); }
-.cv-item + .cv-item { margin-top: 0.75em; }
-.cv-title-min {
-  font-size: 0.8em; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--paper-muted); margin-bottom: 0.6em;
-}
-.cv-title-corp {
-  font-size: 1em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  border-bottom: 1px solid var(--paper-ink); padding-bottom: 0.2em; margin-bottom: 0.6em;
-}
-.cv-title-mod {
-  font-size: 0.85em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--paper-accent); margin-bottom: 0.5em;
-}
-
-/* ==========================================================================
-   Français Simple Moderne Bleu — Gabarit A4 794 × 1123 px (Anti-débordement)
-   ========================================================================== */
-.cv-blue-layout {
-  display: grid;
-  grid-template-columns: 251px 543px;
-  width: 794px;
-  min-height: 1123px;
-  box-sizing: border-box;
-  background: var(--paper);
-  color: var(--paper-ink);
-}
-
-/* --- Colonne latérale gauche (Bleu marine) --- */
-.cv-blue-sidebar {
-  position: relative;
-  color: var(--primary-foreground);
-  min-height: 1123px;
-  padding: 310px 32px 42px;
-  box-sizing: border-box;
-}
-
-/* Blocs arrondis de fond avec chevauchement pour combler l'espace */
-.cv-blue-sidebar::before,
-.cv-blue-sidebar::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  left: 0;
-  background: var(--cv-blue);
-}
-.cv-blue-sidebar::before {
-  top: 0;
-  width: 266px;
-  height: 290px;
-  border-bottom-right-radius: 170px;
-}
-.cv-blue-sidebar::after {
-  top: 270px;
-  bottom: 0;
-  width: 243px;
-  border-top-right-radius: 165px;
-}
-
-/* Médaillon photo circulaire parfait (non déformé) */
-.cv-blue-portrait-wrap {
-  position: absolute;
-  z-index: 2;
-  top: 36px;
-  left: 38px;
-  width: 176px;
-  height: 176px;
-}
-.cv-blue-portrait {
-  display: grid;
-  place-items: center;
-  width: 176px;
-  height: 176px;
-  overflow: hidden;
-  border-radius: 50%;
-  border: 3px solid #ffffff;
-  background: var(--paper-tint);
-  color: var(--cv-blue);
-  font-size: 34px;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-.cv-blue-portrait img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Contenu textuel de la colonne latérale */
-.cv-blue-sidebar-content {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: 36px;
-}
-.cv-blue-sidebar-content h2 {
-  margin-bottom: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.cv-blue-sidebar-content ul {
-  display: grid;
-  gap: 7px;
-  font-size: 13px;
-  line-height: 1.4;
-  word-break: break-word;
-}
-
-/* Coordonnées avec retours à la ligne garantis */
-.cv-blue-contacts {
-  display: grid;
-  gap: 16px;
-}
-.cv-blue-contacts p,
-.cv-blue-contacts a {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  align-items: center;
-  gap: 10px;
-  font-size: 11.5px;
-  line-height: 1.25;
-  color: inherit;
-  text-decoration: none;
-  word-break: break-all;
-}
-.cv-blue-contacts a:hover {
-  text-decoration: underline;
-}
-.cv-blue-contacts svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  stroke-width: 2;
-}
-
-/* Jauges de langues */
-.cv-blue-languages {
-  display: grid;
-  gap: 10px;
-}
-.cv-blue-language {
-  display: grid;
-  grid-template-columns: 80px 48px;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-}
-.cv-blue-language i {
-  display: block;
-  height: 7px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: var(--cv-blue-soft);
-}
-.cv-blue-language b {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: #ffffff;
-}
-
-/* --- Colonne principale droite --- */
-.cv-blue-main {
-  padding: 60px 60px 40px 55px;
-  box-sizing: border-box;
-  min-width: 0;
-}
-
-/* En-tête sécurisé anti-débordement */
-.cv-blue-header {
-  margin-bottom: 30px;
-  min-width: 0;
-}
-.cv-blue-header h1 {
-  color: var(--cv-blue);
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
-.cv-blue-header p {
-  margin-top: 10px;
-  color: var(--cv-blue-soft);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  word-break: break-word;
-}
-
-/* Sections avec titre souligné */
-.cv-blue-section + .cv-blue-section {
-  margin-top: 32px;
-}
-.cv-blue-heading {
-  margin-bottom: 22px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--cv-blue);
-  color: var(--cv-blue);
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-
-/* Timeline verticale délimitée */
-.cv-blue-timeline {
-  position: relative;
-  display: grid;
-  gap: 24px;
-}
-.cv-blue-timeline::before {
-  content: "";
-  position: absolute;
-  top: 8px;
-  bottom: 8px;
-  left: -20px;
-  width: 2px;
-  background: var(--cv-blue);
-}
-
-/* Entrées Formation et Expérience */
-.cv-blue-entry {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 16px;
-  min-width: 0;
-}
-.cv-blue-dot {
-  position: absolute;
-  z-index: 1;
-  top: 5px;
-  left: -25px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--cv-blue);
-}
-.cv-blue-entry h3 {
-  color: var(--cv-blue-soft);
-  font-size: 14.5px;
-  font-weight: 700;
-  line-height: 1.25;
-  word-break: break-word;
-}
-.cv-blue-entry p {
-  color: var(--cv-blue-soft);
-  font-size: 13.5px;
-  line-height: 1.3;
-  word-break: break-word;
-}
-.cv-blue-entry time {
-  color: var(--cv-blue-soft);
-  font-size: 11px;
-  font-style: italic;
-  font-weight: 600;
-  line-height: 1.25;
-  text-align: right;
-  white-space: nowrap;
-}
-.cv-blue-company {
-  font-style: italic;
-  margin-top: 2px;
-}
-.cv-blue-bullets {
-  display: grid;
-  gap: 4px;
-  margin-top: 10px;
-  padding-left: 20px;
-  color: var(--cv-blue-soft);
-  font-size: 13px;
-  line-height: 1.35;
-  list-style: disc;
-  word-break: break-word;
-}
-
-/* --- Règles d'impression A4 --- */
-@page {
-  size: A4;
-  margin: 0;
-}
-@media print {
-  html, body {
-    background: #ffffff !important;
-  }
-  body * {
-    visibility: hidden;
-  }
-  #cv-page, #cv-page * {
-    visibility: visible;
-  }
-  #cv-page {
-    position: absolute;
-    left: 0;
-    top: 0;
-    box-shadow: none !important;
-  }
-  .cv-zoom {
-    transform: none !important;
-  }
-  .cv-pagebreak,
-  .no-print {
-    display: none !important;
-  }
-  * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-}
+export const emptyCV = (): CV => ({
+  personal: { name: "", email: "", phone: "", location: "", link: "" },
+  title: "",
+  summary: "",
+  experiences: [{ id: uid(), role: "", company: "", start: "", end: "", bullets: [] }],
+  education: [{ id: uid(), degree: "", school: "", start: "", end: "" }],
+  skills: [],
+  languages: [],
+  interests: [],
+});
