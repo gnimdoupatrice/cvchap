@@ -1,10 +1,16 @@
-import { emptyCV, type CVDocument } from "./types";
+import { sampleFrenchBlue } from "./samples";
+import { type CVDocument, type TemplateId } from "./types";
 
 const DOC_KEY = "cvflow.doc.v1";
 const CREDITS_KEY = "cvflow.credits.v1";
 export const FREE_CREDITS = 5;
 
-export const defaultDoc = (): CVDocument => ({ cv: emptyCV(), template: "french-blue", mode: "form", scale: 1 });
+export const defaultDoc = (): CVDocument => ({
+  cv: sampleFrenchBlue,
+  template: "french-blue",
+  mode: "form",
+  scale: 1,
+});
 
 export function loadDoc(): CVDocument {
   try {
@@ -12,16 +18,22 @@ export function loadDoc(): CVDocument {
     if (raw) {
       const stored = JSON.parse(raw) as Partial<CVDocument>;
       const fallback = defaultDoc();
+      const validTemplate: TemplateId =
+        stored.template === "emerald-tech" ? "emerald-tech" : "french-blue";
+
       return {
         ...fallback,
         ...stored,
-        template: "french-blue",
+        template: validTemplate,
         cv: {
           ...fallback.cv,
           ...stored.cv,
           personal: { ...fallback.cv.personal, ...stored.cv?.personal },
-          languages: stored.cv?.languages ?? [],
-          interests: stored.cv?.interests ?? [],
+          experiences: stored.cv?.experiences && stored.cv.experiences.length > 0 ? stored.cv.experiences : fallback.cv.experiences,
+          education: stored.cv?.education && stored.cv.education.length > 0 ? stored.cv.education : fallback.cv.education,
+          skills: stored.cv?.skills && stored.cv.skills.length > 0 ? stored.cv.skills : fallback.cv.skills,
+          languages: stored.cv?.languages && stored.cv.languages.length > 0 ? stored.cv.languages : fallback.cv.languages,
+          interests: stored.cv?.interests && stored.cv.interests.length > 0 ? stored.cv.interests : fallback.cv.interests,
         },
       };
     }

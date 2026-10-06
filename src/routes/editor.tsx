@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AlertTriangle, Download, FileText, Maximize2, PenLine, Sparkles, Wand2, X } from "lucide-react";
+import { AlertTriangle, Download, FileText, LayoutTemplate, Maximize2, PenLine, Sparkles, Wand2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { A4Preview } from "@/components/cv/A4Preview";
@@ -10,7 +10,8 @@ import { CoachEditor } from "@/components/cv/CoachEditor";
 import { FormEditor, type AskAI } from "@/components/cv/FormEditor";
 import { coachExperience, improveText } from "@/lib/ai.functions";
 import { FREE_CREDITS, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
-import type { CVDocument } from "@/lib/cv/types";
+import type { CVDocument, TemplateId } from "@/lib/cv/types";
+import { templateMeta } from "@/components/cv/templates";
 
 export const Route = createFileRoute("/editor")({
   head: () => ({
@@ -50,7 +51,6 @@ function Editor() {
 
   const update = (patch: Partial<CVDocument>) => setDoc((d) => (d ? { ...d, ...patch } : d));
 
-  // "Adapter à 1 page": tighten density step by step until the content fits.
   const onOverflow = useCallback((o: boolean) => {
     setOverflow(o);
     if (!fitting.current) return;
@@ -101,7 +101,23 @@ function Editor() {
           <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground"><FileText className="h-4 w-4" /></span>
           <span className="hidden sm:inline">CVflow</span>
         </Link>
-        <span className="ml-2 hidden text-sm text-muted-foreground md:inline">Français Simple Moderne Bleu</span>
+
+        {/* Sélecteur de modèle */}
+        <div className="flex items-center gap-2 ml-2">
+          <LayoutTemplate className="h-4 w-4 text-muted-foreground hidden sm:inline" />
+          <select
+            value={doc.template}
+            onChange={(e) => update({ template: e.target.value as TemplateId })}
+            className="rounded-lg border bg-background px-2.5 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            {templateMeta.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="ml-auto flex items-center gap-2">
           <span className="flex items-center gap-1 rounded-full border bg-card px-3 py-1 text-xs font-medium" title="Crédits d'optimisation IA offerts">
             <Sparkles className="h-3.5 w-3.5 text-primary" /> {credits}/{FREE_CREDITS}

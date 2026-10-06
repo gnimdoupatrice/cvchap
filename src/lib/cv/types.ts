@@ -1,4 +1,4 @@
-export type TemplateId = "french-blue";
+export type TemplateId = "french-blue" | "emerald-tech";
 export type InputMode = "form" | "coach";
 
 export interface Experience {

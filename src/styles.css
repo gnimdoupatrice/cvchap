@@ -12,10 +12,6 @@
  *
  * The :root and .dark blocks define the actual color values using oklch.
  * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
  */
 
 @theme inline {
@@ -207,22 +203,29 @@
   color: var(--paper-accent); margin-bottom: 0.5em;
 }
 
-/* Français Simple Moderne Bleu — exact 794 × 1123 px A4 composition. */
+/* ==========================================================================
+   Français Simple Moderne Bleu — Gabarit A4 794 × 1123 px (Anti-débordement)
+   ========================================================================== */
 .cv-blue-layout {
   display: grid;
   grid-template-columns: 251px 543px;
   width: 794px;
-  height: 1123px;
-  overflow: hidden;
+  min-height: 1123px;
+  box-sizing: border-box;
   background: var(--paper);
   color: var(--paper-ink);
 }
+
+/* --- Colonne latérale gauche (Bleu marine) --- */
 .cv-blue-sidebar {
   position: relative;
   color: var(--primary-foreground);
-  height: 1123px;
-  padding: 348px 39px 42px;
+  min-height: 1123px;
+  padding: 310px 32px 42px;
+  box-sizing: border-box;
 }
+
+/* Blocs arrondis de fond avec chevauchement pour combler l'espace */
 .cv-blue-sidebar::before,
 .cv-blue-sidebar::after {
   content: "";
@@ -231,81 +234,274 @@
   left: 0;
   background: var(--cv-blue);
 }
-.cv-blue-sidebar::before { top: 0; width: 266px; height: 281px; border-bottom-right-radius: 170px; }
-.cv-blue-sidebar::after { top: 280px; bottom: 0; width: 243px; border-top-right-radius: 165px; }
-.cv-blue-portrait-wrap { position: absolute; z-index: 2; top: 37px; left: 46px; width: 176px; height: 207px; }
+.cv-blue-sidebar::before {
+  top: 0;
+  width: 266px;
+  height: 290px;
+  border-bottom-right-radius: 170px;
+}
+.cv-blue-sidebar::after {
+  top: 270px;
+  bottom: 0;
+  width: 243px;
+  border-top-right-radius: 165px;
+}
+
+/* Médaillon photo circulaire parfait (non déformé) */
+.cv-blue-portrait-wrap {
+  position: absolute;
+  z-index: 2;
+  top: 36px;
+  left: 38px;
+  width: 176px;
+  height: 176px;
+}
 .cv-blue-portrait {
   display: grid;
   place-items: center;
   width: 176px;
-  height: 207px;
+  height: 176px;
   overflow: hidden;
-  border: 2px solid color-mix(in oklab, var(--paper) 70%, transparent);
   border-radius: 50%;
+  border: 3px solid #ffffff;
   background: var(--paper-tint);
   color: var(--cv-blue);
-  font-size: 36px;
+  font-size: 34px;
   font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
-.cv-blue-portrait img { width: 100%; height: 100%; object-fit: cover; }
-.cv-blue-sidebar-content { position: relative; z-index: 1; display: grid; gap: 42px; }
+.cv-blue-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Contenu textuel de la colonne latérale */
+.cv-blue-sidebar-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 36px;
+}
 .cv-blue-sidebar-content h2 {
-  margin-bottom: 22px;
-  font-size: 17px;
+  margin-bottom: 16px;
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-.cv-blue-sidebar-content ul { display: grid; gap: 7px; font-size: 13.5px; line-height: 1.42; }
-.cv-blue-contacts { display: grid; gap: 20px; }
-.cv-blue-contacts p { display: grid; grid-template-columns: 23px minmax(0, 1fr); align-items: center; gap: 11px; font-size: 11.5px; line-height: 1.15; overflow-wrap: anywhere; }
-.cv-blue-contacts svg { width: 22px; height: 22px; fill: currentColor; stroke-width: 2; }
-.cv-blue-languages { display: grid; gap: 10px; }
-.cv-blue-language { display: grid; grid-template-columns: 74px 48px; align-items: center; font-size: 13.5px; }
-.cv-blue-language i { display: block; height: 7px; overflow: hidden; border-radius: 999px; background: var(--cv-blue-soft); }
-.cv-blue-language b { display: block; height: 100%; border-radius: inherit; background: var(--paper); }
-.cv-blue-main { padding: 84px 87px 48px 70px; }
-.cv-blue-header { min-height: 172px; }
+.cv-blue-sidebar-content ul {
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Coordonnées avec retours à la ligne garantis */
+.cv-blue-contacts {
+  display: grid;
+  gap: 16px;
+}
+.cv-blue-contacts p,
+.cv-blue-contacts a {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  line-height: 1.25;
+  color: inherit;
+  text-decoration: none;
+  word-break: break-all;
+}
+.cv-blue-contacts a:hover {
+  text-decoration: underline;
+}
+.cv-blue-contacts svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  stroke-width: 2;
+}
+
+/* Jauges de langues */
+.cv-blue-languages {
+  display: grid;
+  gap: 10px;
+}
+.cv-blue-language {
+  display: grid;
+  grid-template-columns: 80px 48px;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.cv-blue-language i {
+  display: block;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--cv-blue-soft);
+}
+.cv-blue-language b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #ffffff;
+}
+
+/* --- Colonne principale droite --- */
+.cv-blue-main {
+  padding: 60px 60px 40px 55px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* En-tête sécurisé anti-débordement */
+.cv-blue-header {
+  margin-bottom: 30px;
+  min-width: 0;
+}
 .cv-blue-header h1 {
   color: var(--cv-blue);
-  font-size: 39px;
+  font-size: 34px;
   font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
-  white-space: nowrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
-.cv-blue-header p { margin-top: 19px; color: var(--cv-blue-soft); font-size: 21px; font-weight: 600; letter-spacing: 0; text-transform: uppercase; }
-.cv-blue-section + .cv-blue-section { margin-top: 38px; }
+.cv-blue-header p {
+  margin-top: 10px;
+  color: var(--cv-blue-soft);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+/* Sections avec titre souligné */
+.cv-blue-section + .cv-blue-section {
+  margin-top: 32px;
+}
 .cv-blue-heading {
-  margin-bottom: 31px;
-  padding-bottom: 7px;
+  margin-bottom: 22px;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--cv-blue);
   color: var(--cv-blue);
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: 0.05em;
   line-height: 1.1;
   text-transform: uppercase;
 }
-.cv-blue-timeline { position: relative; display: grid; gap: 28px; }
-.cv-blue-timeline::before { content: ""; position: absolute; top: 7px; bottom: -1123px; left: -21px; width: 2px; background: var(--cv-blue); }
-.cv-blue-entry { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 92px; gap: 15px; }
-.cv-blue-dot { position: absolute; z-index: 1; top: 5px; left: -26px; width: 10px; height: 10px; border-radius: 50%; background: var(--cv-blue); }
-.cv-blue-entry h3 { color: var(--cv-blue-soft); font-size: 14.5px; font-weight: 700; line-height: 1.22; }
-.cv-blue-entry p { color: var(--cv-blue-soft); font-size: 14px; line-height: 1.28; }
-.cv-blue-entry time { color: var(--cv-blue-soft); font-size: 11px; font-style: italic; font-weight: 600; line-height: 1.2; text-align: right; }
-.cv-blue-company { font-style: italic; }
-.cv-blue-bullets { display: grid; gap: 2px; margin-top: 23px; padding-left: 26px; color: var(--cv-blue-soft); font-size: 14px; line-height: 1.25; list-style: disc; }
 
-@page { size: A4; margin: 0; }
+/* Timeline verticale délimitée */
+.cv-blue-timeline {
+  position: relative;
+  display: grid;
+  gap: 24px;
+}
+.cv-blue-timeline::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: -20px;
+  width: 2px;
+  background: var(--cv-blue);
+}
+
+/* Entrées Formation et Expérience */
+.cv-blue-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  min-width: 0;
+}
+.cv-blue-dot {
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  left: -25px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cv-blue);
+}
+.cv-blue-entry h3 {
+  color: var(--cv-blue-soft);
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  word-break: break-word;
+}
+.cv-blue-entry p {
+  color: var(--cv-blue-soft);
+  font-size: 13.5px;
+  line-height: 1.3;
+  word-break: break-word;
+}
+.cv-blue-entry time {
+  color: var(--cv-blue-soft);
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: right;
+  white-space: nowrap;
+}
+.cv-blue-company {
+  font-style: italic;
+  margin-top: 2px;
+}
+.cv-blue-bullets {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  padding-left: 20px;
+  color: var(--cv-blue-soft);
+  font-size: 13px;
+  line-height: 1.35;
+  list-style: disc;
+  word-break: break-word;
+}
+
+/* --- Règles d'impression A4 --- */
+@page {
+  size: A4;
+  margin: 0;
+}
 @media print {
-  html, body { background: var(--paper) !important; }
-  body * { visibility: hidden; }
-  #cv-page, #cv-page * { visibility: visible; }
-  #cv-page { position: absolute; left: 0; top: 0; box-shadow: none !important; }
-  .cv-zoom { transform: none !important; }
-  .cv-pagebreak { display: none !important; }
-  .no-print { display: none !important; }
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body {
+    background: #ffffff !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #cv-page, #cv-page * {
+    visibility: visible;
+  }
+  #cv-page {
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-shadow: none !important;
+  }
+  .cv-zoom {
+    transform: none !important;
+  }
+  .cv-pagebreak,
+  .no-print {
+    display: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
