@@ -1,4 +1,10 @@
-export type TemplateId = "french-blue" | "emerald-tech";
+export type TemplateId =
+  | "french-blue"
+  | "emerald-tech"
+  | "juriste-navy"
+  | "alfred-bold"
+  | "adeline-capsule";
+
 export type InputMode = "form" | "coach";
 
 export interface Experience {
@@ -19,7 +25,14 @@ export interface Education {
 }
 
 export interface CV {
-  personal: { name: string; email: string; phone: string; location: string; link: string; photo?: string };
+  personal: {
+    name: string;
+    email: string;
+    phone: string;
+    location: string;
+    link: string;
+    photo?: string;
+  };
   title: string;
   summary: string;
   experiences: Experience[];
@@ -33,7 +46,7 @@ export interface CVDocument {
   cv: CV;
   template: TemplateId;
   mode: InputMode;
-  /** Density factor for the A4 page (1 = default, lower = tighter). */
+  /** Facteur de densité A4 (1 = normal, inférieur = plus serré). */
   scale: number;
 }
 
