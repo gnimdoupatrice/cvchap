@@ -232,25 +232,8 @@ function Editor() {
             <CoachEditor
               cv={doc.cv}
               onChange={(cv) => update({ cv })}
-              onGenerateBullets={async (expId, answers) => {
-                await spend(
-                  () => coach({ data: answers }),
-                  "",
-                  (text) => {
-                    const bullets = text
-                      .split("\n")
-                      .map((s) => s.replace(/^[•\-\*]\s*/, "").trim())
-                      .filter(Boolean);
-                    update({
-                      cv: {
-                        ...doc.cv,
-                        experiences: doc.cv.experiences.map((e) =>
-                          e.id === expId ? { ...e, bullets } : e
-                        ),
-                      },
-                    });
-                  }
-                );
+              askCoach={(input, before, apply) => {
+                void spend(() => coach({ data: input }), before, apply);
               }}
               busy={busy}
             />
@@ -263,12 +246,7 @@ function Editor() {
             tab === "preview" ? "block" : "hidden sm:flex"
           }`}
         >
-          <A4Preview
-            cv={doc.cv}
-            template={doc.template}
-            scale={doc.scale}
-            onOverflowChange={onOverflow}
-          />
+          <A4Preview doc={doc} onOverflowChange={onOverflow} />
         </section>
       </div>
 
@@ -277,12 +255,12 @@ function Editor() {
         <BeforeAfter
           before={pending.before}
           after={pending.after}
-          onApply={() => {
+          onAccept={() => {
             pending.apply(pending.after);
             setPending(null);
             toast.success("Optimisation appliquée.");
           }}
-          onDiscard={() => setPending(null)}
+          onReject={() => setPending(null)}
         />
       )}
 

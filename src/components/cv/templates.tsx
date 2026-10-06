@@ -476,8 +476,8 @@ function JuristeNavy({ cv }: { cv: CV }) {
               {cv.languages.map((l) => (
                 <div className="jn-lang" key={l}>
                   <div className="jn-lang-row">
-                    <span>{l.split("—")[0].trim()}</span>
-                    <i>{l.includes("—") ? l.split("—")[1].trim() : "bon niveau"}</i>
+                    <span>{(l.split("—")[0] ?? "").trim()}</span>
+                    <i>{l.includes("—") ? (l.split("—")[1] ?? "").trim() : "bon niveau"}</i>
                   </div>
                   <div className="jn-bar">
                     <span style={{ width: languageLevel(l) }} />
