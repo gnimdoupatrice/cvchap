@@ -845,7 +845,7 @@ function AdelineCapsule({ cv }: { cv: CV }) {
 }
 
 /* ========================================================
-   DISPATCHEUR PRINCIPAL
+   DISPATCHEUR PRINCIPAL    vbn     nngbfbgb
    ======================================================== */
 export function CVTemplate({ cv, template }: { cv: CV; template: TemplateId }) {
   switch (template) {
