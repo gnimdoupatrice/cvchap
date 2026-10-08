@@ -232,17 +232,17 @@ function JuristeNavy({ cv }: { cv: CV }) {
   const experiences = cv.experiences.filter((e) => e.role || e.company || e.bullets.some(Boolean));
   const education = cv.education.filter((e) => e.degree || e.school);
   const highlights = (cv.highlights ?? []).filter((h) => h.title || h.text);
+  const parseLang = (l: string) => {
+    const [name, rest = ""] = l.split("—").map((x) => x.trim());
+    const m = rest.match(/\((\d+)\s*%\)/);
+    const level = rest.replace(/\(\d+\s*%\)/, "").trim();
+    return { name, level, width: m ? `${m[1]}%` : languageLevel(l) };
+  };
 
   return (
     <div className="jn-page">
       <style>{`
-        .jn-page {
-          --jn-head: "Poppins", "Segoe UI", Arial, sans-serif;
-          width: 794px; min-height: 1123px; display: flex; background: #fff; color: #333;
-          font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
-          -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;
-          position: relative; overflow: hidden;
-        }
+        .jn-page { --jn-head: "Poppins", "Segoe UI", Arial, sans-serif; width: 794px; min-height: 1123px; display: flex; background: #fff; color: #333; font-family: "Liberation Sans", Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left; }
         .jn-page *, .jn-page *::before, .jn-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
         .jn-side { width: 274px; flex: none; background: #1c3f61; color: #fff; position: relative; overflow: hidden; }
         .jn-halo { position: absolute; top: 0; left: 0; width: 272px; height: 272px; border-radius: 50%; background: #2c5583; }
@@ -319,7 +319,7 @@ function JuristeNavy({ cv }: { cv: CV }) {
               <h2>Langues</h2>
               <div>
                 {cv.languages.map((l, i) => {
-                  const p = parseLangWithPercent(l);
+                  const p = parseLang(l);
                   return (
                     <div className="jn-lang" key={i}>
                       <div className="jn-row"><span>{p.name}</span><i>{p.level}</i></div>

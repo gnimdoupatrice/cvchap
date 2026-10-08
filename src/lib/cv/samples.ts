@@ -214,16 +214,16 @@ export const sampleJuristeNavy: CV = {
       start: "2023",
       end: "Présent",
       bullets: [
-        "Coordination des stagiaires et animation des réunions d'équipe.",
+        "Coordination des stagiaires.",
         "Animation des formations sur la rédaction des documents administratifs (rapport, mémo, compte-rendu).",
         "Animation sur la rédaction de projet et de termes de référence.",
-        "Monitoring et reporting des droits humains et environnementaux.",
+        "Monitoring des droits humains.",
       ],
     },
     {
       id: uid(),
       role: "Programme Green Week — Plaidoyer et Action Climat",
-      company: "CAJS & Partenaires institutionnels",
+      company: "",
       start: "2023",
       end: "Présent",
       bullets: [
@@ -235,12 +235,12 @@ export const sampleJuristeNavy: CV = {
     {
       id: uid(),
       role: "Programme Eco-Kids — Éducation Environnementale",
-      company: "CAJS — Kara, Togo",
+      company: "",
       start: "2023",
       end: "Présent",
       bullets: [
-        "Coordination de micro-projets de reboisement éducatif impliquant les établissements scolaires.",
-        "Développement de programmes d'éveil écologique adaptés au jeune public.",
+        "Coordination de micro-projets de reboisement éducatif impliquant des enfants.",
+        "Développement de programmes d'éveil écologique adaptés au jeune enfant.",
       ],
     },
   ],
@@ -281,10 +281,14 @@ export const sampleJuristeNavy: CV = {
     "ODD et cadres multilatéraux",
     "Finance climat et économie verte",
     "Gestion de partenariats multi-acteurs",
-    "Compostage & bokashi",
+    "Compostage, bokashi",
     "Gestion des déchets agricoles",
-    "Gestion de projet durable",
-    "Mobilisation communautaire & Plaidoyer",
+    "Gestion de projet",
+    "Solutions vertes",
+    "Mobilisation communautaire",
+    "Plaidoyer environnemental",
+    "Négociation climatique",
+    "Google Suite",
   ],
   languages: [
     "Français — courant (96%)",
@@ -293,10 +297,16 @@ export const sampleJuristeNavy: CV = {
     "Kabiyè — bonne pratique orale (43%)",
     "Éwé — bonne pratique orale (43%)",
   ],
-  interests: [
-    "Environnement & développement durable",
-    "Agroécologie & maraîchage biologique",
-    "Lecture & vulgarisation juridique",
+  interests: ["Environnement & développement durable", "Agroécologie", "Lecture"],
+  highlights: [
+    {
+      title: "Rigueur méthodologique",
+      text: "La formation juridique m'a permis de développer une approche structurée de la gestion de projet : analyse de contexte, rédaction de termes de référence, suivi d'indicateurs. Des réflexes méthodologiques que j'applique également à la conduite de projets numériques.",
+    },
+    {
+      title: "Terrain et outils numériques",
+      text: "La coordination d'équipes de terrain a renforcé mes capacités de documentation, de communication et de reporting, des compétences directement transférables à la gestion de projets numériques et à la relation client.",
+    },
   ],
 };
 
