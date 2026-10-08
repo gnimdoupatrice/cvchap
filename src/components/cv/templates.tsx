@@ -423,162 +423,157 @@ function EmeraldTech({ cv }: { cv: CV }) {
 function JuristeNavy({ cv }: { cv: CV }) {
   const experiences = cv.experiences.filter((e) => e.role || e.company || e.bullets.some(Boolean));
   const education = cv.education.filter((e) => e.degree || e.school);
+  const highlights = (cv.highlights ?? []).filter((h) => h.title || h.text);
+  const parseLang = (l: string) => {
+    const [name, rest = ""] = l.split("—").map((x) => x.trim());
+    const m = rest.match(/\((\d+)\s*%\)/);
+    const level = rest.replace(/\(\d+\s*%\)/, "").trim();
+    return { name, level, width: m ? `${m[1]}%` : languageLevel(l) };
+  };
 
   return (
     <div className="jn-page">
       <style>{`
-        .jn-page { width: 794px; min-height: 1123px; display: flex; background: #ffffff; color: #333333; font-family: Arial, sans-serif; }
-        .jn-side { width: 274px; flex-shrink: 0; background: #1c3f61; color: #ffffff; position: relative; overflow: hidden; }
-        .jn-side .halo { position: absolute; top: 0; left: 0; width: 272px; height: 272px; border-radius: 50%; background: #2c5583; }
+        .jn-page { --jn-head: "Poppins", "Segoe UI", Arial, sans-serif; width: 794px; min-height: 1123px; display: flex; background: #fff; color: #333; font-family: "Liberation Sans", Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left; }
+        .jn-page *, .jn-page *::before, .jn-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        .jn-side { width: 274px; flex: none; background: #1c3f61; color: #fff; position: relative; overflow: hidden; }
+        .jn-halo { position: absolute; top: 0; left: 0; width: 272px; height: 272px; border-radius: 50%; background: #2c5583; }
         .jn-photo { position: absolute; top: 53px; left: 49px; width: 174px; height: 174px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 9px 20px rgba(10,24,40,.45); }
-        .jn-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .jn-side-inner { position: relative; padding: 260px 30px 28px 30px; }
-        .jn-side h2 { font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; margin: 18px 0 9px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.28); }
-        .jn-label { color: #d9b24a; font-weight: 600; font-size: 8.5px; letter-spacing: .06em; text-transform: uppercase; margin-top: 10px; }
-        .jn-val { font-size: 11px; line-height: 1.35; margin-top: 3px; word-break: break-word; color: #f0f4f8; }
-        .jn-keys { list-style: none; font-size: 11px; font-weight: 600; line-height: 1.3; }
-        .jn-keys li { position: relative; padding-left: 14px; margin-bottom: 4px; }
-        .jn-keys li::before { content: "▸"; position: absolute; left: 0; top: 0; font-size: 8px; color: #d9b24a; }
-        .jn-bar-bg { height: 6px; border-radius: 3px; background: rgba(255,255,255,.2); margin-top: 4px; overflow: hidden; }
-        .jn-bar-fill { display: block; height: 100%; background: rgba(255,255,255,.7); border-radius: 3px; }
-
-        .jn-main { flex: 1; padding: 20px 30px 28px 30px; }
-        .jn-name { font-weight: 700; font-size: 31px; line-height: 1.12; color: #1a3a5c; text-transform: uppercase; }
-        .jn-sub { font-weight: 600; font-size: 14px; color: #2a5a8f; letter-spacing: .02em; text-transform: uppercase; margin-top: 10px; margin-bottom: 16px; }
-        .jn-main h2 { font-weight: 700; font-size: 17.5px; color: #1a3a5c; margin: 18px 0 10px; }
-        .jn-item { position: relative; padding-left: 19px; margin-bottom: 12px; }
+        .jn-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .jn-initial { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #2c5583; color: #fff; font-family: var(--jn-head); font-weight: 700; font-size: 56px; }
+        .jn-side-inner { position: relative; padding: 267px 34px 28px 34px; }
+        .jn-side h2 { font-family: var(--jn-head); font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; margin: 20px 0 9px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.28); }
+        .jn-side .jn-coord h2 { margin-top: 0; margin-bottom: 4px; border-bottom: 0; }
+        .jn-label { color: #d9b24a; font-family: var(--jn-head); font-weight: 500; font-size: 8.5px; letter-spacing: .06em; text-transform: uppercase; margin-top: 12px; }
+        .jn-value { font-size: 11px; line-height: 1.35; margin-top: 4px; word-break: break-word; }
+        .jn-keys { list-style: none; font-size: 11px; font-weight: 700; line-height: 1.25; }
+        .jn-keys li { position: relative; padding-left: 16px; margin-bottom: 3px; }
+        .jn-keys li::before { content: "▸"; position: absolute; left: 0; top: 1px; font-size: 8px; color: rgba(255,255,255,.85); }
+        .jn-lang { margin-top: 10px; }
+        .jn-lang:first-of-type { margin-top: 0; }
+        .jn-lang .jn-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 10.5px; color: rgba(255,255,255,.8); }
+        .jn-lang .jn-row i { font-size: 8.5px; color: rgba(255,255,255,.55); }
+        .jn-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.2); margin-top: 4px; overflow: hidden; }
+        .jn-bar span { display: block; height: 100%; background: rgba(255,255,255,.5); border-radius: 3px; }
+        .jn-interests { list-style: none; font-size: 10.5px; line-height: 1.4; color: rgba(255,255,255,.75); }
+        .jn-main { flex: 1; padding: 14px 26px 28px 28px; }
+        .jn-main h1 { font-family: var(--jn-head); font-weight: 700; font-size: 31px; line-height: 1.12; color: #1a3a5c; text-transform: uppercase; }
+        .jn-subtitle { font-family: var(--jn-head); font-weight: 500; font-size: 14px; color: #2a5a8f; letter-spacing: .02em; text-transform: uppercase; margin-top: 14px; }
+        .jn-main h2 { font-family: var(--jn-head); font-weight: 700; font-size: 17.5px; color: #1a3a5c; margin: 20px 0 10px; }
+        .jn-item { position: relative; padding-left: 19px; }
         .jn-item::before { content: ""; position: absolute; left: 0; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: #1a3a5c; }
         .jn-item::after { content: ""; position: absolute; left: 4px; top: 14px; bottom: -8px; width: 1px; background: #c3ccd8; }
-        .jn-item:last-child::after { display: none; }
-        .jn-head { display: flex; justify-content: space-between; align-items: baseline; }
-        .jn-head b { font-size: 13.5px; font-weight: 700; color: #1a3a5c; }
-        .jn-head em { font-size: 10.5px; color: #666; font-style: normal; }
-        .jn-item-sub { font-style: italic; font-size: 11px; color: #2a5a8f; margin-top: 2px; }
+        .jn-item.jn-last::after { display: none; }
+        .jn-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+        .jn-head b { font-size: 13.5px; font-weight: 700; color: #1a3a5c; line-height: 1.3; }
+        .jn-head em { font-size: 10.5px; color: #666; white-space: nowrap; }
+        .jn-sub { font-style: italic; font-size: 11px; color: #2a5a8f; margin-top: 3px; }
         .jn-item ul { list-style: none; margin: 5px 0 0 0; }
-        .jn-item li { position: relative; padding-left: 14px; font-size: 11px; line-height: 1.42; margin-bottom: 3px; }
-        .jn-item li::before { content: "•"; position: absolute; left: 0; color: #1a3a5c; }
+        .jn-item li { position: relative; padding-left: 15px; font-size: 11px; line-height: 1.42; margin-bottom: 3px; }
+        .jn-item li::before { content: "•"; position: absolute; left: 1px; color: #1a3a5c; }
+        .jn-exp { margin-bottom: 12px; }
+        .jn-edu { margin-bottom: 10px; }
+        .jn-main p { font-size: 12px; line-height: 1.5; text-align: justify; }
+        .jn-skill h3 { font-size: 12px; font-weight: 700; color: #1a3a5c; margin: 12px 0 4px; }
+        .jn-skill p { font-size: 10.5px; line-height: 1.42; }
       `}</style>
 
       <aside className="jn-side">
         <div className="jn-halo" />
         <div className="jn-photo">
           {cv.personal.photo ? (
-            <img src={cv.personal.photo} alt="" />
+            <img src={cv.personal.photo} alt={`Photo de ${cv.personal.name}`} />
           ) : (
-            <div className="w-full h-full bg-[#1c3f61] text-white flex items-center justify-center font-bold text-3xl">
-              {cv.personal.name ? cv.personal.name[0] : "J"}
-            </div>
+            <div className="jn-initial">{(cv.personal.name || "J").charAt(0)}</div>
           )}
         </div>
+
         <div className="jn-side-inner">
-          <h2>Coordonnées</h2>
-          {cv.personal.phone && (
-            <div>
-              <div className="jn-label">Téléphone</div>
-              <div className="jn-val">{cv.personal.phone}</div>
-            </div>
-          )}
-          {cv.personal.email && (
-            <div>
-              <div className="jn-label">Courriel</div>
-              <div className="jn-val">{cv.personal.email}</div>
-            </div>
-          )}
-          {cv.personal.location && (
-            <div>
-              <div className="jn-label">Adresse</div>
-              <div className="jn-val">{cv.personal.location}</div>
-            </div>
-          )}
-          {cv.personal.link && (
-            <div>
-              <div className="jn-label">Profil Pro</div>
-              <div className="jn-val">{cv.personal.link}</div>
-            </div>
-          )}
+          <div className="jn-coord">
+            <h2>Coordonnées</h2>
+            {cv.personal.phone && (<><div className="jn-label">Téléphone</div><div className="jn-value">{cv.personal.phone}</div></>)}
+            {cv.personal.email && (<><div className="jn-label">Courriel</div><div className="jn-value">{cv.personal.email}</div></>)}
+            {cv.personal.link && (<><div className="jn-label">Portfolio</div><div className="jn-value">{cv.personal.link}</div></>)}
+            {cv.personal.location && (<><div className="jn-label">Adresse</div><div className="jn-value">{cv.personal.location}</div></>)}
+          </div>
 
           {cv.skills.length > 0 && (
-            <div>
-              <h2>Compétences Clés</h2>
+            <>
+              <h2>Compétences clés</h2>
               <ul className="jn-keys">
-                {cv.skills.map((s) => (
-                  <li key={s}>{s}</li>
-                ))}
+                {cv.skills.map((s, i) => <li key={i}>{s}</li>)}
               </ul>
-            </div>
+            </>
           )}
 
           {cv.languages.length > 0 && (
-            <div>
+            <>
               <h2>Langues</h2>
-              {cv.languages.map((l) => (
-                <div key={l} style={{ marginTop: "8px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10.5px" }}>
-                    <span>{l.split("—")[0]}</span>
-                    <span style={{ opacity: 0.6 }}>{l.split("—")[1] || "Courant"}</span>
-                  </div>
-                  <div className="jn-bar-bg">
-                    <span className="jn-bar-fill" style={{ width: languageLevel(l) }} />
-                  </div>
-                </div>
-              ))}
-            </div>
+              <div>
+                {cv.languages.map((l, i) => {
+                  const p = parseLang(l);
+                  return (
+                    <div className="jn-lang" key={i}>
+                      <div className="jn-row"><span>{p.name}</span><i>{p.level}</i></div>
+                      <div className="jn-bar"><span style={{ width: p.width }} /></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          {cv.interests.length > 0 && (
+            <>
+              <h2>Centres d'intérêt</h2>
+              <ul className="jn-interests">
+                {cv.interests.map((x, i) => <li key={i}>{x}</li>)}
+              </ul>
+            </>
           )}
         </div>
       </aside>
 
       <main className="jn-main">
-        <h1 className="jn-name">{cv.personal.name || "BEYELI AKOU"}</h1>
-        <div className="jn-sub">{cv.title || "Juriste & Cadre d'Entreprise"}</div>
+        <h1>{cv.personal.name}</h1>
+        {cv.title && <div className="jn-subtitle">{cv.title}</div>}
 
-        {cv.summary && (
-          <div>
-            <h2>Profil</h2>
-            <p style={{ fontSize: "12px", lineHeight: "1.52", textAlign: "justify" }}>
-              {cv.summary}
-            </p>
-          </div>
-        )}
+        {cv.summary && (<><h2>Profil</h2><p>{cv.summary}</p></>)}
 
         {experiences.length > 0 && (
-          <div>
-            <h2>Expérience Professionnelle</h2>
-            <div>
-              {experiences.map((exp) => (
-                <div className="jn-item" key={exp.id}>
-                  <div className="jn-head">
-                    <b>{exp.role}</b>
-                    <em>{dates(exp.start, exp.end)}</em>
-                  </div>
-                  <div className="jn-item-sub">{exp.company}</div>
-                  {exp.bullets.length > 0 && (
-                    <ul>
-                      {exp.bullets.map((b, i) => (
-                        <li key={i}>{b}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
+          <>
+            <h2>Expérience professionnelle</h2>
+            {experiences.map((exp, i) => (
+              <div className={`jn-item jn-exp${i === experiences.length - 1 ? " jn-last" : ""}`} key={exp.id}>
+                <div className="jn-head"><b>{exp.role}</b><em>{dates(exp.start, exp.end)}</em></div>
+                {exp.company && <div className="jn-sub">{exp.company}</div>}
+                {exp.bullets.some(Boolean) && (
+                  <ul>{exp.bullets.filter(Boolean).map((b, k) => <li key={k}>{b}</li>)}</ul>
+                )}
+              </div>
+            ))}
+          </>
+        )}
+
+        {highlights.length > 0 && (
+          <>
+            <h2>Compétences transversales</h2>
+            <div className="jn-skill">
+              {highlights.map((h, i) => (<div key={i}><h3>{h.title}</h3><p>{h.text}</p></div>))}
             </div>
-          </div>
+          </>
         )}
 
         {education.length > 0 && (
-          <div>
+          <>
             <h2>Éducation</h2>
-            <div>
-              {education.map((edu) => (
-                <div className="jn-item" key={edu.id}>
-                  <div className="jn-head">
-                    <b>{edu.degree}</b>
-                    <em>{dates(edu.start, edu.end)}</em>
-                  </div>
-                  <div className="jn-item-sub">{edu.school}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+            {education.map((edu, i) => (
+              <div className={`jn-item jn-edu${i === education.length - 1 ? " jn-last" : ""}`} key={edu.id}>
+                <div className="jn-head"><b>{edu.degree}</b><em>{dates(edu.start, edu.end)}</em></div>
+                {edu.school && <div className="jn-sub">{edu.school}</div>}
+              </div>
+            ))}
+          </>
         )}
       </main>
     </div>
