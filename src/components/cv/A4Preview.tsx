@@ -5,7 +5,10 @@ import { CVTemplate } from "./templates";
 export const A4_W = 794; // 210mm @ 96dpi
 export const A4_H = 1123; // 297mm @ 96dpi
 
-/** Realistic A4 sheet with adaptive zoom and live overflow detection. */
+/**
+ * Feuille A4 réaliste avec zoom adaptatif à la largeur de l'écran
+ * et préservation stricte de la typographie de chaque gabarit.
+ */
 export function A4Preview({
   doc,
   onOverflowChange,
@@ -30,35 +33,33 @@ export function A4Preview({
 
   useLayoutEffect(() => {
     const el = contentRef.current;
-    if (el) onOverflowChange(el.scrollHeight > A4_H + 1);
+    if (el) onOverflowChange(el.scrollHeight > A4_H + 2);
   });
 
-  const s = doc.scale;
   const height = Math.max(A4_H, contentRef.current?.scrollHeight ?? A4_H);
 
   return (
     <div ref={wrapRef} className="flex w-full justify-center py-4">
       <div style={{ width: A4_W * zoom, height: height * zoom }}>
-        <div className="cv-zoom origin-top-left" style={{ transform: `scale(${zoom})`, width: A4_W }}>
-          <div id="cv-page" className="cv-paper relative shadow-paper" style={{ width: A4_W, minHeight: A4_H }}>
-            <div
-              ref={contentRef}
-              style={{
-                fontSize: `${13 * s}px`,
-                lineHeight: 1.25 + 0.25 * s,
-                ["--cv-gap" as string]: `${1.3 * s}em`,
-                ["--cv-pad" as string]: `${56 * s}px`,
-              }}
-            >
+        <div
+          className="cv-zoom origin-top-left"
+          style={{ transform: `scale(${zoom})`, width: A4_W }}
+        >
+          <div
+            id="cv-page"
+            className="cv-paper relative shadow-paper"
+            style={{ width: A4_W, minHeight: A4_H }}
+          >
+            <div ref={contentRef}>
               <CVTemplate cv={doc.cv} template={doc.template} />
             </div>
-            {height > A4_H && (
+            {height > A4_H + 2 && (
               <div
                 className="cv-pagebreak pointer-events-none absolute inset-x-0 border-t-2 border-dashed border-destructive"
                 style={{ top: A4_H }}
               >
                 <span className="absolute right-2 -top-6 rounded bg-destructive px-2 py-0.5 text-xs text-destructive-foreground">
-                  Fin de la page 1
+                  Fin de la page 1 (dépassement A4)
                 </span>
               </div>
             )}
