@@ -14,6 +14,7 @@ import {
   ZoomIn,
 } from "lucide-react";
 import { CVTemplate, templateMeta } from "@/components/cv/templates";
+import { A4Thumbnail } from "@/components/cv/A4Thumbnail";
 import { sampleMap, samples } from "@/lib/cv/samples";
 import { defaultDoc, saveDoc } from "@/lib/cv/storage";
 import type { InputMode, TemplateId } from "@/lib/cv/types";
@@ -137,18 +138,11 @@ function Home() {
                 </div>
 
                 {/* Cadre de la miniature A4 VISIBLE IMMÉDIATEMENT */}
-                <div className="relative h-[390px] w-full overflow-hidden rounded-xl border bg-muted/20 shadow-inner flex items-center justify-center">
-                  <div
-                    className="pointer-events-none origin-top transition-transform duration-200"
-                    style={{
-                      width: 794,
-                      height: 1123,
-                      transform: "scale(0.33)",
-                      transformOrigin: "top center",
-                      marginTop: "10px",
-                    }}
-                  >
-                    <CVTemplate cv={previewCV} template={t.id} />
+                <div className="relative w-full overflow-hidden rounded-xl border bg-muted/30 p-3">
+                  <div className="overflow-hidden rounded-sm shadow-md ring-1 ring-border">
+                    <A4Thumbnail>
+                      <CVTemplate cv={previewCV} template={t.id} />
+                    </A4Thumbnail>
                   </div>
 
                   {/* Bouton rapide plein écran en haut à droite */}
