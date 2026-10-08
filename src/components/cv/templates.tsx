@@ -845,7 +845,7 @@ function AdelineCapsule({ cv }: { cv: CV }) {
 }
 
 /* ========================================================
-   DISPATCHEUR PRINCIPAL    vbn     nngbfbgb
+   DISPATCHEUR PRINCIPAL
    ======================================================== */
 export function CVTemplate({ cv, template }: { cv: CV; template: TemplateId }) {
   switch (template) {
@@ -862,3 +862,4 @@ export function CVTemplate({ cv, template }: { cv: CV; template: TemplateId }) {
       return <FrenchBlue cv={cv} />;
   }
 }
+                    
