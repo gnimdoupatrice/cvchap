@@ -57,7 +57,7 @@ export interface CVDocument {
   cv: CV;
   template: TemplateId;
   mode: InputMode;
-  /** Facteur de densité A4 (1 = normal, inférieur = plus serré). */
+  /** Facteur de densité A4 (1 = normal, inférieur = plus serré).   ok ok ok ok  */
   scale: number;
 }
 
