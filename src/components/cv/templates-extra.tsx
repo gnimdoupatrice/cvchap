@@ -377,9 +377,9 @@ export function DrewFeig({ cv }: { cv: CV }) {
           </section>
           <section style={{ display: "flex", gap: 40 }}>
             {!!cv.references?.length && <div style={{ flex: 1 }}><H c="Reference" />
-              <div style={{ fontWeight: 700, fontSize: 16 }}>{cv.references[0].name}</div>
-              <div style={{ fontStyle: "italic", fontSize: 15 }}>{cv.references[0].company}</div>
-              <div style={{ fontSize: 14, marginTop: 6 }}>{cv.references[0].contact}</div>
+              <div style={{ fontWeight: 700, fontSize: 16 }}>{cv.references[0]?.name}</div>
+              <div style={{ fontStyle: "italic", fontSize: 15 }}>{cv.references[0]?.company}</div>
+              <div style={{ fontSize: 14, marginTop: 6 }}>{cv.references[0]?.contact}</div>
             </div>}
             {cv.languages.length > 0 && <div style={{ width: 240 }}><H c="Language" />
               {cv.languages.map((l, i) => (
