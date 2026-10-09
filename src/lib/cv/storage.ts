@@ -1,4 +1,4 @@
-import { sampleFrenchBlue } from "./samples";
+import { sampleEmeraldTech } from "./samples";
 import { type CVDocument, type TemplateId } from "./types";
 
 const DOC_KEY = "cvflow.doc.v1";
@@ -6,7 +6,6 @@ const CREDITS_KEY = "cvflow.credits.v1";
 export const FREE_CREDITS = 5;
 
 const VALID_TEMPLATES: TemplateId[] = [
-  "french-blue",
   "emerald-tech",
   "juriste-navy",
   "alfred-bold",
@@ -14,8 +13,8 @@ const VALID_TEMPLATES: TemplateId[] = [
 ];
 
 export const defaultDoc = (): CVDocument => ({
-  cv: sampleFrenchBlue,
-  template: "french-blue",
+  cv: sampleEmeraldTech,
+  template: "emerald-tech",
   mode: "form",
   scale: 1,
 });
@@ -29,7 +28,7 @@ export function loadDoc(): CVDocument {
       const validTemplate: TemplateId =
         stored.template && VALID_TEMPLATES.includes(stored.template as TemplateId)
           ? (stored.template as TemplateId)
-          : "french-blue";
+          : "emerald-tech";
 
       return {
         ...fallback,
