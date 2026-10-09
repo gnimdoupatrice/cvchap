@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "5 modèles A4 fidèles, Coach IA et export PDF compatible ATS sans inscription.",
+          "4 modèles A4 fidèles, Coach IA et export PDF compatible ATS sans inscription.",
       },
       { property: "og:title", content: "CVflow — Le catalogue de CV intelligent" },
       {
@@ -42,14 +42,14 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const navigate = useNavigate();
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>("french-blue");
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>("emerald-tech");
   const [exploringTemplate, setExploringTemplate] = useState<TemplateId | null>(null);
   const [mode, setMode] = useState<InputMode>("form");
 
   const start = (templateToUse?: TemplateId) => {
     const t = templateToUse ?? selectedTemplate;
     const doc = defaultDoc();
-    const cvData = sampleMap[t] || sampleMap["french-blue"];
+    const cvData = sampleMap[t] || sampleMap["emerald-tech"];
     saveDoc({ ...doc, cv: cvData, template: t, mode });
     navigate({ to: "/editor" });
   };
@@ -72,7 +72,7 @@ function Home() {
       {/* Hero */}
       <section className="mx-auto max-w-4xl px-6 pb-8 pt-10 text-center sm:pt-16">
         <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-soft">
-          <Sparkles className="h-3.5 w-3.5 text-primary" /> 5 modèles A4 haute fidélité · 100 % remplis
+          <Sparkles className="h-3.5 w-3.5 text-primary" /> 4 modèles A4 haute fidélité · 100 % remplis
         </span>
         <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
           Des CV conçus au millimètre, prêts à être personnalisés.
@@ -100,10 +100,10 @@ function Home() {
         </div>
       </section>
 
-      {/* Grille des 5 modèles avec miniature A4 visible immédiatement */}
+      {/* Grille des 4 modèles avec miniature A4 visible immédiatement */}
       <section className="mx-auto max-w-7xl px-6 py-10">
         <div className="text-center mb-10">
-          <h2 className="text-2xl font-bold tracking-tight">Catalogue de nos 5 modèles</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Catalogue de nos 4 modèles</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             L'aperçu miniature de chaque feuille A4 est chargé en direct.
           </p>

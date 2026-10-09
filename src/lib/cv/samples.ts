@@ -476,7 +476,6 @@ export const sampleMap: Record<TemplateId, CV> = {
 };
 
 export const samples = [
-  { id: "french-blue", label: "Cheffe de projet (Bleu moderne)", cv: sampleFrenchBlue },
   { id: "emerald-tech", label: "Développeur Web & Mobile (Émeraude)", cv: sampleEmeraldTech },
   { id: "juriste-navy", label: "Juriste & Cadre (Navy & Or)", cv: sampleJuristeNavy },
   { id: "alfred-bold", label: "Informaticien (Bold Minimal)", cv: sampleAlfredBold },

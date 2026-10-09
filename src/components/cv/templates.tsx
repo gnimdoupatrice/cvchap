@@ -420,11 +420,12 @@ function AlfredBold({ cv }: { cv: CV }) {
         
         .ab-abs { position: absolute; }
         .ab-h { font-family: var(--head); font-weight: 800; text-transform: uppercase; }
-        .ab-side .ab-h { color: #fff; font-size: 18px; line-height: 22px; letter-spacing: .14em; left: 49px; white-space: nowrap; }
-        .ab-side .ab-t { position: absolute; left: 49px; width: 240px; color: #fff; font-size: 15px; }
+        .ab-flow { position: absolute; left: 49px; top: 382px; right: 24px; bottom: 28px; display: flex; flex-direction: column; gap: 22px; overflow: hidden; }
+        .ab-side .ab-h { color: #fff; font-size: 18px; line-height: 22px; letter-spacing: .14em; margin-bottom: 8px; }
+        .ab-side .ab-t { width: 254px; color: #fff; font-size: 15px; overflow-wrap: anywhere; }
         .ab-side .ab-t p { margin: 0; }
-        .ab-side .ab-comp p { line-height: 21.8px; margin-bottom: 10.2px; }
-        .ab-side .ab-int p { line-height: 21.8px; margin-bottom: 9.2px; }
+        .ab-side .ab-comp p { line-height: 20px; margin-bottom: 6px; }
+        .ab-side .ab-int p { line-height: 20px; margin-bottom: 6px; }
         
         .ab-main-title { position: absolute; left: 366px; top: 121px; font-family: var(--head); font-weight: 900; font-size: 62px; line-height: 73px; letter-spacing: .02em; text-transform: uppercase; color: var(--dark); }
         .ab-job { font-family: var(--head); font-weight: 800; font-size: 13px; line-height: 18px; text-transform: uppercase; left: 391px; white-space: nowrap; color: var(--dark); }
@@ -446,40 +447,44 @@ function AlfredBold({ cv }: { cv: CV }) {
           )}
         </div>
 
-        <div className="ab-abs ab-h" style={{ top: "382px" }}>Coordonnées</div>
-        <div className="ab-t" style={{ top: "413px", lineHeight: "25.4px" }}>
-          {cv.personal.location && <p>{cv.personal.location}</p>}
-          {cv.personal.email && <p>{cv.personal.email}</p>}
-          {cv.personal.phone && <p>{cv.personal.phone}</p>}
-          {cv.personal.link && <p>{cv.personal.link}</p>}
+        <div className="ab-flow">
+          <section>
+            <div className="ab-h">Coordonnées</div>
+            <div className="ab-t" style={{ lineHeight: "25.4px" }}>
+              {cv.personal.location && <p>{cv.personal.location}</p>}
+              {cv.personal.email && <p>{cv.personal.email}</p>}
+              {cv.personal.phone && <p>{cv.personal.phone}</p>}
+              {cv.personal.link && <p>{cv.personal.link}</p>}
+            </div>
+          </section>
+
+          {cv.languages.length > 0 && (
+            <section>
+              <div className="ab-h">Langues</div>
+              <div className="ab-t" style={{ lineHeight: "25.1px" }}>
+                {cv.languages.map((l, i) => <p key={i}>{l}</p>)}
+              </div>
+            </section>
+          )}
+
+          {cv.skills.length > 0 && (
+            <section>
+              <div className="ab-h">Compétences</div>
+              <div className="ab-t ab-comp">
+                {cv.skills.map((s, i) => <p key={i}>{s}</p>)}
+              </div>
+            </section>
+          )}
+
+          {cv.interests.length > 0 && (
+            <section>
+              <div className="ab-h">Centres<br />d'intérêts</div>
+              <div className="ab-t ab-int">
+                {cv.interests.map((x, i) => <p key={i}>{x}</p>)}
+              </div>
+            </section>
+          )}
         </div>
-
-        {cv.languages.length > 0 && (
-          <>
-            <div className="ab-abs ab-h" style={{ top: "560px" }}>Langues</div>
-            <div className="ab-t" style={{ top: "588px", lineHeight: "25.1px" }}>
-              {cv.languages.map((l, i) => <p key={i}>{l}</p>)}
-            </div>
-          </>
-        )}
-
-        {cv.skills.length > 0 && (
-          <>
-            <div className="ab-abs ab-h" style={{ top: "683px" }}>Compétences</div>
-            <div className="ab-t ab-comp" style={{ top: "720px" }}>
-              {cv.skills.map((s, i) => <p key={i}>{s}</p>)}
-            </div>
-          </>
-        )}
-
-        {cv.interests.length > 0 && (
-          <>
-            <div className="ab-abs ab-h" style={{ top: "927px" }}>Centres<br />d'intérêts</div>
-            <div className="ab-t ab-int" style={{ top: "987px" }}>
-              {cv.interests.map((x, i) => <p key={i}>{x}</p>)}
-            </div>
-          </>
-        )}
       </aside>
 
       <h1 className="ab-main-title">
