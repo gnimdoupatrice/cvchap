@@ -1,67 +1,72 @@
 import { uid, type CV, type TemplateId } from "./types";
 
+/* ==========================================================================
+   Jeux de données d'exemple — un CV complet et réaliste par modèle.
+   Chaque jeu est calibré pour remplir ~98 % de la première page A4.
+   ========================================================================== */
+
 export const sampleFrenchBlue: CV = {
   personal: {
     name: "Sacha Dubois",
-    email: "sacha.dubois@email.fr",
-    phone: "+33 6 12 34 56 78",
-    location: "Paris, France",
-    link: "linkedin.com/in/sachadubois",
+    email: "hello@reallygreatsite.com",
+    phone: "123-456-7890",
+    location: "123 Anywhere St., Any City",
+    link: "",
   },
-  title: "Chargée de Projet & Transformation Digitale",
+  title: "Chargée de projet",
   summary:
-    "Professionnelle certifiée PMP avec 7 ans d'expérience dans la conduite de projets digitaux et transverses complexes. Reconnue pour sa capacité à fédérer des équipes pluridisciplinaires, optimiser les processus opérationnels et livrer des résultats quantifiables dans le respect strict des délais et budgets.",
+    "Chargée de projet rigoureuse et fédératrice, je pilote des projets transverses de la planification à la livraison, en veillant au respect des délais, des budgets et de la qualité attendue.",
   experiences: [
     {
       id: uid(),
-      role: "Cheffe de Projet Digital Senior",
-      company: "Groupe Nexus Innovations",
-      start: "2022",
-      end: "Présent",
+      role: "Chargée de Projet",
+      company: "Really Great Company - Any City",
+      start: "Depuis janvier",
+      end: "2020",
       bullets: [
-        "Direction du déploiement de la plateforme e-santé unifiée touchant plus de 450 000 utilisateurs actifs.",
-        "Management agile d'une escouade de 14 personnes (développeurs, UX/UI, analystes QA).",
-        "Réduction de 28 % du délai de mise en production grâce à la rationalisation des cycles de sprint.",
-        "Gestion d'un budget annuel de 1,4 M€ avec un taux d'adhérence financière de 98,5 %.",
+        "Élaboration du plan de projet et gestion des calendriers",
+        "Gestion des ressources et du budget",
+        "Gestion des risques (identification des risques, réaction aux imprévus)",
       ],
     },
     {
       id: uid(),
-      role: "Responsable de Projet Opérations",
-      company: "Cabinet Altius Conseil",
-      start: "2019",
-      end: "2022",
+      role: "Assistante Chargée de Projet",
+      company: "Really Great Company - Any City",
+      start: "Septembre 2018",
+      end: "Janvier 2020",
       bullets: [
-        "Pilotage de 8 projets de transformation numérique pour des acteurs bancaires et assurantiels majeurs.",
-        "Conduite du changement auprès de 1 200 collaborateurs avec un taux d'adoption de 94 % à 6 mois.",
+        "Rédaction des rapports de progression",
+        "Participation aux réunions de suivi de projet",
+        "Suivi de l'avancement des projets en collaboration avec les équipes concernées",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Stagiaire Chargée de Projet",
+      company: "Really Great Company - Any City",
+      start: "Février 2018",
+      end: "Juin 2018",
+      bullets: [
+        "Aide pour définir les objectifs et les périmètres du projet",
+        "Participation à l'élaboration des plans de projet (échéanciers, jalons et livrables)",
       ],
     },
   ],
   education: [
-    {
-      id: uid(),
-      degree: "Master 2 Management International de Projets",
-      school: "Université Paris-Dauphine",
-      start: "2015",
-      end: "2017",
-    },
+    { id: uid(), degree: "Master en Management", school: "Really Great School - Any City", start: "2016", end: "2018" },
+    { id: uid(), degree: "Licence en Gestion Administrative", school: "Really Great School - Any City", start: "2013", end: "2016" },
   ],
   skills: [
-    "Gestion de projet Agile (Scrum / Kanban)",
-    "Planification stratégique & Roadmap",
-    "Conduite du changement",
-    "Gestion budgétaire & ROI",
-    "Jira · Confluence · Asana",
+    "Gestion du temps",
+    "Capacités d'organisation",
+    "Communication",
+    "Leadership",
+    "Logiciels de gestion de projet",
+    "Gestion de budget",
   ],
-  languages: [
-    "Français — langue maternelle",
-    "Anglais — courant C1",
-    "Espagnol — professionnel B2",
-  ],
-  interests: [
-    "Voyages & immersion culturelle",
-    "Course à pied (semi-marathon)",
-  ],
+  languages: ["Anglais — courant (80%)", "Allemand — intermédiaire (55%)"],
+  interests: ["Lecture", "Randonnée", "Gymnastique"],
 };
 
 export const sampleEmeraldTech: CV = {
@@ -78,22 +83,13 @@ export const sampleEmeraldTech: CV = {
   experiences: [
     {
       id: uid(),
-      role: "Startup personnelle",
+      role: "Startup personnelle — Fondateur & développeur",
       company: "RECYC HUB TOGO",
       start: "2025",
       end: "Présent",
       bullets: [
-        "Plateforme phygitale de gestion des déchets à Kara : rachat de plastiques au kilo (cash ou Mobile Money), enlèvement de déchets ménagers à domicile et signalement géolocalisé de dépotoirs sauvages. Volet B2B de pilotage de tournées pour entreprises de pré-collecte. Stack : React, Tailwind CSS, Vercel.",
-      ],
-    },
-    {
-      id: uid(),
-      role: "Portfolio personnel",
-      company: "Portfolio — Juriste et Développeur",
-      start: "2025",
-      end: "2026",
-      bullets: [
-        "Site vitrine personnel présentant le double profil en droit de l'environnement et en développement web, avec intégration des projets tech, des publications juridiques et un formulaire de contact direct. Stack : HTML5, CSS3, JavaScript, Vercel.",
+        "Plateforme phygitale de gestion des déchets à Kara : rachat de plastiques au kilo (cash ou Mobile Money), enlèvement à domicile et signalement géolocalisé de dépotoirs sauvages.",
+        "Volet B2B de pilotage de tournées pour les entreprises de pré-collecte. Stack : React, Tailwind CSS, Vercel.",
       ],
     },
     {
@@ -103,24 +99,52 @@ export const sampleEmeraldTech: CV = {
       start: "2025",
       end: "2026",
       bullets: [
-        "Plateforme professionnelle complète pour un cabinet d'avocats togolais : domaines d'expertise, profils des associés, prise de rendez-vous en ligne et actualités juridiques. Stack : React, Tailwind CSS, Vercel.",
+        "Plateforme professionnelle complète : domaines d'expertise, profils des associés, prise de rendez-vous en ligne et actualités juridiques.",
+        "Optimisation SEO et accessibilité. Stack : React, Tailwind CSS, Vercel.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Projet associatif",
+      company: "Plateforme CAJS Kara",
+      start: "2025",
+      end: "2026",
+      bullets: [
+        "Site institutionnel du Centre d'Actions Juridiques et Sociales : programmes, actualités, formulaire de signalement et espace partenaires.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Portfolio personnel",
+      company: "Portfolio — Juriste et Développeur",
+      start: "2025",
+      end: "2026",
+      bullets: [
+        "Site vitrine présentant le double profil droit de l'environnement / développement web, publications juridiques et contact direct. Stack : HTML5, CSS3, JavaScript.",
       ],
     },
   ],
   education: [
     {
       id: uid(),
-      degree: "Certificat de fin de formation Développeur Web et Mobile",
-      school: "Institut Supérieur de Management et du Bâtiment (ISMB) — Kara, Togo",
+      degree: "Certificat Développeur Web et Mobile",
+      school: "Institut Supérieur de Management et du Bâtiment (ISMB) — Kara",
       start: "2025",
       end: "2026",
     },
     {
       id: uid(),
-      degree: "Master I en Droit — Parcours Justice et Droit du Procès",
+      degree: "Master I en Droit — Justice et Droit du Procès",
       school: "Faculté de Droit et des Sciences Politiques, Université de Kara",
       start: "2024",
       end: "2025",
+    },
+    {
+      id: uid(),
+      degree: "Licence en Droit Public",
+      school: "Université de Kara",
+      start: "2021",
+      end: "2023",
     },
   ],
   skills: [
@@ -128,23 +152,28 @@ export const sampleEmeraldTech: CV = {
     "JavaScript (ES6+)",
     "React / Next.js",
     "Tailwind CSS",
+    "React Native / Flutter",
     "Git / GitHub",
-    "Vercel Deployment",
+    "Déploiement Vercel",
     "Responsive Design",
     "Outils IA & No-Code",
     "Accessibilité Web",
   ],
   languages: [
-    "Français — langue officielle (très bon niveau écrit et oral)",
-    "Anglais — notions de base",
-    "Kotokoli — langue maternelle",
-    "Kabiyè — bonne pratique orale",
-    "Éwé — bonne pratique orale",
+    "Français — courant (95%)",
+    "Anglais — notions (40%)",
+    "Kotokoli — maternelle (100%)",
+    "Kabiyè — oral (70%)",
+    "Éwé — oral (60%)",
   ],
   interests: [
-    "Agroécologie & protection environnementale",
-    "Recherche en droit du numérique et IA",
-    "Lecture et vulgarisation technologique",
+    "Agroécologie & environnement",
+    "Droit du numérique et IA",
+    "Vulgarisation technologique",
+  ],
+  highlights: [
+    { title: "Rigueur juridique appliquée au code", text: "" },
+    { title: "Gestion de projet de bout en bout", text: "" },
   ],
 };
 
@@ -158,7 +187,7 @@ export const sampleJuristeNavy: CV = {
   },
   title: "Juriste environnementaliste",
   summary:
-    "Juriste environnementaliste fort de trois années d'expérience en tant que coordonnateur du département Environnement et ODD au Centre d'Actions Juridiques et Sociales (CAJS Kara), je suis passionné par la transition écologique, l'agriculture durable et le développement communautaire.",
+    "Juriste environnementaliste fort de trois années d'expérience en tant que coordonnateur du département Environnement et ODD au Centre d'Actions Juridiques et Sociales (CAJS Kara), je suis passionné par la transition écologique, l'agriculture durable et le développement communautaire. J'accompagne les collectivités et les organisations dans la mise en conformité réglementaire et la conduite de projets à impact.",
   experiences: [
     {
       id: uid(),
@@ -167,39 +196,40 @@ export const sampleJuristeNavy: CV = {
       start: "2023",
       end: "Présent",
       bullets: [
-        "Coordination des stagiaires.",
+        "Coordination et encadrement des stagiaires du département.",
         "Animation des formations sur la rédaction des documents administratifs.",
-        "Animation sur la rédaction de projet et de termes de référence.",
-        "Monitoring des droits humains.",
+        "Animation d'ateliers sur la rédaction de projets et de termes de référence.",
+        "Monitoring des droits humains et rédaction de rapports trimestriels.",
       ],
     },
     {
       id: uid(),
       role: "Programme Green Week — Plaidoyer et Action Climat",
-      company: "",
+      company: "CAJS Kara & partenaires communautaires",
       start: "2023",
       end: "Présent",
       bullets: [
         "Animation d'ateliers de renforcement de capacités sur les techniques de reboisement et d'entretien des plants.",
         "Coordination opérationnelle de campagnes de reboisement communautaire.",
+        "Sensibilisation des jeunes au compostage et au bokashi.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Stagiaire juriste",
+      company: "Clinique juridique — Université de Kara",
+      start: "2022",
+      end: "2023",
+      bullets: [
+        "Accueil, écoute et orientation juridique des justiciables.",
+        "Recherche documentaire et rédaction de notes juridiques.",
       ],
     },
   ],
   education: [
-    {
-      id: uid(),
-      degree: "Master I Justice et Droit du Procès",
-      school: "Université de Kara",
-      start: "2024",
-      end: "2025",
-    },
-    {
-      id: uid(),
-      degree: "Licence Droit Public",
-      school: "Université de Kara",
-      start: "2021",
-      end: "2023",
-    },
+    { id: uid(), degree: "Master I Justice et Droit du Procès", school: "Université de Kara", start: "2024", end: "2025" },
+    { id: uid(), degree: "Licence Droit Public", school: "Université de Kara", start: "2021", end: "2023" },
+    { id: uid(), degree: "Certificat Développeur Web et Mobile", school: "ISMB — Kara", start: "2025", end: "2026" },
   ],
   skills: [
     "Droit de l'environnement",
@@ -214,16 +244,14 @@ export const sampleJuristeNavy: CV = {
   languages: [
     "Français — courant (96%)",
     "Anglais — intermédiaire (58%)",
-    "Kotokoli — bonne pratique orale (43%)",
-    "Kabiyè — bonne pratique orale (43%)",
-    "Éwé — bonne pratique orale (43%)",
+    "Kotokoli — oral (43%)",
+    "Kabiyè — oral (43%)",
+    "Éwé — oral (43%)",
   ],
   interests: ["Environnement & développement durable", "Agroécologie", "Lecture"],
   highlights: [
-    {
-      title: "Rigueur méthodologique",
-      text: "La formation juridique m'a permis de développer une approche structurée de la gestion de projet.",
-    },
+    { title: "Rigueur méthodologique", text: "" },
+    { title: "Animation & pédagogie", text: "" },
   ],
 };
 
@@ -237,7 +265,7 @@ export const sampleAlfredBold: CV = {
   },
   title: "Informaticien",
   summary:
-    "Développeur full-stack et administrateur système rigoureux, passionné par la robustesse des infrastructures et la fluidité des interfaces. 10 ans d'expérience dans la conception d'architectures web résilientes et la maintenance de réseaux hautement sécurisés.",
+    "Développeur full-stack et administrateur système rigoureux, passionné par la robustesse des infrastructures et la fluidité des interfaces. Plus de dix ans d'expérience dans la conception d'architectures web résilientes et la maintenance de réseaux hautement sécurisés.",
   experiences: [
     {
       id: uid(),
@@ -246,44 +274,48 @@ export const sampleAlfredBold: CV = {
       start: "Février 2017",
       end: "Présent",
       bullets: [
-        "Développement et maintenance d'applications web scalables à fort trafic.",
-        "Collaboration étroite avec les équipes de design pour créer des interfaces utilisateur intuitives.",
-        "Optimisation poussée des performances des applications.",
+        "Développement et maintenance d'applications web à fort trafic.",
+        "Collaboration avec les équipes de conception pour créer des interfaces utilisateur intuitives.",
+        "Optimisation des performances et réduction de 40 % des temps de chargement.",
       ],
     },
     {
       id: uid(),
       role: "Administrateur système et réseau",
-      company: "Audio Stream - Lyon, France",
+      company: "Audio Stream, Lyon, France",
       start: "Août 2013",
       end: "Janvier 2017",
       bullets: [
-        "Gestion quotidienne des infrastructures réseaux et des parcs de serveurs virtualisés.",
-        "Déploiement et supervision des politiques de sécurité et pare-feux d'entreprise.",
+        "Gestion des infrastructures réseau et des serveurs virtualisés.",
+        "Mise en place des politiques de sécurité et des pare-feux d'entreprise.",
+        "Support technique de niveau 2 auprès de 250 collaborateurs.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Technicien informatique",
+      company: "Datacom Services, Lyon, France",
+      start: "Septembre 2012",
+      end: "Juillet 2013",
+      bullets: [
+        "Installation et configuration des postes de travail et périphériques.",
+        "Diagnostic et résolution des incidents matériels et logiciels.",
       ],
     },
   ],
   education: [
-    {
-      id: uid(),
-      degree: "Master en Informatique",
-      school: "École Amédé Autran, Paris, France",
-      start: "2010",
-      end: "2012",
-    },
+    { id: uid(), degree: "Master en Informatique", school: "École Amédé Autran, Paris", start: "2010", end: "2012" },
+    { id: uid(), degree: "Licence en Informatique", school: "Université Lumière, Lyon", start: "2007", end: "2010" },
   ],
   skills: [
-    "Langages (JavaScript, Python, C++)",
-    "Bases relationnelles & NoSQL",
-    "Systèmes Linux & Windows Server",
+    "Langages de programmation (JavaScript, Python, C++)",
+    "Bases de données SQL & NoSQL",
+    "Systèmes d'exploitation Linux & Windows Server",
     "Réseaux, sécurité & Docker",
+    "Excellentes compétences en résolution de problèmes et en dépannage",
   ],
-  languages: [
-    "Français — langue maternelle",
-    "Anglais — courant C1",
-    "Espagnol — intermédiaire B1",
-  ],
-  interests: ["Veille technologique & Open Source", "Photographie", "Lecture scientifique"],
+  languages: ["Français — langue maternelle", "Anglais — courant", "Espagnol — intermédiaire"],
+  interests: ["Technologie", "Photographie", "Lecture"],
 };
 
 export const sampleAdelineCapsule: CV = {
@@ -296,43 +328,62 @@ export const sampleAdelineCapsule: CV = {
   },
   title: "Graphic Designer",
   summary:
-    "Directrice artistique et designer graphique polyvalente avec plus de 8 années d'expérience en agence créative et en studio. Experte en identité de marque, design éditorial et création d'expériences utilisateur mémorables.",
+    "Designer graphique polyvalente avec plus de huit années d'expérience en agence et en studio. Experte en identité de marque, design éditorial et création d'expériences visuelles mémorables, je transforme les objectifs de mes clients en univers graphiques cohérents et impactants.",
   experiences: [
     {
       id: uid(),
       role: "Lead Graphic Designer",
       company: "Aldenaire & Partners",
-      start: "Jan 2021",
+      start: "2021",
       end: "Présent",
       bullets: [
-        "Direction artistique de campagnes de communication à 360° pour des marques de luxe.",
-        "Supervision d'une équipe de 5 designers juniors.",
+        "Direction artistique de campagnes de communication à 360° pour des marques premium.",
+        "Supervision et accompagnement d'une équipe de 5 designers juniors.",
+        "Création de chartes graphiques complètes pour 12 nouveaux clients.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Graphic Designer",
+      company: "Borcelle Studio",
+      start: "2018",
+      end: "2021",
+      bullets: [
+        "Conception d'identités visuelles, packagings et supports imprimés.",
+        "Collaboration étroite avec les équipes marketing et les clients.",
+        "Production de visuels pour les réseaux sociaux et le web.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Junior Graphic Designer",
+      company: "Fauget Agency",
+      start: "2016",
+      end: "2018",
+      bullets: [
+        "Mise en page de catalogues, brochures et rapports annuels.",
+        "Retouche photo et préparation des fichiers pour l'impression.",
       ],
     },
   ],
   education: [
-    {
-      id: uid(),
-      degree: "Master of Design",
-      school: "Really Great University — Any City",
-      start: "2016",
-      end: "2020",
-    },
+    { id: uid(), degree: "Master of Design", school: "Really Great University", start: "2014", end: "2016" },
+    { id: uid(), degree: "Bachelor of Fine Arts", school: "Wardiere University", start: "2011", end: "2014" },
   ],
   skills: [
     "Adobe Creative Cloud",
-    "Figma & Prototypage UX/UI",
-    "Direction artistique & Branding",
-    "Typographie & Édition",
+    "Figma & prototypage UX/UI",
+    "Direction artistique",
+    "Identité de marque",
+    "Typographie & édition",
+    "Motion design",
+    "Gestion de projet créatif",
   ],
   languages: ["Anglais — bilingue", "Français — courant", "Espagnol — intermédiaire"],
-  interests: ["Design typographique", "Expositions d'art contemporain"],
+  interests: ["Design typographique", "Art contemporain"],
   references: [
-    {
-      name: "Alfredo Torres",
-      company: "Directeur, Aldenaire & Partners",
-      contact: "+123-456-7890",
-    },
+    { name: "Alfredo Torres", company: "Directeur, Aldenaire & Partners", contact: "+123-456-7890" },
+    { name: "Harumi Kobayashi", company: "CEO, Borcelle Studio", contact: "hello@reallygreatsite.com" },
   ],
 };
 
@@ -342,189 +393,225 @@ export const sampleMichaelHenson: CV = {
     email: "hello@reallygreatsite.com",
     phone: "+123-456-7890",
     location: "123 Anywhere St., Any City",
-    link: "reallygreatsite.com",
+    link: "www.reallygreatsite.com",
   },
-  title: "Commercial & Business Developer",
+  title: "Sales Representative",
   summary:
-    "Professionnel de la vente et du développement commercial avec 6 ans d'expérience dans l'acquisition de grands comptes, la négociation stratégique et la fidélisation client.",
+    "Commercial expérimenté qui initie et entretient des relations durables avec les clients. Interlocuteur privilégié, j'accompagne chaque client du premier contact jusqu'à la signature, avec une approche fondée sur l'écoute, la négociation et le suivi.",
   experiences: [
     {
       id: uid(),
-      role: "Key Account Manager",
-      company: "Giganet Telecom",
-      start: "2021",
-      end: "Présent",
+      role: "Sales Representative",
+      company: "Timmerman Industries",
+      start: "2020",
+      end: "2023",
       bullets: [
-        "Croissance de +35 % du chiffre d'affaires sur le portefeuille grands comptes.",
-        "Négociation de contrats cadres pluriannuels d'une valeur de plus de 2 M€.",
+        "Offre de packages de biens de consommation aux entreprises et clients.",
+        "Rencontres trimestrielles avec les clients pour mettre à jour les services.",
+        "Formation des commerciaux juniors.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "FMCG Sales Agent",
+      company: "Timmerman Industries",
+      start: "2017",
+      end: "2019",
+      bullets: [
+        "Visites des bureaux clients pour présenter les derniers produits.",
+        "Relations clients durables pour atteindre les objectifs de vente.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Sales Agent",
+      company: "Timmerman Industries",
+      start: "2014",
+      end: "2017",
+      bullets: [
+        "Prospection de nouveaux comptes entreprises.",
+        "Renouvellement trimestriel des contrats de service.",
       ],
     },
   ],
   education: [
-    {
-      id: uid(),
-      degree: "Master en Négociation Commerciale",
-      school: "Business School Paris",
-      start: "2017",
-      end: "2019",
-    },
+    { id: uid(), degree: "Bachelor of Business Management", school: "Borcelle University", start: "2016", end: "2020" },
+    { id: uid(), degree: "Bachelor of Business Management", school: "Wardiere University", start: "2012", end: "2016" },
   ],
   skills: [
-    "Prospection B2B & Closing",
-    "Gestion de portefeuille grands comptes",
-    "CRM Salesforce & HubSpot",
-    "Négociation contractuelle",
+    "Client Acquisition",
+    "B2B Sales",
+    "Negotiation",
+    "Relationship Management",
+    "Market Analysis",
+    "Problem-Solving",
+    "Time Management",
+    "Networking",
   ],
-  languages: ["Français — langue maternelle", "Anglais — courant C1"],
+  languages: ["English — native", "German — basic"],
   interests: ["Golf", "Économie internationale"],
+  references: [
+    { name: "Bailey Dupont", company: "Wardiere Inc. / CEO", contact: "123-456-7890" },
+    { name: "Harumi Kobayashi", company: "Wardiere Inc. / CEO", contact: "123-456-7890" },
+  ],
 };
 
 export const sampleElviraMontanez: CV = {
   personal: {
     name: "Dr. Elvira Montanez, MD",
-    email: "elvira.montanez@hospital.org",
-    phone: "+1 555 019 2834",
-    location: "Chicago, IL, États-Unis",
-    link: "drelviramontanez.com",
+    email: "hello@reallygreatsite.com",
+    phone: "+123-456-7890",
+    location: "www.reallygreatsite.com",
+    link: "linkedin.com/in/name",
   },
-  title: "Médecin Spécialiste & Santé Publique",
+  title: "Geriatric Medicine",
   summary:
-    "Praticienne hospitalière engagée avec plus de 9 ans d'expertise clinique, de coordination d'unités de soins intensifs et d'enseignement médical.",
+    "Médecin gériatre attentive et engagée, spécialisée dans la prise en charge globale des patients âgés, les soins palliatifs et la prévention en santé publique.",
   experiences: [
     {
       id: uid(),
-      role: "Praticien Hospitalier Titulaire",
-      company: "Chicago Central Hospital",
-      start: "2019",
-      end: "Présent",
+      role: "Physician",
+      company: "East Forge Medical",
+      start: "Mars 2022",
+      end: "Août 2025",
       bullets: [
-        "Coordination d'un service de 28 lits et encadrement de 6 internes.",
-        "Mise en place de protocoles de soins réduisant les durées moyennes de séjour.",
+        "Supervision des médecins en formation, en hausse annuelle de 30 %.",
+        "Éducation sanitaire du public : baisse de 5 % des grippes sévères.",
+        "Dossiers médicaux complets : efficacité améliorée de 30 %.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Resident Physician",
+      company: "Roseton General Hospital",
+      start: "2021",
+      end: "2022",
+      bullets: [
+        "Prise en charge de 20 patients gériatriques par jour.",
+        "Participation aux réunions pluridisciplinaires de soins palliatifs.",
       ],
     },
   ],
   education: [
-    {
-      id: uid(),
-      degree: "Doctorat d'État en Médecine (MD)",
-      school: "University of Illinois College of Medicine",
-      start: "2010",
-      end: "2016",
-    },
+    { id: uid(), degree: "Doctor of Medicine", school: "University of Roseton", start: "", end: "Class of 2021" },
+    { id: uid(), degree: "Bachelor of Science in Human Biology", school: "De Loureigh University", start: "", end: "Class of 2015" },
   ],
   skills: [
-    "Prise en charge clinique d'urgence",
-    "Recherche translationnelle",
-    "Coordination d'équipes soignantes",
-    "Audit qualité hospitalier",
+    "Hospice and Palliative Care",
+    "Rheumatology",
+    "Geriatric Medicine",
+    "Chronic Disease Management",
+    "Patient Education",
   ],
-  languages: [
-    "Anglais — langue maternelle",
-    "Espagnol — bilingue",
-    "Français — intermédiaire B2",
+  languages: ["English — native", "Spanish — fluent"],
+  interests: [],
+  highlights: [
+    { title: "Member, Society of Hospice and Palliative Medicine", text: "2022 to Present" },
+    { title: "Volunteer Physician, Lily River Children's Foundation", text: "2021" },
   ],
-  interests: ["Humanitaire médical", "Violoncelle"],
 };
 
 export const sampleEmmaBrooks: CV = {
   personal: {
     name: "Emma Brooks",
-    email: "emma@brooksdesign.co",
-    phone: "+44 20 7946 0912",
-    location: "Londres, Royaume-Uni",
-    link: "emmabrooks-interior.co.uk",
+    email: "hello@reallygreatsite.com",
+    phone: "+123-456-7890",
+    location: "123 Anywhere St., Any City",
+    link: "",
   },
-  title: "Architecte d'Intérieur & Scénographe",
+  title: "Interior Architect",
   summary:
-    "Créatrice d'espaces habités alliant sensibilité des matières naturelles, optimisation de la lumière et intégration de concepts écologiques contemporains.",
+    "Architecte d'intérieur forte de 9 ans d'expérience dans la conception d'espaces hôteliers, professionnels et résidentiels. Je crée des environnements fonctionnels qui concilient besoins des usagers, caractère des matériaux et objectifs commerciaux.",
   experiences: [
     {
       id: uid(),
-      role: "Fondatrice & Directrice de Création",
-      company: "Brooks Atelier Studio",
-      start: "2020",
-      end: "Présent",
+      role: "Senior Interior Architect",
+      company: "Innovation Systems",
+      start: "2022",
+      end: "Present",
       bullets: [
-        "Conception et aménagement de plus de 30 résidences privées et boutiques haut de gamme.",
-        "Gestion globale des chantiers de la phase esquisse jusqu'à la livraison finale.",
+        "Pilotage du développement des concepts et de la livraison des projets hôteliers et tertiaires. Coordination d'équipes pluridisciplinaires, de la planification à la réception.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Interior Architect",
+      company: "Collab Studio",
+      start: "2019",
+      end: "2022",
+      bullets: [
+        "Conception d'espaces de travail et d'intérieurs hôteliers : plans d'aménagement, concepts matériaux et dossiers techniques. Réduction de 21 % des déchets de chantier.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Junior Designer",
+      company: "Creative Collective",
+      start: "2016",
+      end: "2019",
+      bullets: [
+        "Plans d'aménagement, présentations, documentation et concepts mobilier pour des intérieurs résidentiels et commerciaux.",
       ],
     },
   ],
   education: [
-    {
-      id: uid(),
-      degree: "Master en Architecture d'Intérieur",
-      school: "Royal College of Art, Londres",
-      start: "2015",
-      end: "2017",
-    },
+    { id: uid(), degree: "MA Interior Architecture", school: "Northbridge University", start: "", end: "2016" },
+    { id: uid(), degree: "BA Spatial Design", school: "Westbrook College", start: "", end: "2014" },
   ],
   skills: [
-    "AutoCAD · SketchUp · Revit",
-    "Conception de mobilier sur mesure",
-    "Éco-conception & Matériaux biosourcés",
-    "Suivi et coordination de chantier",
+    "Concept Development",
+    "Space Planning",
+    "Material Strategy",
+    "Design Documentation",
+    "Site Coordination",
+    "Client Presentation",
   ],
-  languages: [
-    "Anglais — langue maternelle",
-    "Français — courant C1",
-    "Italien — intermédiaire B1",
-  ],
-  interests: ["Céramique japonaise", "Design scandinave"],
+  languages: ["English — Native", "Spanish — Professional", "Italian — Conversational"],
+  interests: [],
+  certifications: ["Hotel", "Creative Workplace", "Private Residence"],
 };
 
 export const sampleDrewFeig: CV = {
   personal: {
     name: "Drew Feig",
-    email: "drew@feigmarketing.io",
-    phone: "+1 415 889 0122",
-    location: "San Francisco, CA",
-    link: "drewfeig.marketing",
+    email: "hello@reallygreatsite.com",
+    phone: "+123-456-7890",
+    location: "123 Anywhere St., Any City",
+    link: "",
   },
-  title: "Head of Growth & Performance Marketing",
+  title: "Marketing Manager",
   summary:
-    "Leader marketing axé données avec 8 ans d'expérience dans la mise à l'échelle d'entreprises SaaS de 1 M$ à 25 M$ d'ARR. Expert en acquisition multicanale et optimisation du funnel de conversion.",
+    "Responsable marketing orienté résultats, je conçois et pilote des stratégies d'acquisition et de marque qui transforment l'audience en clients fidèles. J'allie créativité, analyse de données et leadership pour faire grandir les équipes et les marques que j'accompagne.",
   experiences: [
     {
       id: uid(),
-      role: "VP Marketing & Growth",
-      company: "ScaleFlow Technologies",
-      start: "2022",
-      end: "Présent",
+      role: "Marketing Manager",
+      company: "Borcelle Company",
+      start: "2020",
+      end: "2024",
       bullets: [
-        "Pilotage d'un budget d'acquisition digital annuel de 3,2 M$ avec un ROAS supérieur à 340 %.",
-        "Direction d'une équipe de 8 spécialistes acquisition, SEO et content marketing.",
+        "Pilotage de la stratégie marketing multicanale et d'un budget annuel de 1,2 M€. Hausse de 45 % des leads qualifiés et encadrement d'une équipe de 6 personnes.",
+      ],
+    },
+    {
+      id: uid(),
+      role: "Digital Marketing Specialist",
+      company: "Fauget Agency",
+      start: "2017",
+      end: "2020",
+      bullets: [
+        "Gestion des campagnes SEA et réseaux sociaux pour 15 clients. Optimisation des parcours utilisateurs et des tunnels de conversion (+28 % de conversion).",
       ],
     },
   ],
   education: [
-    {
-      id: uid(),
-      degree: "MBA in Strategic Marketing",
-      school: "UC Berkeley Haas School of Business",
-      start: "2016",
-      end: "2018",
-    },
+    { id: uid(), degree: "Master in Marketing Management", school: "Wardiere University", start: "", end: "2017" },
+    { id: uid(), degree: "Bachelor of Communication", school: "Borcelle University", start: "", end: "2015" },
   ],
-  skills: [
-    "Growth Hacking & Funnels",
-    "Paid Search & Social Ads",
-    "Analytics & Attribution (GA4, Mixpanel)",
-    "Product-Led Growth (PLG)",
-  ],
-  languages: [
-    "Anglais — bilingue (100%)",
-    "Français — professionnel (80%)",
-    "Allemand — notions (40%)",
-  ],
-  interests: ["Triathlon", "Angel Investing"],
-  references: [
-    {
-      name: "Marcus Vance",
-      company: "CEO, ScaleFlow Technologies",
-      contact: "marcus@scaleflow.io",
-    },
-  ],
+  skills: ["UI/UX", "User flow", "Process flow", "Visual design", "Leadership", "Coaching"],
+  languages: ["Spanish — native (100%)", "English — fluent (85%)"],
+  interests: [],
+  references: [{ name: "Lorna Alvarado", company: "CEO, Borcelle Company", contact: "Phone : +123-456-7890" }],
 };
 
 export const sampleMap: Record<TemplateId, CV> = {
@@ -541,13 +628,13 @@ export const sampleMap: Record<TemplateId, CV> = {
 };
 
 export const samples = [
-  { id: "emerald-tech", label: "Développeur Web & Mobile (Émeraude)", cv: sampleEmeraldTech },
-  { id: "juriste-navy", label: "Juriste & Cadre (Navy & Or)", cv: sampleJuristeNavy },
-  { id: "alfred-bold", label: "Informaticien (Bold Minimal)", cv: sampleAlfredBold },
-  { id: "adeline-capsule", label: "Designer Graphique (Capsules)", cv: sampleAdelineCapsule },
-  { id: "sacha-dubois", label: "Management & Projets (Sacha)", cv: sampleFrenchBlue },
-  { id: "michael-henson", label: "Commerce & Vente (Henson)", cv: sampleMichaelHenson },
-  { id: "elvira-montanez", label: "Santé & Médical (Dr. Montanez)", cv: sampleElviraMontanez },
-  { id: "emma-brooks", label: "Architecture (Brooks)", cv: sampleEmmaBrooks },
-  { id: "drew-feig", label: "Dark Executive (Feig)", cv: sampleDrewFeig },
+  { id: "emerald-tech", label: "Développeur Web & Mobile", cv: sampleEmeraldTech },
+  { id: "juriste-navy", label: "Juriste & Cadre ODD", cv: sampleJuristeNavy },
+  { id: "alfred-bold", label: "Informaticien", cv: sampleAlfredBold },
+  { id: "adeline-capsule", label: "Designer Graphique", cv: sampleAdelineCapsule },
+  { id: "sacha-dubois", label: "Chargée de projet", cv: sampleFrenchBlue },
+  { id: "michael-henson", label: "Commercial", cv: sampleMichaelHenson },
+  { id: "elvira-montanez", label: "Médecin", cv: sampleElviraMontanez },
+  { id: "emma-brooks", label: "Architecte d'intérieur", cv: sampleEmmaBrooks },
+  { id: "drew-feig", label: "Marketing Manager", cv: sampleDrewFeig },
 ];
