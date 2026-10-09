@@ -1,4 +1,11 @@
 import type { CV, TemplateId } from "@/lib/cv/types";
+import {
+  SachaDubois,
+  MichaelHenson,
+  ElviraMontanez,
+  EmmaBrooks,
+  DrewFeig,
+} from "./templates-extra";
 
 export const templateMeta: {
   id: TemplateId;
@@ -30,6 +37,36 @@ export const templateMeta: {
     hint: "Double capsule arrondie 60px, barre de contact pilule & références",
     category: "Créatif & Studio",
   },
+  {
+    id: "sacha-dubois",
+    name: "Bleu Moderne — Sacha Dubois",
+    hint: "Bleu profond #0f375c, League Spartan & timeline projets",
+    category: "Management",
+  },
+  {
+    id: "michael-henson",
+    name: "Commercial & Vente — Michael Henson",
+    hint: "Colonne droite marine #253452, liseré doré & médaillon photo",
+    category: "Commerce",
+  },
+  {
+    id: "elvira-montanez",
+    name: "Santé & Médical — Dr. Elvira Montanez",
+    hint: "Bandeau océan #2878ab, colonne menthe & puces circulaires",
+    category: "Médical",
+  },
+  {
+    id: "emma-brooks",
+    name: "Architecte d'Intérieur — Emma Brooks",
+    hint: "Fond crème #f7f3eb, monogrammes géants filigranés & terracotta",
+    category: "Architecture",
+  },
+  {
+    id: "drew-feig",
+    name: "Marketing Manager — Drew Feig",
+    hint: "Thème sombre immersif #313657, barres de compétences & lisibilité maximale",
+    category: "Marketing",
+  },
 ];
 
 const dates = (start: string, end: string) => [start, end].filter(Boolean).join(" – ");
@@ -44,7 +81,7 @@ const parseLangWithPercent = (l: string) => {
 };
 
 /* ========================================================
-   MODÈLE 2 : Développeur Web et Mobile (Beyeli Patrice)
+   MODÈLE 1 : Développeur Web et Mobile (Beyeli Patrice)
    ======================================================== */
 function EmeraldTech({ cv }: { cv: CV }) {
   const experiences = cv.experiences.filter((e) => e.role || e.company || e.bullets.some(Boolean));
@@ -203,30 +240,28 @@ function EmeraldTech({ cv }: { cv: CV }) {
 
         {experiences.length > 0 && (
           <>
-            <h2>Projets déployés</h2>
+            <h2>Projets déployés &amp; Expériences</h2>
             {experiences.map((exp, i) => (
               <div className={`dev-item dev-project${i === experiences.length - 1 ? " last" : ""}`} key={exp.id}>
-                <div className="dev-head"><b>{exp.company || exp.role}</b><em>{exp.role && exp.company ? exp.role : dates(exp.start, exp.end)}</em></div>
-                <div className="dev-sub">{dates(exp.start, exp.end)}</div>
-                {exp.bullets.some(Boolean) && (
-                  <ul>
-                    {exp.bullets.filter(Boolean).map((b, idx) => <li key={idx}>{b}</li>)}
-                  </ul>
-                )}
+                <div className="dev-head">
+                  <b>{exp.company}</b>
+                  <em>{dates(exp.start, exp.end)}</em>
+                </div>
+                {exp.role && <div className="dev-sub">{exp.role}</div>}
+                <ul>
+                  {exp.bullets.map((b, bi) => <li key={bi}>{b}</li>)}
+                </ul>
               </div>
             ))}
           </>
         )}
-
-        <h2>Disponibilité</h2>
-        <p>Disponible immédiatement pour un stage ou une collaboration en développement web et mobile, à Kara ou à distance, selon les besoins de la structure d'accueil.</p>
       </main>
     </div>
   );
 }
 
 /* ========================================================
-   MODÈLE 3 : Juriste & Cadre ODD
+   MODÈLE 2 : Juriste & Cadre ODD (Beyeli Patrice)
    ======================================================== */
 function JuristeNavy({ cv }: { cv: CV }) {
   const experiences = cv.experiences.filter((e) => e.role || e.company || e.bullets.some(Boolean));
@@ -234,107 +269,125 @@ function JuristeNavy({ cv }: { cv: CV }) {
   const highlights = (cv.highlights ?? []).filter((h) => h.title || h.text);
 
   return (
-    <div className="jn-page">
+    <div className="jur-page">
       <style>{`
-        .jn-page {
-          --jn-head: "Poppins", "Segoe UI", Arial, sans-serif;
-          width: 794px; min-height: 1123px; display: flex; background: #fff; color: #333;
-          font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+        .jur-page {
+          --navy: #1c3f61;
+          --navy-title: #1a3a5c;
+          --circle: #2c5583;
+          --gold: #d9b24a;
+          --blue-link: #2a5a8f;
+          --text: #333;
+          --muted: #666;
+          --bar-bg: rgba(255,255,255,.25);
+          --font-head: "Poppins", "Segoe UI", Arial, sans-serif;
+          --font-body: "Liberation Sans", Arial, Helvetica, sans-serif;
+          width: 794px; min-height: 1123px; display: flex; background: #fff;
+          font-family: var(--font-body); color: var(--text);
           -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;
           position: relative; overflow: hidden;
         }
-        .jn-page *, .jn-page *::before, .jn-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        .jn-side { width: 274px; flex: none; background: #1c3f61; color: #fff; position: relative; overflow: hidden; }
-        .jn-halo { position: absolute; top: 0; left: 0; width: 272px; height: 272px; border-radius: 50%; background: #2c5583; }
-        .jn-photo { position: absolute; top: 53px; left: 49px; width: 174px; height: 174px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 9px 20px rgba(10,24,40,.45); }
-        .jn-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .jn-initial { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #2c5583; color: #fff; font-family: var(--jn-head); font-weight: 700; font-size: 56px; }
-        .jn-side-inner { position: relative; padding: 267px 34px 28px 34px; }
-        .jn-side h2 { font-family: var(--jn-head); font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; margin: 20px 0 9px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.28); }
-        .jn-side .jn-coord h2 { margin-top: 0; margin-bottom: 4px; border-bottom: 0; }
-        .jn-label { color: #d9b24a; font-family: var(--jn-head); font-weight: 500; font-size: 8.5px; letter-spacing: .06em; text-transform: uppercase; margin-top: 12px; }
-        .jn-value { font-size: 11px; line-height: 1.35; margin-top: 4px; word-break: break-word; }
-        .jn-keys { list-style: none; font-size: 11px; font-weight: 700; line-height: 1.25; }
-        .jn-keys li { position: relative; padding-left: 16px; margin-bottom: 3px; }
-        .jn-keys li::before { content: "▸"; position: absolute; left: 0; top: 1px; font-size: 8px; color: rgba(255,255,255,.85); }
-        .jn-lang { margin-top: 10px; }
-        .jn-lang:first-of-type { margin-top: 0; }
-        .jn-lang .jn-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 10.5px; color: rgba(255,255,255,.8); }
-        .jn-lang .jn-row i { font-size: 8.5px; color: rgba(255,255,255,.55); }
-        .jn-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.2); margin-top: 4px; overflow: hidden; }
-        .jn-bar span { display: block; height: 100%; background: rgba(255,255,255,.5); border-radius: 3px; }
-        .jn-interests { list-style: none; font-size: 10.5px; line-height: 1.4; color: rgba(255,255,255,.75); }
-        .jn-main { flex: 1; padding: 14px 26px 28px 28px; }
-        .jn-main h1 { font-family: var(--jn-head); font-weight: 700; font-size: 31px; line-height: 1.12; color: #1a3a5c; text-transform: uppercase; }
-        .jn-subtitle { font-family: var(--jn-head); font-weight: 500; font-size: 14px; color: #2a5a8f; letter-spacing: .02em; text-transform: uppercase; margin-top: 14px; }
-        .jn-main h2 { font-family: var(--jn-head); font-weight: 700; font-size: 17.5px; color: #1a3a5c; margin: 20px 0 10px; }
-        .jn-item { position: relative; padding-left: 19px; }
-        .jn-item::before { content: ""; position: absolute; left: 0; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: #1a3a5c; }
-        .jn-item::after { content: ""; position: absolute; left: 4px; top: 14px; bottom: -8px; width: 1px; background: #c3ccd8; }
-        .jn-item.jn-last::after { display: none; }
-        .jn-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-        .jn-head b { font-size: 13.5px; font-weight: 700; color: #1a3a5c; line-height: 1.3; }
-        .jn-head em { font-size: 10.5px; color: #666; white-space: nowrap; }
-        .jn-sub { font-style: italic; font-size: 11px; color: #2a5a8f; margin-top: 3px; }
-        .jn-item ul { list-style: none; margin: 5px 0 0 0; }
-        .jn-item li { position: relative; padding-left: 15px; font-size: 11px; line-height: 1.42; margin-bottom: 3px; }
-        .jn-item li::before { content: "•"; position: absolute; left: 1px; color: #1a3a5c; }
-        .jn-exp { margin-bottom: 12px; }
-        .jn-edu { margin-bottom: 10px; }
-        .jn-main p { font-size: 12px; line-height: 1.5; text-align: justify; }
-        .jn-skill h3 { font-size: 12px; font-weight: 700; color: #1a3a5c; margin: 12px 0 4px; }
-        .jn-skill p { font-size: 10.5px; line-height: 1.42; }
+        .jur-page *, .jur-page *::before, .jur-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .jur-side { width: 274px; flex: none; background: var(--navy); color: #fff; position: relative; overflow: hidden; }
+        .jur-halo { position: absolute; top: 0; left: 0; width: 272px; height: 272px; border-radius: 50%; background: var(--circle); }
+        .jur-photo { position: absolute; top: 53px; left: 49px; width: 174px; height: 174px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 9px 20px rgba(10,24,40,.45); }
+        .jur-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .jur-initial { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #2c5583; color: #fff; font-family: var(--font-head); font-weight: 700; font-size: 56px; }
+        .jur-side-inner { position: relative; padding: 267px 34px 28px 34px; }
+        
+        .jur-side h2 { font-family: var(--font-head); font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; margin: 22px 0 9px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.28); }
+        .jur-side h2:first-child { border-bottom: 0; }
+        .jur-side .jur-coord h2 { border-bottom: 0; margin-bottom: 4px; margin-top: 0; }
+        .jur-label { color: var(--gold); font-family: var(--font-head); font-weight: 500; font-size: 8.5px; letter-spacing: .06em; text-transform: uppercase; margin-top: 12px; }
+        .jur-value { font-size: 11px; line-height: 1.35; margin-top: 4px; word-break: break-word; }
+        
+        .jur-lang { margin-top: 10px; }
+        .jur-lang .row { display: flex; justify-content: space-between; align-items: baseline; font-size: 11px; }
+        .jur-lang .row b { font-weight: 700; }
+        .jur-lang .row i { font-size: 9px; color: rgba(255,255,255,.7); }
+        .jur-bar { height: 10px; border-radius: 5px; background: var(--bar-bg); margin-top: 3px; overflow: hidden; }
+        .jur-bar span { display: block; height: 100%; background: #fff; border-radius: 5px; }
+        
+        .jur-side ul { list-style: none; font-size: 11px; line-height: 1.38; }
+        
+        .jur-main { flex: 1; padding: 14px 26px 28px 28px; }
+        .jur-main h1 { font-family: var(--font-head); font-weight: 700; font-size: 31px; line-height: 1.12; color: var(--navy-title); letter-spacing: .005em; text-transform: uppercase; }
+        .jur-subtitle { font-family: var(--font-head); font-weight: 500; font-size: 14px; color: var(--blue-link); letter-spacing: .02em; text-transform: uppercase; margin-top: 14px; }
+        .jur-main h2 { font-family: var(--font-head); font-weight: 700; font-size: 17.5px; color: var(--navy-title); margin: 20px 0 10px; }
+        
+        .jur-item { position: relative; padding-left: 19px; }
+        .jur-item::before { content: ""; position: absolute; left: 0; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--navy-title); }
+        .jur-item::after { content: ""; position: absolute; left: 4px; top: 14px; bottom: -8px; width: 1px; background: #c3ccd8; }
+        .jur-item.last::after { display: none; }
+        .jur-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+        .jur-head b { font-size: 13.5px; font-weight: 700; color: var(--navy-title); }
+        .jur-head em { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+        .jur-sub { font-style: italic; font-size: 11px; color: var(--blue-link); margin-top: 2px; }
+        .jur-item ul { list-style: none; margin: 5px 0 0 0; }
+        .jur-item li { position: relative; padding-left: 15px; font-size: 11px; line-height: 1.42; margin-bottom: 3px; }
+        .jur-item li::before { content: "•"; position: absolute; left: 1px; color: var(--navy-title); }
+        .jur-exp { margin-bottom: 14px; }
+        .jur-edu { margin-bottom: 4px; }
+        .jur-main p { font-size: 12px; line-height: 1.5; text-align: justify; }
       `}</style>
 
-      <aside className="jn-side">
-        <div className="jn-halo" />
-        <div className="jn-photo">
+      <aside className="jur-side">
+        <div className="jur-halo" />
+        <div className="jur-photo">
           {cv.personal.photo ? (
             <img src={cv.personal.photo} alt={`Photo de ${cv.personal.name}`} />
           ) : (
-            <div className="jn-initial">{(cv.personal.name || "J").charAt(0)}</div>
+            <div className="jur-initial">{(cv.personal.name || "B").charAt(0)}</div>
           )}
         </div>
 
-        <div className="jn-side-inner">
-          <div className="jn-coord">
+        <div className="jur-side-inner">
+          <div className="jur-coord">
             <h2>Coordonnées</h2>
-            {cv.personal.phone && (<><div className="jn-label">Téléphone</div><div className="jn-value">{cv.personal.phone}</div></>)}
-            {cv.personal.email && (<><div className="jn-label">Courriel</div><div className="jn-value">{cv.personal.email}</div></>)}
-            {cv.personal.link && (<><div className="jn-label">Portfolio</div><div className="jn-value">{cv.personal.link}</div></>)}
-            {cv.personal.location && (<><div className="jn-label">Adresse</div><div className="jn-value">{cv.personal.location}</div></>)}
+            {cv.personal.phone && (<><div className="jur-label">Téléphone</div><div className="jur-value">{cv.personal.phone}</div></>)}
+            {cv.personal.email && (<><div className="jur-label">Courriel</div><div className="jur-value">{cv.personal.email}</div></>)}
+            {cv.personal.link && (<><div className="jur-label">Site Web</div><div className="jur-value">{cv.personal.link}</div></>)}
+            {cv.personal.location && (<><div className="jur-label">Adresse</div><div className="jur-value">{cv.personal.location}</div></>)}
           </div>
+
+          {cv.languages.length > 0 && (
+            <>
+              <h2 style={{ borderBottom: 0, marginBottom: 0 }}>Langues</h2>
+              {cv.languages.map((l, i) => {
+                const p = parseLangWithPercent(l);
+                return (
+                  <div className="jur-lang" key={i}>
+                    <div className="row"><b>{p.name}</b><i>{p.level}</i></div>
+                    <div className="jur-bar"><span style={{ width: p.width }} /></div>
+                  </div>
+                );
+              })}
+            </>
+          )}
 
           {cv.skills.length > 0 && (
             <>
-              <h2>Compétences clés</h2>
-              <ul className="jn-keys">
+              <h2>Compétences</h2>
+              <ul>
                 {cv.skills.map((s, i) => <li key={i}>{s}</li>)}
               </ul>
             </>
           )}
 
-          {cv.languages.length > 0 && (
+          {highlights.length > 0 && (
             <>
-              <h2>Langues</h2>
-              <div>
-                {cv.languages.map((l, i) => {
-                  const p = parseLangWithPercent(l);
-                  return (
-                    <div className="jn-lang" key={i}>
-                      <div className="jn-row"><span>{p.name}</span><i>{p.level}</i></div>
-                      <div className="jn-bar"><span style={{ width: p.width }} /></div>
-                    </div>
-                  );
-                })}
-              </div>
+              <h2>Compétences transversales</h2>
+              <ul>
+                {highlights.map((h, i) => <li key={i}>{h.title || h.text}</li>)}
+              </ul>
             </>
           )}
 
           {cv.interests.length > 0 && (
             <>
               <h2>Centres d'intérêt</h2>
-              <ul className="jn-interests">
+              <ul>
                 {cv.interests.map((x, i) => <li key={i}>{x}</li>)}
               </ul>
             </>
@@ -342,33 +395,32 @@ function JuristeNavy({ cv }: { cv: CV }) {
         </div>
       </aside>
 
-      <main className="jn-main">
+      <main className="jur-main">
         <h1>{cv.personal.name}</h1>
-        {cv.title && <div className="jn-subtitle">{cv.title}</div>}
+        {cv.title && <div className="dev-subtitle">{cv.title}</div>}
 
-        {cv.summary && (<><h2>Profil</h2><p>{cv.summary}</p></>)}
+        {cv.summary && (
+          <>
+            <h2>Profil</h2>
+            <p>{cv.summary}</p>
+          </>
+        )}
 
         {experiences.length > 0 && (
           <>
             <h2>Expérience professionnelle</h2>
             {experiences.map((exp, i) => (
-              <div className={`jn-item jn-exp${i === experiences.length - 1 ? " jn-last" : ""}`} key={exp.id}>
-                <div className="jn-head"><b>{exp.role}</b><em>{dates(exp.start, exp.end)}</em></div>
-                {exp.company && <div className="jn-sub">{exp.company}</div>}
-                {exp.bullets.some(Boolean) && (
-                  <ul>{exp.bullets.filter(Boolean).map((b, k) => <li key={k}>{b}</li>)}</ul>
-                )}
+              <div className={`jur-item jur-exp${i === experiences.length - 1 ? " last" : ""}`} key={exp.id}>
+                <div className="jur-head">
+                  <b>{exp.role || exp.company}</b>
+                  <em>{dates(exp.start, exp.end)}</em>
+                </div>
+                {exp.company && exp.role && <div className="jur-sub">{exp.company}</div>}
+                <ul>
+                  {exp.bullets.map((b, bi) => <li key={bi}>{b}</li>)}
+                </ul>
               </div>
             ))}
-          </>
-        )}
-
-        {highlights.length > 0 && (
-          <>
-            <h2>Compétences transversales</h2>
-            <div className="jn-skill">
-              {highlights.map((h, i) => (<div key={i}><h3>{h.title}</h3><p>{h.text}</p></div>))}
-            </div>
           </>
         )}
 
@@ -376,9 +428,9 @@ function JuristeNavy({ cv }: { cv: CV }) {
           <>
             <h2>Éducation</h2>
             {education.map((edu, i) => (
-              <div className={`jn-item jn-edu${i === education.length - 1 ? " jn-last" : ""}`} key={edu.id}>
-                <div className="jn-head"><b>{edu.degree}</b><em>{dates(edu.start, edu.end)}</em></div>
-                {edu.school && <div className="jn-sub">{edu.school}</div>}
+              <div className={`jur-item jur-edu${i === education.length - 1 ? " last" : ""}`} key={edu.id}>
+                <div className="jur-head"><b>{edu.degree}</b><em>{dates(edu.start, edu.end)}</em></div>
+                {edu.school && <div className="jur-sub">{edu.school}</div>}
               </div>
             ))}
           </>
@@ -389,373 +441,278 @@ function JuristeNavy({ cv }: { cv: CV }) {
 }
 
 /* ========================================================
-   MODÈLE 4 : Informaticien Bold Minimal (Alfred Bernard)
+   MODÈLE 3 : Informaticien Bold Minimal (Alfred Bernard)
    ======================================================== */
 function AlfredBold({ cv }: { cv: CV }) {
   const experiences = cv.experiences.filter((e) => e.role || e.company || e.bullets.some(Boolean));
   const education = cv.education.filter((e) => e.degree || e.school);
-  const nameParts = (cv.personal.name || "Alfred Bernard").trim().split(/\s+/);
-  const firstName = nameParts[0] || "Alfred";
-  const lastName = nameParts.slice(1).join(" ") || "Bernard";
+
+  const [firstName = "ALFRED", ...lastNameParts] = (cv.personal.name || "ALFRED BERNARD").split(" ");
+  const lastName = lastNameParts.join(" ") || "BERNARD";
 
   return (
     <div className="ab-page">
       <style>{`
         .ab-page {
-          --dark: #222;
-          --white: #fff;
-          --head: "Montserrat", "Arial Black", Arial, sans-serif;
-          --body: "Jost", "Segoe UI", Arial, sans-serif;
-          position: relative; width: 794px; height: 1123px; min-height: 1123px;
-          background: #fff; overflow: hidden;
-          font-family: var(--body); color: var(--dark);
-          -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;
+          width: 794px; min-height: 1123px; position: relative; background: #fff;
+          font-family: 'Jost', sans-serif; color: #222; overflow: hidden;
+          -webkit-print-color-adjust: exact; print-color-adjust: exact;
         }
-        .ab-page *, .ab-page *::before, .ab-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        .ab-side { position: absolute; left: 0; top: 0; width: 327px; height: 1123px; background: var(--dark); }
-        .ab-photo { position: absolute; left: 36px; top: 49px; width: 231px; height: 231px; border-radius: 50%; overflow: hidden; background: #e3e4e4; }
-        .ab-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .ab-photo-initial { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #333; color: #fff; font-family: var(--head); font-weight: 800; font-size: 64px; }
-        
+        .ab-page * { box-sizing: border-box; }
         .ab-abs { position: absolute; }
-        .ab-h { font-family: var(--head); font-weight: 800; text-transform: uppercase; }
-        .ab-flow { position: absolute; left: 49px; top: 382px; right: 24px; bottom: 28px; display: flex; flex-direction: column; gap: 22px; overflow: hidden; }
-        .ab-side .ab-h { color: #fff; font-size: 18px; line-height: 22px; letter-spacing: .14em; margin-bottom: 8px; }
-        .ab-side .ab-t { width: 254px; color: #fff; font-size: 15px; overflow-wrap: anywhere; }
-        .ab-side .ab-t p { margin: 0; }
-        .ab-side .ab-comp p { line-height: 20px; margin-bottom: 6px; }
-        .ab-side .ab-int p { line-height: 20px; margin-bottom: 6px; }
-        
-        .ab-main-title { position: absolute; left: 366px; top: 121px; font-family: var(--head); font-weight: 900; font-size: 62px; line-height: 73px; letter-spacing: .02em; text-transform: uppercase; color: var(--dark); }
-        .ab-job { font-family: var(--head); font-weight: 800; font-size: 13px; line-height: 18px; text-transform: uppercase; left: 391px; white-space: nowrap; color: var(--dark); }
-        .ab-meta { font-size: 12.5px; line-height: 16px; left: 391px; color: var(--dark); }
-        .ab-main-h { font-size: 17px; line-height: 22px; left: 366px; letter-spacing: .02em; white-space: nowrap; color: var(--dark); }
-        .ab-b { position: absolute; left: 391px; width: 362px; list-style: none; font-size: 12.5px; }
-        .ab-b li { position: relative; padding-left: 15px; }
-        .ab-b li::before { content: ""; position: absolute; left: 1px; top: .55em; width: 4.5px; height: 4.5px; border-radius: 50%; background: var(--dark); }
-        .ab-tl { position: absolute; left: 365px; width: 2px; background: var(--dark); }
-        .ab-tl::before { content: ""; position: absolute; left: -3.5px; top: -4px; width: 9px; height: 9px; border-radius: 50%; background: var(--dark); }
+        .ab-side { left: 0; top: 0; width: 327px; height: 1123px; background: #222; }
+        .ab-side-white { left: 0; top: 0; width: 327px; height: 267px; background: #fff; }
+        .ab-photo { left: 49px; top: 36px; width: 231px; height: 231px; border-radius: 50%; overflow: hidden; background: #333; z-index: 2; }
+        .ab-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .ab-flow { left: 49px; top: 295px; width: 254px; color: #fff; display: flex; flex-direction: column; gap: 20px; }
+        .ab-h { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
+        .ab-t { font-size: 12px; line-height: 18px; color: #fff; }
+        .ab-item { margin-bottom: 8px; }
+        .ab-label { font-size: 10px; text-transform: uppercase; color: #aaa; }
+        .ab-val { font-size: 12px; }
+        .ab-lang { margin-bottom: 6px; }
+        .ab-main { left: 365px; top: 40px; width: 395px; }
+        .ab-name-1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 50px; line-height: 52px; text-transform: uppercase; color: #222; }
+        .ab-name-2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 50px; line-height: 52px; text-transform: uppercase; color: #222; }
+        .ab-job { font-family: 'Jost', sans-serif; font-weight: 500; font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; color: #555; margin-top: 10px; }
+        .ab-sec-h { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; text-transform: uppercase; color: #222; margin: 24px 0 14px; border-bottom: 2px solid #222; padding-bottom: 4px; }
+        .ab-timeline { position: relative; padding-left: 18px; border-left: 1.5px solid #ccc; margin-bottom: 16px; }
+        .ab-timeline::before { content: ""; position: absolute; left: -5px; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: #222; }
+        .ab-tl-role { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13.5px; }
+        .ab-tl-sub { font-size: 12px; color: #555; margin-bottom: 6px; }
+        .ab-tl-body { font-size: 11.5px; line-height: 16px; color: #444; }
+        .ab-tl-body li { margin-bottom: 4px; }
       `}</style>
 
-      <aside className="ab-side">
-        <div className="ab-photo">
+      <div className="ab-abs ab-side">
+        <div className="ab-abs ab-side-white" />
+        <div className="ab-abs ab-photo">
           {cv.personal.photo ? (
             <img src={cv.personal.photo} alt={`Photo de ${cv.personal.name}`} />
           ) : (
-            <div className="ab-photo-initial">{firstName.charAt(0)}</div>
+            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "70px", fontFamily: "Montserrat", fontWeight: 800 }}>
+              {(cv.personal.name || "A").charAt(0)}
+            </div>
           )}
         </div>
 
-        <div className="ab-flow">
-          <section>
-            <div className="ab-h">Coordonnées</div>
-            <div className="ab-t" style={{ lineHeight: "25.4px" }}>
-              {cv.personal.location && <p>{cv.personal.location}</p>}
-              {cv.personal.email && <p>{cv.personal.email}</p>}
-              {cv.personal.phone && <p>{cv.personal.phone}</p>}
-              {cv.personal.link && <p>{cv.personal.link}</p>}
-            </div>
-          </section>
+        <div className="ab-abs ab-flow">
+          <div>
+            <div className="ab-h">Contact</div>
+            {cv.personal.phone && <div className="ab-item"><div className="ab-label">Téléphone</div><div className="ab-val">{cv.personal.phone}</div></div>}
+            {cv.personal.email && <div className="ab-item"><div className="ab-label">Courriel</div><div className="ab-val">{cv.personal.email}</div></div>}
+            {cv.personal.location && <div className="ab-item"><div className="ab-label">Adresse</div><div className="ab-val">{cv.personal.location}</div></div>}
+            {cv.personal.link && <div className="ab-item"><div className="ab-label">Site web</div><div className="ab-val">{cv.personal.link}</div></div>}
+          </div>
 
           {cv.languages.length > 0 && (
-            <section>
+            <div>
               <div className="ab-h">Langues</div>
-              <div className="ab-t" style={{ lineHeight: "25.1px" }}>
-                {cv.languages.map((l, i) => <p key={i}>{l}</p>)}
-              </div>
-            </section>
+              {cv.languages.map((l, i) => (
+                <div key={i} className="ab-lang ab-t">• {l}</div>
+              ))}
+            </div>
           )}
 
           {cv.skills.length > 0 && (
-            <section>
+            <div>
               <div className="ab-h">Compétences</div>
-              <div className="ab-t ab-comp">
-                {cv.skills.map((s, i) => <p key={i}>{s}</p>)}
-              </div>
-            </section>
+              {cv.skills.map((s, i) => (
+                <div key={i} className="ab-t" style={{ marginBottom: "5px" }}>• {s}</div>
+              ))}
+            </div>
           )}
 
           {cv.interests.length > 0 && (
-            <section>
-              <div className="ab-h">Centres<br />d'intérêts</div>
-              <div className="ab-t ab-int">
-                {cv.interests.map((x, i) => <p key={i}>{x}</p>)}
-              </div>
-            </section>
+            <div>
+              <div className="ab-h">Centres d'intérêts</div>
+              {cv.interests.map((it, i) => (
+                <div key={i} className="ab-t" style={{ marginBottom: "5px" }}>• {it}</div>
+              ))}
+            </div>
           )}
         </div>
-      </aside>
-
-      <h1 className="ab-main-title">
-        {firstName}
-        <br />
-        {lastName}
-      </h1>
-      <div className="ab-abs ab-h" style={{ left: "366px", top: "279px", fontSize: "19px", lineHeight: "22px", fontWeight: 800 }}>
-        {cv.title || "Informaticien"}
       </div>
 
-      {experiences.length > 0 && (
-        <>
-          <div className="ab-abs ab-h ab-main-h" style={{ top: "367px" }}>Expériences professionnelles</div>
-          {experiences[0] && (
-            <>
-              <div className="ab-tl" style={{ top: "426px", height: "197px" }} />
-              <div className="ab-abs ab-job" style={{ top: "415px" }}>{experiences[0].role}</div>
-              <div className="ab-abs ab-meta" style={{ top: "441px" }}>
-                {experiences[0].company} | {dates(experiences[0].start, experiences[0].end)}
-              </div>
-              <ul className="ab-b" style={{ top: "477px", lineHeight: "21.5px" }}>
-                {experiences[0].bullets.map((b, i) => <li key={i}>{b}</li>)}
-              </ul>
-            </>
-          )}
+      <div className="ab-abs ab-main">
+        <div className="ab-name-1">{firstName}</div>
+        <div className="ab-name-2">{lastName}</div>
+        <div className="ab-job">{cv.title || "INFORMATICIEN"}</div>
 
-          {experiences[1] && (
-            <>
-              <div className="ab-tl" style={{ top: "668px", height: "178px" }} />
-              <div className="ab-abs ab-job" style={{ top: "657px" }}>{experiences[1].role}</div>
-              <div className="ab-abs ab-meta" style={{ top: "684px" }}>
-                {experiences[1].company} | {dates(experiences[1].start, experiences[1].end)}
-              </div>
-              <ul className="ab-b" style={{ top: "722px", lineHeight: "20.8px" }}>
-                {experiences[1].bullets.map((b, i) => <li key={i}>{b}</li>)}
-              </ul>
-            </>
-          )}
-        </>
-      )}
+        {cv.summary && (
+          <div style={{ marginTop: "16px", fontSize: "12px", lineHeight: "18px", color: "#444", textAlign: "justify" }}>
+            {cv.summary}
+          </div>
+        )}
 
-      {education.length > 0 && (
-        <>
-          <div className="ab-abs ab-h ab-main-h" style={{ top: "902px" }}>Formations</div>
-          {education[0] && (
-            <>
-              <div className="ab-tl" style={{ top: "968px", height: "30px" }} />
-              <div className="ab-abs ab-job" style={{ top: "955px", left: "389px" }}>{education[0].degree}</div>
-              <div className="ab-abs ab-meta" style={{ top: "981px", left: "389px" }}>
-                {education[0].school} | {dates(education[0].start, education[0].end)}
+        {experiences.length > 0 && (
+          <div>
+            <div className="ab-sec-h">Expérience professionnelle</div>
+            {experiences.map((exp) => (
+              <div key={exp.id} className="ab-timeline">
+                <div className="ab-tl-role">{exp.role}</div>
+                <div className="ab-tl-sub">{exp.company} | {dates(exp.start, exp.end)}</div>
+                <div className="ab-tl-body">
+                  {exp.bullets.length > 0 ? (
+                    <ul style={{ paddingLeft: "14px", margin: 0 }}>
+                      {exp.bullets.map((b, bi) => <li key={bi}>{b}</li>)}
+                    </ul>
+                  ) : null}
+                </div>
               </div>
-            </>
-          )}
-          {education[1] && (
-            <>
-              <div className="ab-tl" style={{ top: "1038px", height: "30px" }} />
-              <div className="ab-abs ab-job" style={{ top: "1026px", left: "389px" }}>{education[1].degree}</div>
-              <div className="ab-abs ab-meta" style={{ top: "1051px", left: "389px" }}>
-                {education[1].school} | {dates(education[1].start, education[1].end)}
+            ))}
+          </div>
+        )}
+
+        {education.length > 0 && (
+          <div>
+            <div className="ab-sec-h">Éducation</div>
+            {education.map((edu) => (
+              <div key={edu.id} className="ab-timeline">
+                <div className="ab-tl-role">{edu.degree}</div>
+                <div className="ab-tl-sub">{edu.school} | {dates(edu.start, edu.end)}</div>
               </div>
-            </>
-          )}
-        </>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 /* ========================================================
-   MODÈLE 5 : Designer Graphique Capsules (Adeline Palmerston)
+   MODÈLE 4 : Designer Graphique Capsules (Adeline Palmerston)
    ======================================================== */
 function AdelineCapsule({ cv }: { cv: CV }) {
   const experiences = cv.experiences.filter((e) => e.role || e.company || e.bullets.some(Boolean));
   const education = cv.education.filter((e) => e.degree || e.school);
-  const nameParts = (cv.personal.name || "Adeline Palmerston").trim().split(/\s+/);
-  const firstName = nameParts[0] || "Adeline";
-  const lastName = nameParts.slice(1).join(" ") || "Palmerston";
   const references = cv.references ?? [];
 
   return (
     <div className="ade-page">
       <style>{`
         .ade-page {
-          --navy: #323b4c;
-          --ring: #7d869a;
-          --font: "Bricolage Grotesque", "Segoe UI", Arial, sans-serif;
-          position: relative; width: 794px; height: 1123px; min-height: 1123px;
-          background: #fff; overflow: hidden;
-          font-family: var(--font); color: #000;
-          -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;
+          width: 794px; min-height: 1123px; position: relative; background: #fff;
+          font-family: 'Bricolage Grotesque', sans-serif; color: #323b4c; overflow: hidden;
+          -webkit-print-color-adjust: exact; print-color-adjust: exact;
         }
-        .ade-page *, .ade-page *::before, .ade-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        .ade-page * { box-sizing: border-box; }
         .ade-abs { position: absolute; }
-        .ade-top { left: 0; top: 0; width: 282px; height: 229px; background: var(--navy); border-bottom-right-radius: 60px; }
-        .ade-photo { position: absolute; left: 57px; top: 33px; width: 166px; height: 166px; border-radius: 50%; border: 3.5px solid var(--ring); overflow: hidden; background: #fff; }
-        .ade-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 89% 50%; display: block; }
-        .ade-photo-initial { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--navy); color: #fff; font-weight: 700; font-size: 54px; }
-        
-        .ade-panel { left: 0; top: 326px; width: 282px; height: 797px; background: var(--navy); border-top-right-radius: 60px; }
-        .ade-name { left: 325px; top: 58px; font-weight: 700; font-size: 44px; line-height: 47px; color: var(--navy); text-transform: uppercase; }
-        .ade-role { left: 325px; top: 162px; font-size: 17px; line-height: 22px; letter-spacing: .2em; color: var(--navy); text-transform: uppercase; white-space: nowrap; }
-        
-        .ade-bar { left: 20px; top: 248px; width: 757px; height: 57px; border-radius: 29px; background: var(--navy); color: #fff; font-size: 12px; }
-        .ade-bar span { position: absolute; top: 0; height: 57px; display: flex; align-items: center; gap: 9px; white-space: nowrap; }
-        .ade-bar svg { width: 15px; height: 15px; fill: #fff; flex: none; }
-        
-        .ade-lh { font-weight: 700; font-size: 22px; line-height: 26px; letter-spacing: .1em; white-space: nowrap; }
-        .ade-side-h { left: 49px; color: #fff; }
-        .ade-rule { height: 1px; }
-        .ade-side-rule { left: 49px; width: 233px; background: #fff; }
-        .ade-main-h { left: 325px; color: var(--navy); }
-        .ade-main-rule { left: 325px; width: 431px; background: var(--navy); }
-        
-        .ade-sw { color: #fff; font-size: 13px; line-height: 20px; }
-        .ade-sw b { font-size: 15.5px; display: block; line-height: 22px; }
-        .ade-sk { left: 49px; color: #fff; font-size: 13.5px; line-height: 28.5px; }
-        .ade-lg { left: 49px; color: #fff; font-size: 13.5px; line-height: 24px; }
-        ul.ade-c { left: 49px; width: 225px; list-style: none; color: #fff; font-size: 13.5px; line-height: 18px; }
-        ul.ade-c li { position: relative; padding-left: 19px; margin-bottom: 7px; }
-        ul.ade-c li::before { content: ""; position: absolute; left: 6px; top: 7px; width: 4.5px; height: 4.5px; border-radius: 50%; background: #fff; }
-        
-        .ade-jt { left: 325px; font-weight: 700; font-size: 15.5px; line-height: 20px; color: #000; }
-        .ade-jd { left: 640px; width: 116px; text-align: right; font-size: 12px; line-height: 20px; color: #000; }
-        .ade-co { left: 325px; font-size: 12px; line-height: 20px; color: #000; }
-        .ade-tx { left: 325px; width: 431px; font-size: 11.2px; line-height: 16.2px; text-align: justify; color: #000; }
-        .ade-rf { font-size: 12px; line-height: 24px; color: #000; }
+        .ade-cap-top { left: 0; top: 0; width: 443px; height: 284px; background: #323b4c; border-bottom-right-radius: 60px; }
+        .ade-cap-bot { left: 0; top: 371px; width: 285px; height: 752px; background: #323b4c; border-top-right-radius: 60px; }
+        .ade-photo-ring { left: 494px; top: 58px; width: 200px; height: 200px; border-radius: 50%; border: 2px solid #7d869a; }
+        .ade-photo { left: 502px; top: 66px; width: 184px; height: 184px; border-radius: 50%; overflow: hidden; background: #fff; }
+        .ade-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .ade-pill { left: 24px; top: 298px; width: 746px; height: 57px; background: #fff; border: 1.5px solid #323b4c; border-radius: 29px; display: flex; align-items: center; justify-content: space-around; padding: 0 16px; font-size: 11px; z-index: 5; }
+        .ade-pill-item { display: flex; align-items: center; gap: 6px; }
+        .ade-h1 { left: 38px; top: 76px; width: 380px; font-weight: 700; font-size: 40px; line-height: 44px; color: #fff; }
+        .ade-h2 { left: 38px; top: 170px; font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
+        .ade-side-flow { left: 28px; top: 400px; width: 230px; color: #fff; display: flex; flex-direction: column; gap: 24px; }
+        .ade-lh { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+        .ade-tx { font-size: 11px; line-height: 16px; color: #e4e7ec; }
+        .ade-main-flow { left: 320px; top: 380px; width: 440px; display: flex; flex-direction: column; gap: 20px; }
+        .ade-main-h { font-weight: 700; font-size: 16px; text-transform: uppercase; color: #323b4c; border-bottom: 2px solid #323b4c; padding-bottom: 4px; }
       `}</style>
 
-      <div className="ade-abs ade-top" />
-      <div className="ade-photo">
+      <div className="ade-abs ade-cap-top" />
+      <div className="ade-abs ade-cap-bot" />
+      <div className="ade-abs ade-photo-ring" />
+      <div className="ade-abs ade-photo">
         {cv.personal.photo ? (
           <img src={cv.personal.photo} alt={`Photo de ${cv.personal.name}`} />
         ) : (
-          <div className="ade-photo-initial">{firstName.charAt(0)}</div>
+          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "60px", fontWeight: 700, color: "#323b4c" }}>
+            {(cv.personal.name || "A").charAt(0)}
+          </div>
         )}
       </div>
 
-      <div className="ade-abs ade-name">{firstName}<br />{lastName}</div>
-      <div className="ade-abs ade-role">{cv.title || "Graphic Designer"}</div>
+      <div className="ade-abs ade-h1">{cv.personal.name}</div>
+      <div className="ade-abs ade-h2">{cv.title}</div>
 
-      <div className="ade-abs ade-bar">
-        <span style={{ left: "23px" }}>
-          <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.500.6 3.600.1.3 0 .7-.2 1z" /></svg>
-          {cv.personal.phone || "+123-456-7890"}
-        </span>
-        <span style={{ left: "178px" }}>
-          <svg viewBox="0 0 24 24"><path d="M2 5h20v2l-10 6L2 7zm0 4.500l10 6 10-6V19H2z" /></svg>
-          {cv.personal.email || "hello@reallygreatsite.com"}
-        </span>
-        <span style={{ left: "373px" }}>
-          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2c1 1.200 1.800 3 2.100 5H9.900C10.200 7 11 5.200 12 4zM4.300 11h3.600a16 16 0 000 2H4.300a8 8 0 010-2zm.6 4h3.200c.3 1.500.8 2.800 1.500 3.900A8 8 0 014.900 15zm3.200-6H4.900a8 8 0 014.700-3.900C8.900 6.200 8.400 7.500 8.100 9zM12 20c-1-1.200-1.800-3-2.100-5h4.200c-.3 2-1.100 3.800-2.100 5zm2.400-7H9.600a14 14 0 010-2h4.800a14 14 0 010 2zm.1 5.900c.7-1.100 1.200-2.400 1.500-3.900h3.200a8 8 0 01-4.700 3.900zM16.100 13a16 16 0 000-2h3.600a8 8 0 010 2zM15.900 9c-.3-1.500-.8-2.800-1.500-3.900A8 8 0 0119.100 9z" /></svg>
-          {cv.personal.link || "www.reallygreatsite.com"}
-        </span>
-        <span style={{ left: "567px" }}>
-          <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h5v-6h4v6h5v-8h3z" /></svg>
-          {cv.personal.location || "123 Anywhere St., Any City"}
-        </span>
+      <div className="ade-abs ade-pill">
+        {cv.personal.phone && <div className="ade-pill-item"><span>📞</span> {cv.personal.phone}</div>}
+        {cv.personal.email && <div className="ade-pill-item"><span>✉️</span> {cv.personal.email}</div>}
+        {cv.personal.location && <div className="ade-pill-item"><span>📍</span> {cv.personal.location}</div>}
+        {cv.personal.link && <div className="ade-pill-item"><span>🔗</span> {cv.personal.link}</div>}
       </div>
 
-      <div className="ade-abs ade-panel" />
-
-      {/* Colonne gauche */}
-      <div className="ade-abs ade-lh ade-side-h" style={{ top: "380px" }}>Éducation</div>
-      <div className="ade-abs ade-rule ade-side-rule" style={{ top: "413px" }} />
-      {education[0] && (
-        <div className="ade-abs ade-sw" style={{ left: "49px", top: "424px", width: "225px" }}>
-          <b>{education[0].degree}</b>
-          {education[0].school}<br />
-          {dates(education[0].start, education[0].end)}
-        </div>
-      )}
-      {education[1] && (
-        <div className="ade-abs ade-sw" style={{ left: "49px", top: "528px", width: "225px" }}>
-          <b>{education[1].degree}</b>
-          {education[1].school}<br />
-          {dates(education[1].start, education[1].end)}
-        </div>
-      )}
-
-      <div className="ade-abs ade-lh ade-side-h" style={{ top: "644px" }}>Certifications</div>
-      <div className="ade-abs ade-rule ade-side-rule" style={{ top: "683px" }} />
-      <ul className="ade-abs ade-c" style={{ top: "698px" }}>
-        {(cv.certifications ?? ["Certified Graphic Designer.", "User Experience (UX) Design Certificate."]).map((c, i) => (
-          <li key={i}>{c}</li>
-        ))}
-      </ul>
-
-      {cv.skills.length > 0 && (
-        <>
-          <div className="ade-abs ade-lh ade-side-h" style={{ top: "782px" }}>Compétences</div>
-          <div className="ade-abs ade-rule ade-side-rule" style={{ top: "816px" }} />
-          <div className="ade-abs ade-sk" style={{ top: "823px" }}>
-            {cv.skills.slice(0, 5).map((s, i) => <div key={i}>{s}</div>)}
+      <div className="ade-abs ade-side-flow">
+        {education.length > 0 && (
+          <div>
+            <div className="ade-lh">Éducation</div>
+            {education.map((e) => (
+              <div key={e.id} style={{ marginBottom: "10px" }}>
+                <div style={{ fontWeight: 700, fontSize: "12px" }}>{e.degree}</div>
+                <div className="ade-tx">{e.school}</div>
+                <div className="ade-tx" style={{ opacity: 0.8 }}>{dates(e.start, e.end)}</div>
+              </div>
+            ))}
           </div>
-        </>
-      )}
+        )}
 
-      {cv.languages.length > 0 && (
-        <>
-          <div className="ade-abs ade-lh ade-side-h" style={{ top: "977px" }}>Langues</div>
-          <div className="ade-abs ade-rule ade-side-rule" style={{ top: "1011px" }} />
-          <div className="ade-abs ade-lg" style={{ top: "1023px" }}>
-            {cv.languages.map((l, i) => <div key={i}>{l}</div>)}
+        {cv.skills.length > 0 && (
+          <div>
+            <div className="ade-lh">Compétences</div>
+            {cv.skills.map((s, i) => (
+              <div key={i} className="ade-tx" style={{ marginBottom: "4px" }}>• {s}</div>
+            ))}
           </div>
-        </>
-      )}
+        )}
 
-      {/* Colonne droite */}
-      {cv.summary && (
-        <>
-          <div className="ade-abs ade-lh ade-main-h" style={{ top: "380px" }}>À Propos</div>
-          <div className="ade-abs ade-rule ade-main-rule" style={{ top: "412px" }} />
-          <div className="ade-abs ade-tx" style={{ top: "422px" }}>{cv.summary}</div>
-        </>
-      )}
-
-      {experiences.length > 0 && (
-        <>
-          <div className="ade-abs ade-lh ade-main-h" style={{ top: "513px" }}>Expériences</div>
-          <div className="ade-abs ade-rule ade-main-rule" style={{ top: "548px" }} />
-
-          {experiences[0] && (
-            <>
-              <div className="ade-abs ade-jt" style={{ top: "560px" }}>{experiences[0].role}</div>
-              <div className="ade-abs ade-jd" style={{ top: "562px" }}>{dates(experiences[0].start, experiences[0].end)}</div>
-              <div className="ade-abs ade-co" style={{ top: "585px" }}>{experiences[0].company}</div>
-              <div className="ade-abs ade-tx" style={{ top: "610px" }}>
-                {experiences[0].bullets.join(" ") || "Responsable de la création graphique et du design d'interface."}
-              </div>
-            </>
-          )}
-
-          {experiences[1] && (
-            <>
-              <div className="ade-abs ade-jt" style={{ top: "696px" }}>{experiences[1].role}</div>
-              <div className="ade-abs ade-jd" style={{ top: "698px" }}>{dates(experiences[1].start, experiences[1].end)}</div>
-              <div className="ade-abs ade-co" style={{ top: "721px" }}>{experiences[1].company}</div>
-              <div className="ade-abs ade-tx" style={{ top: "746px" }}>
-                {experiences[1].bullets.join(" ") || "Conception de maquettes et chartes graphiques de marques."}
-              </div>
-            </>
-          )}
-
-          {experiences[2] && (
-            <>
-              <div className="ade-abs ade-jt" style={{ top: "834px" }}>{experiences[2].role}</div>
-              <div className="ade-abs ade-jd" style={{ top: "836px" }}>{dates(experiences[2].start, experiences[2].end)}</div>
-              <div className="ade-abs ade-co" style={{ top: "859px" }}>{experiences[2].company}</div>
-              <div className="ade-abs ade-tx" style={{ top: "884px" }}>
-                {experiences[2].bullets.join(" ") || "Gestion des livrables de production et supports marketing."}
-              </div>
-            </>
-          )}
-        </>
-      )}
-
-      <div className="ade-abs ade-lh ade-main-h" style={{ top: "977px" }}>Références</div>
-      <div className="ade-abs ade-rule ade-main-rule" style={{ top: "1011px" }} />
-      <div className="ade-abs ade-rf" style={{ left: "325px", top: "1021px" }}>
-        {references[0] ? (
-          <>{references[0].name}<br />{references[0].company}<br />{references[0].contact}</>
-        ) : (
-          <>Alfredo Torres | Directeur<br />Aldenaire &amp; Partners<br />+123-456-7890</>
+        {cv.languages.length > 0 && (
+          <div>
+            <div className="ade-lh">Langues</div>
+            {cv.languages.map((l, i) => (
+              <div key={i} className="ade-tx" style={{ marginBottom: "4px" }}>• {l}</div>
+            ))}
+          </div>
         )}
       </div>
-      <div className="ade-abs ade-rf" style={{ left: "609px", top: "1021px" }}>
-        {references[1] ? (
-          <>{references[1].name}<br />{references[1].company}<br />{references[1].contact}</>
-        ) : (
-          <>Harumi Kobayashi | CEO<br />Ingoude Company<br />+123-456-7890</>
+
+      <div className="ade-abs ade-main-flow">
+        {cv.summary && (
+          <div>
+            <div className="ade-main-h">À propos</div>
+            <p style={{ marginTop: "8px", fontSize: "12px", lineHeight: "18px", textAlign: "justify" }}>
+              {cv.summary}
+            </p>
+          </div>
+        )}
+
+        {experiences.length > 0 && (
+          <div>
+            <div className="ade-main-h">Expérience</div>
+            {experiences.map((exp) => (
+              <div key={exp.id} style={{ marginTop: "12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: "13px" }}>
+                  <span>{exp.role}</span>
+                  <span style={{ fontSize: "11px", color: "#666" }}>{dates(exp.start, exp.end)}</span>
+                </div>
+                <div style={{ fontSize: "11.5px", color: "#555", fontStyle: "italic", marginBottom: "4px" }}>
+                  {exp.company}
+                </div>
+                {exp.bullets.map((b, bi) => (
+                  <div key={bi} style={{ fontSize: "11px", lineHeight: "16px", marginBottom: "3px" }}>• {b}</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {references.length > 0 && (
+          <div>
+            <div className="ade-main-h">Références</div>
+            <div style={{ display: "flex", gap: "20px", marginTop: "10px" }}>
+              {references.map((r, i) => (
+                <div key={i} style={{ fontSize: "11px" }}>
+                  <b>{r.name}</b><br />
+                  <span>{r.company}</span><br />
+                  <span style={{ color: "#666" }}>{r.contact}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -763,20 +720,29 @@ function AdelineCapsule({ cv }: { cv: CV }) {
 }
 
 /* ========================================================
-   DISPATCHEUR PRINCIPAL en vrai ok ok ok 
+   DISPATCHEUR PRINCIPAL : 9 MODÈLES A4 ACTIFS
    ======================================================== */
 export function CVTemplate({ cv, template }: { cv: CV; template: TemplateId }) {
   switch (template) {
-    case "emerald-tech":
-      return <EmeraldTech cv={cv} />;
     case "juriste-navy":
       return <JuristeNavy cv={cv} />;
     case "alfred-bold":
       return <AlfredBold cv={cv} />;
     case "adeline-capsule":
       return <AdelineCapsule cv={cv} />;
+    case "sacha-dubois":
+    case "french-blue":
+      return <SachaDubois cv={cv} />;
+    case "michael-henson":
+      return <MichaelHenson cv={cv} />;
+    case "elvira-montanez":
+      return <ElviraMontanez cv={cv} />;
+    case "emma-brooks":
+      return <EmmaBrooks cv={cv} />;
+    case "drew-feig":
+      return <DrewFeig cv={cv} />;
+    case "emerald-tech":
     default:
-      // Repli sur le modèle Développeur Web & Mobile
       return <EmeraldTech cv={cv} />;
   }
 }

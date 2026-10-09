@@ -3,7 +3,12 @@ export type TemplateId =
   | "emerald-tech"
   | "juriste-navy"
   | "alfred-bold"
-  | "adeline-capsule";
+  | "adeline-capsule"
+  | "sacha-dubois"
+  | "michael-henson"
+  | "elvira-montanez"
+  | "emma-brooks"
+  | "drew-feig";
 
 export type InputMode = "form" | "coach";
 

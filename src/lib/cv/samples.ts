@@ -21,7 +21,7 @@ export const sampleFrenchBlue: CV = {
       bullets: [
         "Direction du déploiement de la plateforme e-santé unifiée touchant plus de 450 000 utilisateurs actifs.",
         "Management agile d'une escouade de 14 personnes (développeurs, UX/UI, analystes QA).",
-        "Réduction de 28 % du délai de mise en production (time-to-market) grâce à la rationalisation des cycles de sprint.",
+        "Réduction de 28 % du délai de mise en production grâce à la rationalisation des cycles de sprint.",
         "Gestion d'un budget annuel de 1,4 M€ avec un taux d'adhérence financière de 98,5 %.",
       ],
     },
@@ -34,18 +34,6 @@ export const sampleFrenchBlue: CV = {
       bullets: [
         "Pilotage de 8 projets de transformation numérique pour des acteurs bancaires et assurantiels majeurs.",
         "Conduite du changement auprès de 1 200 collaborateurs avec un taux d'adoption de 94 % à 6 mois.",
-        "Automatisation de 15 flux de travail internes générant une économie estimée à 120 k€ par an.",
-      ],
-    },
-    {
-      id: uid(),
-      role: "Coordinatrice de Projets Junior",
-      company: "Agence Digitale Voxia",
-      start: "2017",
-      end: "2019",
-      bullets: [
-        "Suivi opérationnel des livrables de refonte de 12 sites web institutionnels et marchands.",
-        "Animation quotidienne des rituels agiles (Scrum, Kanban) et rédaction des spécifications fonctionnelles.",
       ],
     },
   ],
@@ -57,13 +45,6 @@ export const sampleFrenchBlue: CV = {
       start: "2015",
       end: "2017",
     },
-    {
-      id: uid(),
-      degree: "Licence Sciences de Gestion & Économie",
-      school: "Université Panthéon-Sorbonne",
-      start: "2012",
-      end: "2015",
-    },
   ],
   skills: [
     "Gestion de projet Agile (Scrum / Kanban)",
@@ -71,21 +52,15 @@ export const sampleFrenchBlue: CV = {
     "Conduite du changement",
     "Gestion budgétaire & ROI",
     "Jira · Confluence · Asana",
-    "Communication de crise",
-    "Analyse fonctionnelle",
-    "Management d'équipe transverse",
   ],
   languages: [
     "Français — langue maternelle",
     "Anglais — courant C1",
     "Espagnol — professionnel B2",
-    "Allemand — intermédiaire B1",
   ],
   interests: [
     "Voyages & immersion culturelle",
     "Course à pied (semi-marathon)",
-    "Mentorat associatif pour jeunes diplômés",
-    "Photographie argentique",
   ],
 };
 
@@ -128,27 +103,7 @@ export const sampleEmeraldTech: CV = {
       start: "2025",
       end: "2026",
       bullets: [
-        "Plateforme professionnelle complète pour un cabinet d'avocats togolais : présentation des domaines d'expertise, profils des associés, prise de rendez-vous en ligne et actualités juridiques. Stack : React, Tailwind CSS, Vercel.",
-      ],
-    },
-    {
-      id: uid(),
-      role: "Projet d'entreprise",
-      company: "AKAA GROUP — Entreprise BTP & Immobilier",
-      start: "2025",
-      end: "2026",
-      bullets: [
-        "Site institutionnel multi-pages pour une entreprise de BTP et promotion immobilière : catalogue de réalisations, présentation des services d'ingénierie et demande de devis en ligne. Stack : React, Tailwind CSS, Vercel.",
-      ],
-    },
-    {
-      id: uid(),
-      role: "Projet institutionnel",
-      company: "CMEP Togo — Collectif des Médecins Éco-Patriotes",
-      start: "2025",
-      end: "2026",
-      bullets: [
-        "Plateforme web pour une association de professionnels de santé engagés : diffusion des missions de santé communautaire, gestion des adhésions et publications d'articles scientifiques. Stack : React, Tailwind CSS, Vercel.",
+        "Plateforme professionnelle complète pour un cabinet d'avocats togolais : domaines d'expertise, profils des associés, prise de rendez-vous en ligne et actualités juridiques. Stack : React, Tailwind CSS, Vercel.",
       ],
     },
   ],
@@ -177,8 +132,6 @@ export const sampleEmeraldTech: CV = {
     "Vercel Deployment",
     "Responsive Design",
     "Outils IA & No-Code",
-    "React Native (notions)",
-    "API REST",
     "Accessibilité Web",
   ],
   languages: [
@@ -215,7 +168,7 @@ export const sampleJuristeNavy: CV = {
       end: "Présent",
       bullets: [
         "Coordination des stagiaires.",
-        "Animation des formations sur la rédaction des documents administratifs (rapport, mémo, compte-rendu).",
+        "Animation des formations sur la rédaction des documents administratifs.",
         "Animation sur la rédaction de projet et de termes de référence.",
         "Monitoring des droits humains.",
       ],
@@ -228,19 +181,7 @@ export const sampleJuristeNavy: CV = {
       end: "Présent",
       bullets: [
         "Animation d'ateliers de renforcement de capacités sur les techniques de reboisement et d'entretien des plants.",
-        "Coordination de webinaires sur les enjeux environnementaux à l'ère numérique.",
         "Coordination opérationnelle de campagnes de reboisement communautaire.",
-      ],
-    },
-    {
-      id: uid(),
-      role: "Programme Eco-Kids — Éducation Environnementale",
-      company: "",
-      start: "2023",
-      end: "Présent",
-      bullets: [
-        "Coordination de micro-projets de reboisement éducatif impliquant des enfants.",
-        "Développement de programmes d'éveil écologique adaptés au jeune enfant.",
       ],
     },
   ],
@@ -259,20 +200,6 @@ export const sampleJuristeNavy: CV = {
       start: "2021",
       end: "2023",
     },
-    {
-      id: uid(),
-      degree: "Certificat Développement Web et Mobile",
-      school: "ISMB — Kara, Togo",
-      start: "2025",
-      end: "2026",
-    },
-    {
-      id: uid(),
-      degree: "Formation modulaire en maraîchage et compostage",
-      school: "Ferme Les Trois Mages de Soumbou",
-      start: "Juil. 2025",
-      end: "Oct. 2025",
-    },
   ],
   skills: [
     "Droit de l'environnement",
@@ -282,13 +209,7 @@ export const sampleJuristeNavy: CV = {
     "Finance climat et économie verte",
     "Gestion de partenariats multi-acteurs",
     "Compostage, bokashi",
-    "Gestion des déchets agricoles",
-    "Gestion de projet",
-    "Solutions vertes",
-    "Mobilisation communautaire",
     "Plaidoyer environnemental",
-    "Négociation climatique",
-    "Google Suite",
   ],
   languages: [
     "Français — courant (96%)",
@@ -301,11 +222,7 @@ export const sampleJuristeNavy: CV = {
   highlights: [
     {
       title: "Rigueur méthodologique",
-      text: "La formation juridique m'a permis de développer une approche structurée de la gestion de projet : analyse de contexte, rédaction de termes de référence, suivi d'indicateurs. Des réflexes méthodologiques que j'applique également à la conduite de projets numériques.",
-    },
-    {
-      title: "Terrain et outils numériques",
-      text: "La coordination d'équipes de terrain a renforcé mes capacités de documentation, de communication et de reporting, des compétences directement transférables à la gestion de projets numériques et à la relation client.",
+      text: "La formation juridique m'a permis de développer une approche structurée de la gestion de projet.",
     },
   ],
 };
@@ -331,8 +248,7 @@ export const sampleAlfredBold: CV = {
       bullets: [
         "Développement et maintenance d'applications web scalables à fort trafic.",
         "Collaboration étroite avec les équipes de design pour créer des interfaces utilisateur intuitives.",
-        "Optimisation poussée des performances des applications et résolution des goulots d'étranglement.",
-        "Mise en place de suites de tests automatisés (unitaires et e2e) garantissant zéro régression.",
+        "Optimisation poussée des performances des applications.",
       ],
     },
     {
@@ -344,8 +260,6 @@ export const sampleAlfredBold: CV = {
       bullets: [
         "Gestion quotidienne des infrastructures réseaux et des parcs de serveurs virtualisés.",
         "Déploiement et supervision des politiques de sécurité et pare-feux d'entreprise.",
-        "Surveillance 24/7 des performances système et résolution rapide des incidents techniques critiques.",
-        "Participation à la planification et à la mise en œuvre de projets d'infrastructure cloud.",
       ],
     },
   ],
@@ -357,31 +271,19 @@ export const sampleAlfredBold: CV = {
       start: "2010",
       end: "2012",
     },
-    {
-      id: uid(),
-      degree: "Licence en Informatique",
-      school: "École Amédé Autran, Paris, France",
-      start: "2007",
-      end: "2010",
-    },
   ],
   skills: [
-    "Langages de programmation (JavaScript, Python, C++)",
-    "Bases de données relationnelles & NoSQL",
-    "Systèmes d'exploitation Linux & Windows Server",
-    "Réseaux, sécurité & virtualisation Docker",
-    "Excellentes compétences en résolution de problèmes et dépannage",
+    "Langages (JavaScript, Python, C++)",
+    "Bases relationnelles & NoSQL",
+    "Systèmes Linux & Windows Server",
+    "Réseaux, sécurité & Docker",
   ],
   languages: [
     "Français — langue maternelle",
     "Anglais — courant C1",
     "Espagnol — intermédiaire B1",
   ],
-  interests: [
-    "Veille technologique & Open Source",
-    "Photographie de paysage",
-    "Lecture scientifique",
-  ],
+  interests: ["Veille technologique & Open Source", "Photographie", "Lecture scientifique"],
 };
 
 export const sampleAdelineCapsule: CV = {
@@ -403,31 +305,8 @@ export const sampleAdelineCapsule: CV = {
       start: "Jan 2021",
       end: "Présent",
       bullets: [
-        "Direction artistique de campagnes de communication à 360° pour des marques de luxe et d'art de vivre.",
-        "Supervision d'une équipe de 5 designers juniors et stagiaires.",
-        "Refonte complète de l'identité visuelle de 6 grandes entreprises internationales.",
-      ],
-    },
-    {
-      id: uid(),
-      role: "Senior Graphic Designer",
-      company: "Warner & Spencer",
-      start: "Jan 2020",
-      end: "Dec 2020",
-      bullets: [
-        "Conception de chartes graphiques, packaging produits et supports imprimés haut de gamme.",
-        "Création d'actifs visuels pour les campagnes digitales ayant augmenté l'engagement de 42 %.",
-      ],
-    },
-    {
-      id: uid(),
-      role: "Junior Graphic Designer",
-      company: "Ingoude Company",
-      start: "Jan 2017",
-      end: "Dec 2019",
-      bullets: [
-        "Création d'illustrations vectorielles, bannières web et typographies sur mesure.",
-        "Préparation méticuleuse des fichiers d'exécution pour l'impression offset et numérique.",
+        "Direction artistique de campagnes de communication à 360° pour des marques de luxe.",
+        "Supervision d'une équipe de 5 designers juniors.",
       ],
     },
   ],
@@ -439,31 +318,212 @@ export const sampleAdelineCapsule: CV = {
       start: "2016",
       end: "2020",
     },
+  ],
+  skills: [
+    "Adobe Creative Cloud",
+    "Figma & Prototypage UX/UI",
+    "Direction artistique & Branding",
+    "Typographie & Édition",
+  ],
+  languages: ["Anglais — bilingue", "Français — courant", "Espagnol — intermédiaire"],
+  interests: ["Design typographique", "Expositions d'art contemporain"],
+  references: [
+    {
+      name: "Alfredo Torres",
+      company: "Directeur, Aldenaire & Partners",
+      contact: "+123-456-7890",
+    },
+  ],
+};
+
+export const sampleMichaelHenson: CV = {
+  personal: {
+    name: "Michael Henson",
+    email: "hello@reallygreatsite.com",
+    phone: "+123-456-7890",
+    location: "123 Anywhere St., Any City",
+    link: "reallygreatsite.com",
+  },
+  title: "Commercial & Business Developer",
+  summary:
+    "Professionnel de la vente et du développement commercial avec 6 ans d'expérience dans l'acquisition de grands comptes, la négociation stratégique et la fidélisation client.",
+  experiences: [
     {
       id: uid(),
-      degree: "Bachelor of Design",
-      school: "Really Great University — Any City",
-      start: "2012",
+      role: "Key Account Manager",
+      company: "Giganet Telecom",
+      start: "2021",
+      end: "Présent",
+      bullets: [
+        "Croissance de +35 % du chiffre d'affaires sur le portefeuille grands comptes.",
+        "Négociation de contrats cadres pluriannuels d'une valeur de plus de 2 M€.",
+      ],
+    },
+  ],
+  education: [
+    {
+      id: uid(),
+      degree: "Master en Négociation Commerciale",
+      school: "Business School Paris",
+      start: "2017",
+      end: "2019",
+    },
+  ],
+  skills: [
+    "Prospection B2B & Closing",
+    "Gestion de portefeuille grands comptes",
+    "CRM Salesforce & HubSpot",
+    "Négociation contractuelle",
+  ],
+  languages: ["Français — langue maternelle", "Anglais — courant C1"],
+  interests: ["Golf", "Économie internationale"],
+};
+
+export const sampleElviraMontanez: CV = {
+  personal: {
+    name: "Dr. Elvira Montanez, MD",
+    email: "elvira.montanez@hospital.org",
+    phone: "+1 555 019 2834",
+    location: "Chicago, IL, États-Unis",
+    link: "drelviramontanez.com",
+  },
+  title: "Médecin Spécialiste & Santé Publique",
+  summary:
+    "Praticienne hospitalière engagée avec plus de 9 ans d'expertise clinique, de coordination d'unités de soins intensifs et d'enseignement médical.",
+  experiences: [
+    {
+      id: uid(),
+      role: "Praticien Hospitalier Titulaire",
+      company: "Chicago Central Hospital",
+      start: "2019",
+      end: "Présent",
+      bullets: [
+        "Coordination d'un service de 28 lits et encadrement de 6 internes.",
+        "Mise en place de protocoles de soins réduisant les durées moyennes de séjour.",
+      ],
+    },
+  ],
+  education: [
+    {
+      id: uid(),
+      degree: "Doctorat d'État en Médecine (MD)",
+      school: "University of Illinois College of Medicine",
+      start: "2010",
       end: "2016",
     },
   ],
   skills: [
-    "Adobe Creative Cloud (Photoshop, Illustrator, InDesign)",
-    "Figma & Prototypage UX/UI",
-    "Direction artistique & Branding",
-    "Typographie & Design éditorial",
-    "Créativité & Respect des délais",
-    "Esprit d'équipe & Communication",
+    "Prise en charge clinique d'urgence",
+    "Recherche translationnelle",
+    "Coordination d'équipes soignantes",
+    "Audit qualité hospitalier",
   ],
   languages: [
-    "Anglais — bilingue",
-    "Français — courant",
-    "Espagnol — intermédiaire",
+    "Anglais — langue maternelle",
+    "Espagnol — bilingue",
+    "Français — intermédiaire B2",
   ],
-  interests: [
-    "Design typographique",
-    "Expositions d'art contemporain",
-    "Céramique et arts appliqués",
+  interests: ["Humanitaire médical", "Violoncelle"],
+};
+
+export const sampleEmmaBrooks: CV = {
+  personal: {
+    name: "Emma Brooks",
+    email: "emma@brooksdesign.co",
+    phone: "+44 20 7946 0912",
+    location: "Londres, Royaume-Uni",
+    link: "emmabrooks-interior.co.uk",
+  },
+  title: "Architecte d'Intérieur & Scénographe",
+  summary:
+    "Créatrice d'espaces habités alliant sensibilité des matières naturelles, optimisation de la lumière et intégration de concepts écologiques contemporains.",
+  experiences: [
+    {
+      id: uid(),
+      role: "Fondatrice & Directrice de Création",
+      company: "Brooks Atelier Studio",
+      start: "2020",
+      end: "Présent",
+      bullets: [
+        "Conception et aménagement de plus de 30 résidences privées et boutiques haut de gamme.",
+        "Gestion globale des chantiers de la phase esquisse jusqu'à la livraison finale.",
+      ],
+    },
+  ],
+  education: [
+    {
+      id: uid(),
+      degree: "Master en Architecture d'Intérieur",
+      school: "Royal College of Art, Londres",
+      start: "2015",
+      end: "2017",
+    },
+  ],
+  skills: [
+    "AutoCAD · SketchUp · Revit",
+    "Conception de mobilier sur mesure",
+    "Éco-conception & Matériaux biosourcés",
+    "Suivi et coordination de chantier",
+  ],
+  languages: [
+    "Anglais — langue maternelle",
+    "Français — courant C1",
+    "Italien — intermédiaire B1",
+  ],
+  interests: ["Céramique japonaise", "Design scandinave"],
+};
+
+export const sampleDrewFeig: CV = {
+  personal: {
+    name: "Drew Feig",
+    email: "drew@feigmarketing.io",
+    phone: "+1 415 889 0122",
+    location: "San Francisco, CA",
+    link: "drewfeig.marketing",
+  },
+  title: "Head of Growth & Performance Marketing",
+  summary:
+    "Leader marketing axé données avec 8 ans d'expérience dans la mise à l'échelle d'entreprises SaaS de 1 M$ à 25 M$ d'ARR. Expert en acquisition multicanale et optimisation du funnel de conversion.",
+  experiences: [
+    {
+      id: uid(),
+      role: "VP Marketing & Growth",
+      company: "ScaleFlow Technologies",
+      start: "2022",
+      end: "Présent",
+      bullets: [
+        "Pilotage d'un budget d'acquisition digital annuel de 3,2 M$ avec un ROAS supérieur à 340 %.",
+        "Direction d'une équipe de 8 spécialistes acquisition, SEO et content marketing.",
+      ],
+    },
+  ],
+  education: [
+    {
+      id: uid(),
+      degree: "MBA in Strategic Marketing",
+      school: "UC Berkeley Haas School of Business",
+      start: "2016",
+      end: "2018",
+    },
+  ],
+  skills: [
+    "Growth Hacking & Funnels",
+    "Paid Search & Social Ads",
+    "Analytics & Attribution (GA4, Mixpanel)",
+    "Product-Led Growth (PLG)",
+  ],
+  languages: [
+    "Anglais — bilingue (100%)",
+    "Français — professionnel (80%)",
+    "Allemand — notions (40%)",
+  ],
+  interests: ["Triathlon", "Angel Investing"],
+  references: [
+    {
+      name: "Marcus Vance",
+      company: "CEO, ScaleFlow Technologies",
+      contact: "marcus@scaleflow.io",
+    },
   ],
 };
 
@@ -473,6 +533,11 @@ export const sampleMap: Record<TemplateId, CV> = {
   "juriste-navy": sampleJuristeNavy,
   "alfred-bold": sampleAlfredBold,
   "adeline-capsule": sampleAdelineCapsule,
+  "sacha-dubois": sampleFrenchBlue,
+  "michael-henson": sampleMichaelHenson,
+  "elvira-montanez": sampleElviraMontanez,
+  "emma-brooks": sampleEmmaBrooks,
+  "drew-feig": sampleDrewFeig,
 };
 
 export const samples = [
@@ -480,4 +545,9 @@ export const samples = [
   { id: "juriste-navy", label: "Juriste & Cadre (Navy & Or)", cv: sampleJuristeNavy },
   { id: "alfred-bold", label: "Informaticien (Bold Minimal)", cv: sampleAlfredBold },
   { id: "adeline-capsule", label: "Designer Graphique (Capsules)", cv: sampleAdelineCapsule },
+  { id: "sacha-dubois", label: "Management & Projets (Sacha)", cv: sampleFrenchBlue },
+  { id: "michael-henson", label: "Commerce & Vente (Henson)", cv: sampleMichaelHenson },
+  { id: "elvira-montanez", label: "Santé & Médical (Dr. Montanez)", cv: sampleElviraMontanez },
+  { id: "emma-brooks", label: "Architecture (Brooks)", cv: sampleEmmaBrooks },
+  { id: "drew-feig", label: "Dark Executive (Feig)", cv: sampleDrewFeig },
 ];

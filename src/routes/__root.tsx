@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "CVflow — Créez un CV percutant avec l'IA" },
       {
         name: "description",
-        content: "5 modèles A4 au millimètre, Coach IA et export PDF compatible ATS.",
+        content: "9 modèles A4 au millimètre, Coach IA et export PDF compatible ATS.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -91,7 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Jost:wght@400;500&family=Lora:ital,wght@0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&family=Montserrat:wght@700;800;900&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Jost:wght@400;500&family=League+Spartan:wght@500;700;800&family=Lora:ital,wght@0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&family=Open+Sans:wght@300;400;600;700;800&family=Oswald:wght@300;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap",
       },
       {
         rel: "stylesheet",

@@ -10,6 +10,12 @@ const VALID_TEMPLATES: TemplateId[] = [
   "juriste-navy",
   "alfred-bold",
   "adeline-capsule",
+  "sacha-dubois",
+  "michael-henson",
+  "elvira-montanez",
+  "emma-brooks",
+  "drew-feig",
+  "french-blue",
 ];
 
 export const defaultDoc = (): CVDocument => ({
@@ -61,21 +67,33 @@ export function loadDoc(): CVDocument {
         },
       };
     }
-  } catch {}
+  } catch (e) {
+    console.error("Impossible de lire le CV depuis le stockage :", e);
+  }
   return defaultDoc();
 }
 
 export function saveDoc(doc: CVDocument) {
   try {
     localStorage.setItem(DOC_KEY, JSON.stringify(doc));
-  } catch {}
+  } catch (e) {
+    console.error("Impossible de sauvegarder le CV :", e);
+  }
 }
 
 export function loadCredits(): number {
-  const v = Number(localStorage.getItem(CREDITS_KEY));
-  return localStorage.getItem(CREDITS_KEY) === null || Number.isNaN(v) ? FREE_CREDITS : v;
+  try {
+    const raw = localStorage.getItem(CREDITS_KEY);
+    if (raw !== null) {
+      const parsed = parseInt(raw, 10);
+      return Number.isNaN(parsed) ? FREE_CREDITS : parsed;
+    }
+  } catch {}
+  return FREE_CREDITS;
 }
 
-export function saveCredits(n: number) {
-  localStorage.setItem(CREDITS_KEY, String(Math.max(0, n)));
+export function saveCredits(c: number) {
+  try {
+    localStorage.setItem(CREDITS_KEY, String(c));
+  } catch {}
 }

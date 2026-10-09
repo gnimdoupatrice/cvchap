@@ -1,18 +1,14 @@
 import type { CV } from "@/lib/cv/types";
 
-/* Modèles 5 à 9 — reproductions des HTML fournis.
-   Géométrie A4 fixe 794 × 1123 ; les sections suivent un flux vertical
-   pour qu'un contenu plus long ne chevauche jamais la section suivante. */
-
 const dates = (s: string, e: string) => [s, e].filter(Boolean).join(" - ");
 const initials = (n: string) =>
   n.split(/\s+/).filter(Boolean).slice(0, 2).map((x) => x[0]?.toUpperCase()).join("");
 const splitName = (n: string) => {
   const parts = n.trim().split(/\s+/);
   if (parts.length < 2) return [n, ""];
-  return [parts.slice(0, -1).join(" "), parts[parts.length - 1]];
+  return [parts.slice(0, -1).join(" "), parts[parts.length - 1] ?? ""];
 };
-const langName = (l: string) => l.split(/—|-|\(/)[0].trim();
+const langName = (l: string) => l.split(/—|-|\(/)[0]?.trim() || l;
 const langPct = (l: string, i: number) => {
   const m = l.match(/(\d+)\s*%/);
   if (m) return Math.min(100, +m[1]);
@@ -36,7 +32,7 @@ const page: React.CSSProperties = {
   width: 794, height: 1123, position: "relative", overflow: "hidden",
   WebkitPrintColorAdjust: "exact", printColorAdjust: "exact",
 };
-/* Repère 920 × 1301 des HTML d'origine, réduit à l'A4. */
+
 const P = ({ children }: { children: React.ReactNode }) => (
   <div style={{ position: "absolute", left: 0, top: 0, width: 920, height: 1301, transform: "scale(.863)", transformOrigin: "0 0" }}>{children}</div>
 );
@@ -228,7 +224,7 @@ export function ElviraMontanez({ cv }: { cv: CV }) {
             <div key={x.id} style={{ position: "relative", marginBottom: 24 }}>
               <Ic kind="work" />
               <div style={{ fontWeight: 700, fontSize: 16.5 }}>{x.role}{x.company ? ` | ${x.company}` : ""}</div>
-              <div style={{ fontStyle: "italic", fontSize: 16.5, marginTop: 4 }}>{dates(x.start, x.end)}</div>
+              <div style={{ fontStyle: "italic", fontSize: 16.5, marginTop: 4 }}>{dates(x.start, eSafe(x.end))}</div>
               <Bul items={x.bullets} />
             </div>
           ))}
@@ -237,7 +233,7 @@ export function ElviraMontanez({ cv }: { cv: CV }) {
             <div key={e.id} style={{ position: "relative", marginBottom: 24 }}>
               <Ic kind="edu" />
               <div style={{ fontWeight: 700, fontSize: 16.5, lineHeight: "26px" }}>{e.degree}{e.school ? ` | ${e.school}` : ""}</div>
-              <div style={{ fontStyle: "italic", fontSize: 16.5 }}>{dates(e.start, e.end)}</div>
+              <div style={{ fontStyle: "italic", fontSize: 16.5 }}>{dates(e.start, eSafe(e.end))}</div>
             </div>
           ))}
         </div>
@@ -265,6 +261,8 @@ export function ElviraMontanez({ cv }: { cv: CV }) {
     </div>
   );
 }
+
+const eSafe = (v?: string) => v ?? "";
 
 /* ============ EMMA BROOKS — Interior Architect ============ */
 export function EmmaBrooks({ cv }: { cv: CV }) {
