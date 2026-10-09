@@ -11,7 +11,7 @@ const splitName = (n: string) => {
 const langName = (l: string) => l.split(/—|-|\(/)[0]?.trim() || l;
 const langPct = (l: string, i: number) => {
   const m = l.match(/(\d+)\s*%/);
-  if (m) return Math.min(100, +m[1]);
+  if (m) return Math.min(100, Number(m[1] ?? 0));
   if (/natif|native|maternel|bilingue/i.test(l)) return 100;
   if (/courant|fluent|professional/i.test(l)) return 85;
   if (/interm/i.test(l)) return 60;
