@@ -91,7 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Jost:wght@400;500&family=League+Spartan:wght@500;700;800&family=Lora:ital,wght@0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&family=Open+Sans:wght@300;400;600;700;800&family=Oswald:wght@300;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Jost:wght@400;500&family=Lato:wght@400;700&family=League+Spartan:wght@500;700;800&family=Lora:ital,wght@0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Nunito+Sans:wght@300;400;600;700&family=Open+Sans:wght@300;400;600;700;800&family=Oswald:wght@300;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:wght@400;600;700&display=swap",
       },
       {
         rel: "stylesheet",

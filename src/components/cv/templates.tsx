@@ -6,6 +6,7 @@ import {
   EmmaBrooks,
   DrewFeig,
 } from "./templates-extra";
+import { DanielMorton, RichardSanchez, DanielGallego, DaniMartinez } from "./templates-new";
 
 export const templateMeta: {
   id: TemplateId;
@@ -66,6 +67,30 @@ export const templateMeta: {
     name: "Marketing Manager — Drew Feig",
     hint: "Thème sombre immersif #313657, barres de compétences & lisibilité maximale",
     category: "Marketing",
+  },
+  {
+    id: "daniel-morton",
+    name: "Design Graphique — Daniel Morton",
+    hint: "Vert forêt & turquoise, médaillon photo et timeline",
+    category: "Jeune diplômé",
+  },
+  {
+    id: "richard-sanchez",
+    name: "Marketing Manager — Richard Sanchez",
+    hint: "Colonne ardoise, triangle bleu ciel & références",
+    category: "Marketing",
+  },
+  {
+    id: "daniel-gallego",
+    name: "Graphic Designer — Daniel Gallego",
+    hint: "Noir profond, vagues orange & fond crème",
+    category: "Créatif & Studio",
+  },
+  {
+    id: "dani-martinez",
+    name: "Marketing Manager — Dani Martinez",
+    hint: "Noir & blanc minimaliste, titre XXL Montserrat",
+    category: "Management",
   },
 ];
 
@@ -729,9 +754,17 @@ function AdelineCapsule({ cv }: { cv: CV }) {
    DISPATCHEUR PRINCIPAL : 9 MODÈLES A4 ACTIFS  
    ======================================================== */
 export function CVTemplate({ cv, template }: { cv: CV; template?: TemplateId }) {
-  const activeTemplate = template ?? cv.meta?.template ?? "emerald-tech";
+  const activeTemplate = template ?? "emerald-tech";
 
   switch (activeTemplate) {
+    case "daniel-morton":
+      return <DanielMorton cv={cv} />;
+    case "richard-sanchez":
+      return <RichardSanchez cv={cv} />;
+    case "daniel-gallego":
+      return <DanielGallego cv={cv} />;
+    case "dani-martinez":
+      return <DaniMartinez cv={cv} />;
     case "juriste-navy":
       return <JuristeNavy cv={cv} />;
     case "alfred-bold":
