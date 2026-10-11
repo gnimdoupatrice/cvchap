@@ -19,7 +19,7 @@ const page: React.CSSProperties = {
 
 const Photo = ({ cv, bg = "#ccc" }: { cv: CV; bg?: string }) =>
   cv.personal.photo ? (
-    <img src={cv.personal.photo} alt={cv.personal.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+    <img src={cv.personal.photo} alt={cv.personal.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 18%", display: "block" }} />
   ) : (
     <div style={{ width: "100%", height: "100%", background: bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 54, fontWeight: 700, color: "#fff" }}>
       {initials(cv.personal.name)}
@@ -211,9 +211,9 @@ export function DanielGallego({ cv }: { cv: CV }) {
       <div style={{ position: "absolute", left: 438, top: 0, width: 316, height: 1090, background: black }} />
       <div style={{ position: "absolute", left: 200, top: -330, width: 900, height: 420, borderRadius: "50%", borderBottom: `34px solid ${orange}`, transform: "rotate(14deg)" }} />
       <div style={{ position: "absolute", left: 480, top: -150, width: 600, height: 300, borderRadius: "50%", borderBottom: `22px solid ${rust}`, transform: "rotate(28deg)" }} />
-      <div style={{ position: "absolute", left: -200, top: 1010, width: 1300, height: 400, borderRadius: "50%", background: black }} />
-      <div style={{ position: "absolute", left: 100, top: 950, width: 1100, height: 400, borderRadius: "50%", borderTop: `40px solid ${orange}`, transform: "rotate(-12deg)" }} />
-      <div style={{ position: "absolute", left: 300, top: 980, width: 1000, height: 400, borderRadius: "50%", borderTop: `30px solid ${rust}`, transform: "rotate(-14deg)" }} />
+      <div style={{ position: "absolute", left: -200, top: 1050, width: 1300, height: 400, borderRadius: "50%", background: black }} />
+      <div style={{ position: "absolute", left: 100, top: 1020, width: 1100, height: 400, borderRadius: "50%", borderTop: `40px solid ${orange}`, transform: "rotate(-12deg)" }} />
+      <div style={{ position: "absolute", left: 300, top: 1050, width: 1000, height: 400, borderRadius: "50%", borderTop: `30px solid ${rust}`, transform: "rotate(-14deg)" }} />
 
       <div style={{ position: "absolute", left: 513, top: 80, width: 170, height: 170, borderRadius: "50%", border: `5px solid ${orange}`, overflow: "hidden", boxSizing: "border-box", background: "#ddd" }}>
         <Photo cv={cv} bg={rust} />
