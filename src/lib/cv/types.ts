@@ -8,7 +8,11 @@ export type TemplateId =
   | "michael-henson"
   | "elvira-montanez"
   | "emma-brooks"
-  | "drew-feig";
+  | "drew-feig"
+  | "daniel-morton"
+  | "richard-sanchez"
+  | "daniel-gallego"
+  | "dani-martinez";
 
 export type InputMode = "form" | "coach";
 

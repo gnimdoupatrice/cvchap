@@ -1,3 +1,7 @@
+import morton from "@/assets/cv/morton.jpg";
+import sanchez from "@/assets/cv/sanchez.jpg";
+import gallego from "@/assets/cv/gallego.jpg";
+import martinez from "@/assets/cv/martinez.jpg";
 import { uid, type CV, type TemplateId } from "./types";
 
 /* ==========================================================================
@@ -614,6 +618,87 @@ export const sampleDrewFeig: CV = {
   references: [{ name: "Lorna Alvarado", company: "CEO, Borcelle Company", contact: "Phone : +123-456-7890" }],
 };
 
+
+const contact = { email: "hello@reallygreatsite.com", phone: "+123-456-7890", location: "123 Anywhere St., Any City" };
+
+export const sampleDanielMorton: CV = {
+  personal: { name: "Daniel Morton", ...contact, link: "@reallygreatsite", photo: morton },
+  title: "Design Graphic",
+  summary: "Motivated and detail-oriented fresh graduate with a strong passion for learning, professional growth, and continuous improvement. Possesses excellent communication, organizational, and problem-solving abilities, with the capability to work effectively both independently and within a team.",
+  experiences: [{ id: uid(), role: "Business Development Project", company: "", start: "", end: "", bullets: ["Collaborated with a team to identify business opportunities and develop strategic recommendations for sustainable growth."] }],
+  education: [{ id: uid(), degree: "Bachelor of Business Administration", school: "North Primary School", start: "2023", end: "2025" }],
+  skills: ["Communication", "Teamwork", "Leadership", "Time Management", "Critical Thinking"],
+  languages: [],
+  interests: ["Research & Data Analysis", "Digital Content Creation"],
+  highlights: [
+    { title: "Professional Development", text: "Completed training focused on workplace readiness, communication, and professional growth." },
+    { title: "Management Fundamentals", text: "Completed foundational training in project planning, organization, and execution." },
+  ],
+  certifications: ["Academic Excellence Recognition", "Outstanding Team Project Award", "Leadership Participation Recognition"],
+};
+
+export const sampleRichardSanchez: CV = {
+  personal: { name: "Richard Sanchez", ...contact, link: "www.reallygreatsite.com", photo: sanchez },
+  title: "Marketing Manager",
+  summary: "Marketing manager with a proven record of building brands and leading high-performing teams. I design data-driven campaigns that align with business goals, grow qualified audiences and keep brand messaging consistent across every channel.",
+  experiences: [
+    { id: uid(), role: "Marketing Manager & Specialist", company: "Borcelle Studio", start: "2030", end: "Present", bullets: ["Develop and execute comprehensive marketing strategies and campaigns that align with the company's goals and objectives.", "Lead, mentor, and manage a high-performing marketing team, fostering a collaborative and results-driven work environment.", "Monitor brand consistency across marketing channels and materials."] },
+    { id: uid(), role: "Marketing Manager & Specialist", company: "Fauget Studio", start: "2025", end: "2029", bullets: ["Create and manage the marketing budget, ensuring efficient allocation of resources and optimizing ROI.", "Oversee market research to identify emerging trends, customer needs, and competitor strategies.", "Monitor brand consistency across marketing channels and materials."] },
+  ],
+  education: [
+    { id: uid(), degree: "Master of Business Management", school: "Wardiere University", start: "2029", end: "2030" },
+    { id: uid(), degree: "Bachelor of Business · GPA 3.8 / 4.0", school: "Wardiere University", start: "2025", end: "2029" },
+  ],
+  skills: ["Project Management", "Public Relations", "Teamwork", "Time Management", "Leadership", "Effective Communication", "Critical Thinking"],
+  languages: [],
+  interests: [],
+  references: [
+    { name: "Estelle Darcy", company: "Wardiere Inc. / CTO", contact: "123-456-7890" },
+    { name: "Harper Richard", company: "Wardiere Inc. / CEO", contact: "123-456-7890" },
+  ],
+};
+
+export const sampleDanielGallego: CV = {
+  personal: { name: "Daniel Gallego", ...contact, link: "www.reallygreatsite.com", photo: gallego },
+  title: "Graphic Designer",
+  summary: "Creative and detail-oriented graphic designer with over 5 years of experience creating visual solutions for brands and businesses. Passionate about transforming ideas into impactful designs while maintaining strong attention to detail and aesthetics.",
+  experiences: [
+    { id: uid(), role: "Graphic Designer", company: "Arowwai Industries", start: "2022", end: "Present", bullets: ["Designed marketing materials for digital and print campaigns", "Developed branding concepts for small and medium businesses", "Collaborated with marketing teams to create engaging visual content"] },
+    { id: uid(), role: "Junior Graphic Designer", company: "Studio Shodwe", start: "2020", end: "2022", bullets: ["Assisted senior designers in creating advertising materials", "Designed social media graphics and promotional content", "Maintained brand consistency across different platforms"] },
+  ],
+  education: [
+    { id: uid(), degree: "Bachelor of Graphic Design", school: "University Borcelle", start: "2018", end: "2022" },
+    { id: uid(), degree: "High School Diploma", school: "Borcelle institute", start: "2015", end: "2018" },
+  ],
+  skills: ["Problem Solving", "Creative Thinking", "Adaptability", "Team Collaboration", "Time Management"],
+  languages: ["English", "German", "Spanish"],
+  interests: [],
+  references: [{ name: "Marceline Anderson", company: "Creative Director Arowwai Industries", contact: "123-456-7890 · hello@reallygreatsite.com" }],
+};
+
+export const sampleDaniMartinez: CV = {
+  personal: { name: "Dani Martinez", ...contact, link: "", photo: martinez },
+  title: "Marketing Manager",
+  summary: "Marketing manager focused on brand growth and measurable results. I combine creativity, digital strategy and negotiation to lead teams and deliver campaigns that convert.",
+  experiences: [
+    { id: uid(), role: "Sydney - Australia", company: "Arowwai Industries", start: "2020", end: "2022", bullets: ["Led multichannel campaigns and grew qualified leads while coordinating creative, sales and digital teams around shared objectives."] },
+    { id: uid(), role: "Sydney - Australia", company: "Wardiere Inc.", start: "2016", end: "2020", bullets: ["Managed brand positioning and partnerships, negotiating key agreements and improving campaign return on investment."] },
+    { id: uid(), role: "Sydney - Australia", company: "Studio Showde", start: "2010", end: "2015", bullets: ["Produced digital marketing content and analysed audience data to refine messaging and strengthen customer engagement."] },
+  ],
+  education: [
+    { id: uid(), degree: "Bachelor of Business Management", school: "Borcelle University", start: "2020", end: "2023" },
+    { id: uid(), degree: "Master of Business Management", school: "Borcelle University", start: "2016", end: "2020" },
+  ],
+  skills: ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"],
+  languages: ["English", "German (basic)"],
+  interests: [],
+  certifications: ["Oct 2019 | Ingoude Company — The Best Employee of the Year"],
+  references: [
+    { name: "Bailey Dupont", company: "Wardiere Inc. / CEO", contact: "123-456-7890 · hello@reallygreatsite.com" },
+    { name: "Harumi Kobayashi", company: "Wardiere Inc. / CEO", contact: "123-456-7890 · hello@reallygreatsite.com" },
+  ],
+};
+
 export const sampleMap: Record<TemplateId, CV> = {
   "french-blue": sampleFrenchBlue,
   "emerald-tech": sampleEmeraldTech,
@@ -625,6 +710,10 @@ export const sampleMap: Record<TemplateId, CV> = {
   "elvira-montanez": sampleElviraMontanez,
   "emma-brooks": sampleEmmaBrooks,
   "drew-feig": sampleDrewFeig,
+  "daniel-morton": sampleDanielMorton,
+  "richard-sanchez": sampleRichardSanchez,
+  "daniel-gallego": sampleDanielGallego,
+  "dani-martinez": sampleDaniMartinez,
 };
 
 export const samples = [
@@ -637,4 +726,8 @@ export const samples = [
   { id: "elvira-montanez", label: "Médecin", cv: sampleElviraMontanez },
   { id: "emma-brooks", label: "Architecte d'intérieur", cv: sampleEmmaBrooks },
   { id: "drew-feig", label: "Marketing Manager", cv: sampleDrewFeig },
+  { id: "daniel-morton", label: "Jeune diplômé", cv: sampleDanielMorton },
+  { id: "richard-sanchez", label: "Responsable marketing", cv: sampleRichardSanchez },
+  { id: "daniel-gallego", label: "Graphiste", cv: sampleDanielGallego },
+  { id: "dani-martinez", label: "Manager", cv: sampleDaniMartinez },
 ];
