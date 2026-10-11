@@ -16,3 +16,4 @@
 - PDF export uses the browser print engine with A4 `@page` CSS so text stays vector/selectable (ATS-friendly).
 - Optional portrait images remain embedded as local data URLs so guest CVs and print exports work without remote storage.
 - The only active CV template is the editable HTML/CSS reproduction of “Français Simple Moderne Bleu”; keep its fixed 794 × 1123 A4 geometry so print and preview remain identical.
+- Additional CV templates live in `src/components/cv/templates-new.tsx` (dispatched from `templates.tsx`) so existing template files stay untouched; sample portraits are bundled under `src/assets/cv/`.
