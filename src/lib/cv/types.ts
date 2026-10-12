@@ -31,6 +31,8 @@ export interface Education {
   school: string;
   start: string;
   end: string;
+  /** Ligne complémentaire optionnelle (ex. moyenne). */
+  note?: string;
 }
 
 export interface CV {
