@@ -7,6 +7,7 @@ import {
   DrewFeig,
 } from "./templates-extra";
 import { DanielMorton, RichardSanchez, DanielGallego, DaniMartinez } from "./templates-new";
+import { SanchezProduct, AdelinePalmerston } from "./templates-fidele";
 
 export const templateMeta: {
   id: TemplateId;
@@ -91,6 +92,18 @@ export const templateMeta: {
     name: "Marketing Manager — Dani Martinez",
     hint: "Noir & blanc minimaliste, titre XXL Montserrat",
     category: "Management",
+  },
+  {
+    id: "sanchez-product",
+    name: "Product Designer — Richard Sanchez",
+    hint: "Colonne noire, bandeau bleu roi & capsules",
+    category: "Design",
+  },
+  {
+    id: "adeline-palmerston",
+    name: "Graphics Designer — Adeline Palmerston",
+    hint: "Jaune soleil, bleu nuit & timeline",
+    category: "Créatif & Studio",
   },
 ];
 
@@ -763,6 +776,10 @@ export function CVTemplate({ cv, template }: { cv: CV; template?: TemplateId }) 
       return <RichardSanchez cv={cv} />;
     case "daniel-gallego":
       return <DanielGallego cv={cv} />;
+    case "sanchez-product":
+      return <SanchezProduct cv={cv} />;
+    case "adeline-palmerston":
+      return <AdelinePalmerston cv={cv} />;
     case "dani-martinez":
       return <DaniMartinez cv={cv} />;
     case "juriste-navy":

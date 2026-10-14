@@ -2,6 +2,8 @@ import morton from "@/assets/cv/morton.jpg";
 import sanchez from "@/assets/cv/sanchez.jpg";
 import gallego from "@/assets/cv/gallego.jpg";
 import martinez from "@/assets/cv/martinez.jpg";
+import sanchezProduct from "@/assets/cv/sanchez-product.jpg";
+import palmerston from "@/assets/cv/palmerston.jpg";
 import { uid, type CV, type TemplateId } from "./types";
 
 /* ==========================================================================
@@ -699,6 +701,42 @@ export const sampleDaniMartinez: CV = {
   ],
 };
 
+export const sampleSanchezProduct: CV = {
+  personal: { name: "Richard Sanchez", email: "hello@reallygreatsite.com", phone: "+123-456-7890", location: "123 Anywhere St., Any City", link: "", photo: sanchezProduct },
+  title: "Product Designer",
+  summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet quam rhoncus, egestas dui eget, malesuada justo. Ut aliquam augue dui.",
+  experiences: [
+    { id: uid(), company: "Arowwai Industries", role: "Sydney - Australia", start: "2020", end: "2022", bullets: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet quam rhoncus, egestas dui eget, malesuada justo. Ut aliquam augue."] },
+    { id: uid(), company: "Wardiere Inc.", role: "Sydney - Australia", start: "2016", end: "2020", bullets: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet quam rhoncus, egestas dui eget, malesuada justo. Ut aliquam augue."] },
+    { id: uid(), company: "Studio Showde", role: "Sydney - Australia", start: "2010", end: "2015", bullets: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet quam rhoncus, egestas dui eget, malesuada justo. Ut aliquam augue."] },
+  ],
+  education: [
+    { id: uid(), school: "Borcelle University", degree: "Bachelor of Business Management", start: "2014", end: "2023" },
+    { id: uid(), school: "Borcelle University", degree: "Master of Business Management", start: "2014", end: "2018" },
+  ],
+  skills: ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"],
+  languages: ["English", "Germany (basic)", "Spain (basic)"],
+  interests: [],
+  highlights: [{ title: "Design Process", text: "78" }, { title: "Project Management", text: "81" }],
+};
+
+export const sampleAdelinePalmerston: CV = {
+  personal: { name: "Adeline Palmerston", email: "hello@reallygreatsite.com", phone: "+123-456-7890", location: "123 Anywhere Street., Any City", link: "", photo: palmerston },
+  title: "Graphics Designer",
+  summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pharetra in lorem at laoreet. Donec hendrerit libero eget est tempor, quis tempus arcu elementum.",
+  experiences: [
+    { id: uid(), role: "Senior Graphic Designer", company: "Fauget studio", start: "2020", end: "2024", bullets: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pharetra in lorem at laoreet."] },
+    { id: uid(), role: "Senior Graphic Designer", company: "larana, inc", start: "2017", end: " 2019", bullets: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pharetra in lorem at laoreet."] },
+  ],
+  education: [
+    { id: uid(), school: "Wardiere University", degree: "Bachelor of Design", start: "2011", end: "2015", note: "3.65" },
+    { id: uid(), school: "Wardiere University", degree: "Bachelor of Design", start: "2014", end: "2019", note: "3.99" },
+  ],
+  skills: ["Web Design", "Branding", "Graphic Design", "SEO", "Marketing"],
+  languages: ["English", "French"],
+  interests: [],
+};
+
 export const sampleMap: Record<TemplateId, CV> = {
   "french-blue": sampleFrenchBlue,
   "emerald-tech": sampleEmeraldTech,
@@ -714,6 +752,8 @@ export const sampleMap: Record<TemplateId, CV> = {
   "richard-sanchez": sampleRichardSanchez,
   "daniel-gallego": sampleDanielGallego,
   "dani-martinez": sampleDaniMartinez,
+  "sanchez-product": sampleSanchezProduct,
+  "adeline-palmerston": sampleAdelinePalmerston,
 };
 
 export const samples = [
@@ -730,4 +770,6 @@ export const samples = [
   { id: "richard-sanchez", label: "Responsable marketing", cv: sampleRichardSanchez },
   { id: "daniel-gallego", label: "Graphiste", cv: sampleDanielGallego },
   { id: "dani-martinez", label: "Manager", cv: sampleDaniMartinez },
+  { id: "sanchez-product", label: "Product Designer", cv: sampleSanchezProduct },
+  { id: "adeline-palmerston", label: "Graphiste", cv: sampleAdelinePalmerston },
 ];

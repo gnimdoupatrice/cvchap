@@ -12,7 +12,9 @@ export type TemplateId =
   | "daniel-morton"
   | "richard-sanchez"
   | "daniel-gallego"
-  | "dani-martinez";
+  | "dani-martinez"
+  | "sanchez-product"
+  | "adeline-palmerston";
 
 export type InputMode = "form" | "coach";
 
