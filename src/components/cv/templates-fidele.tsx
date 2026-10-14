@@ -69,13 +69,13 @@ export function SanchezProduct({ cv }: { cv: CV }) {
       {/* nom & titre */}
       <div style={abs({ left: 306.8, top: 117, fontFamily: "Poppins, sans-serif", fontWeight: 600, fontSize: 48.9, lineHeight: "58px", color: "#fff", textTransform: "uppercase", whiteSpace: "nowrap" })}>{first}</div>
       <div style={abs({ left: 350.7, top: 175, fontFamily: "Poppins, sans-serif", fontWeight: 600, fontSize: 48.9, lineHeight: "58px", color: "#fff", textTransform: "uppercase", whiteSpace: "nowrap" })}>{last}</div>
-      <div style={abs({ left: 405.6, top: 223, fontSize: 17.8, lineHeight: "22px", color: "#fff", whiteSpace: "nowrap" })}>{cv.title}</div>
+      <div style={abs({ left: 405.6, top: 226, fontSize: 17.8, lineHeight: "22px", color: "#fff", whiteSpace: "nowrap" })}>{cv.title}</div>
 
       {/* colonne gauche */}
       <aside style={abs({ left: 44.3, top: 296.8, width: 294.5, bottom: 20, color: "#fff", display: "flex", flexDirection: "column", alignItems: "stretch" })}>
         <div style={{ textAlign: "center", fontSize: 20.45, lineHeight: "24px", marginLeft: 0, width: 276 }}>About Me</div>
         {cv.summary && (
-          <p style={{ margin: "12.4px 0 0", alignSelf: "flex-start", marginLeft: 52.7, width: 170, textAlign: "center", fontSize: 12.45, lineHeight: "16.85px" }}>{cv.summary}</p>
+          <p style={{ margin: "12.4px 0 0", alignSelf: "flex-start", marginLeft: 55.7, width: 164, textAlign: "center", fontSize: 12.45, lineHeight: "16.85px" }}>{cv.summary}</p>
         )}
         <div style={{ marginTop: 11.6, marginLeft: 49, display: "flex", flexDirection: "column", gap: 16.5 }}>
           {contacts.filter(([v]) => v).map(([v, d], i) => (
@@ -221,7 +221,7 @@ export function AdelinePalmerston({ cv }: { cv: CV }) {
         <Head icon={icons.user} c="About Me" mt={0} iconBox={38.5} />
         {cv.summary && <p style={{ margin: "15.8px 0 0 -6.7px", width: 235, fontSize: 12.45, lineHeight: "16px", textAlign: "justify" }}>{cv.summary}</p>}
         <Head icon={icons.card} c="Contact" mt={59} iconBox={38.5} />
-        <div style={{ marginTop: 15.5, display: "flex", flexDirection: "column", gap: 13.7 }}>
+        <div style={{ marginTop: 15.5, display: "flex", flexDirection: "column", gap: 15 }}>
           {contacts.filter(([v]) => v).map(([v, ic], i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", fontSize: 14.2, lineHeight: "22px", minHeight: 22, wordBreak: "break-word" }}>
               <span style={{ width: 32, display: "flex", paddingLeft: 4 }}>{ic}</span><span>{v}</span>
@@ -229,11 +229,11 @@ export function AdelinePalmerston({ cv }: { cv: CV }) {
           ))}
         </div>
         {cv.skills.length > 0 && <>
-          <Head icon={icons.bulb} c="Skills" mt={53} iconBox={38.5} />
+          <Head icon={icons.bulb} c="Skills" mt={58} iconBox={38.5} />
           <div style={{ marginTop: 7.8 }}>{cv.skills.map((s, i) => <Bul key={i} c={s} size={13.3} h={34} textLeft={20} />)}</div>
         </>}
         {cv.languages.length > 0 && <>
-          <Head icon={icons.lang} c="Language" mt={27.5} iconBox={38.5} />
+          <Head icon={icons.lang} c="Language" mt={32} iconBox={38.5} />
           <div style={{ marginTop: 6 }}>{cv.languages.map((s, i) => <Bul key={i} c={s} size={14.2} h={34.7} textLeft={23} />)}</div>
         </>}
       </aside>
