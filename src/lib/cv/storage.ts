@@ -19,6 +19,8 @@ const VALID_TEMPLATES: TemplateId[] = [
   "richard-sanchez",
   "daniel-gallego",
   "dani-martinez",
+  "sanchez-product",
+  "adeline-palmerston",
   "french-blue",
 ];
 
