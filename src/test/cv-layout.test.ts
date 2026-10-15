@@ -21,11 +21,15 @@ describe("A4 layout", () => {
   it("enlarges sparse content instead of only shrinking it", () => {
     const fits = ({ fontSize, sectionSpacing }: { fontSize: number; sectionSpacing: number }) => fontSize * 6 + sectionSpacing <= 1000;
     const result = findOptimalLayout(fits);
-    expect(result).toEqual({ fontSize: 140, sectionSpacing: 160 });
+    expect(result).toEqual({ fontSize: 140, sidebarFontSize: 140, sectionSpacing: 160 });
     expect(result && fits(result)).toBe(true);
     expect(fits({ fontSize: 140, sectionSpacing: 161 })).toBe(false);
   });
   it("reports impossible one-page content without discarding text", () => {
     expect(findOptimalLayout(() => false)).toBeNull();
+  });
+  it("enlarges the main column even when the sidebar is already full", () => {
+    const fits = (layout: { fontSize: number; sectionSpacing: number; sidebarFontSize?: number }) => layout.fontSize <= 135 && (layout.sidebarFontSize ?? layout.fontSize) <= 95 && layout.sectionSpacing <= 110;
+    expect(findOptimalLayout(fits)).toEqual({ fontSize: 135, sidebarFontSize: 95, sectionSpacing: 110 });
   });
 });

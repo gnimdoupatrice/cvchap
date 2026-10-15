@@ -18,6 +18,10 @@ export function LayoutControls({ value, onChange, onOptimize, optimizing, overfl
           <Slider aria-labelledby="cv-font-label" min={FONT_MIN} max={FONT_MAX} step={1} value={[value.fontSize]} onValueChange={([fontSize]) => onChange({ ...value, fontSize: fontSize ?? 100 })} />
         </div>
         <div>
+          <div className="mb-3 flex items-center justify-between text-xs"><label id="cv-sidebar-label" className="flex items-center gap-2"><Type className="size-3.5 text-primary" />Police colonne latérale</label><output className="font-semibold tabular-nums">{value.sidebarFontSize ?? value.fontSize} %</output></div>
+          <Slider aria-labelledby="cv-sidebar-label" min={FONT_MIN} max={FONT_MAX} step={1} value={[value.sidebarFontSize ?? value.fontSize]} onValueChange={([sidebarFontSize]) => onChange({ ...value, sidebarFontSize: sidebarFontSize ?? 100 })} />
+        </div>
+        <div>
           <div className="mb-3 flex items-center justify-between text-xs"><label id="cv-spacing-label" className="flex items-center gap-2"><Rows3 className="size-3.5 text-primary" />Espacement entre sections</label><output className="font-semibold tabular-nums">{value.sectionSpacing} %</output></div>
           <Slider aria-labelledby="cv-spacing-label" min={SPACING_MIN} max={SPACING_MAX} step={1} value={[value.sectionSpacing]} onValueChange={([sectionSpacing]) => onChange({ ...value, sectionSpacing: sectionSpacing ?? 100 })} />
         </div>

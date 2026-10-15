@@ -18,7 +18,8 @@ export function applyTemplateLayout(root: HTMLElement, value: CVLayout) {
   const settings = normalizeLayout(value);
   for (const entry of entries) {
     const { element } = entry;
-    const factor = entry.font >= 24 ? Math.min(1.15, settings.fontSize / 100) : settings.fontSize / 100;
+    const columnFont = element.closest("aside") ? settings.sidebarFontSize ?? settings.fontSize : settings.fontSize;
+    const factor = entry.font >= 24 ? Math.min(1.15, columnFont / 100) : columnFont / 100;
     element.style.setProperty("font-size", `${entry.font * factor}px`, "important");
     if (Number.isFinite(entry.line)) element.style.setProperty("line-height", `${entry.line * factor}px`, "important");
     for (const [property, size] of [["margin-top", entry.top], ["margin-bottom", entry.bottom], ["row-gap", entry.gap]] as const) {

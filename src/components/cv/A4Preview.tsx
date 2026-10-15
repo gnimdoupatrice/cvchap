@@ -84,7 +84,7 @@ export function A4Preview({
           <div
             id="cv-page"
             className="cv-paper relative shadow-paper"
-            style={{ width: A4_W, minHeight: A4_H }}
+            style={{ width: A4_W, height: A4_H }}
           >
             <div ref={contentRef}>
               <CVTemplate cv={doc.cv} template={doc.template} layout={normalizeLayout(doc.layout)} />

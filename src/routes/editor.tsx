@@ -124,7 +124,7 @@ function Editor() {
       <Toaster />
       {/* Barre supérieure */}
       <header className="flex h-14 items-center justify-between border-b px-4 no-print sm:px-6">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <Link
             to="/"
             className="flex items-center gap-2 font-semibold tracking-tight text-foreground"
@@ -137,12 +137,13 @@ function Editor() {
           <span className="text-muted-foreground/40">/</span>
 
           {/* Sélecteur parmi les 5 modèles */}
-          <div className="flex items-center gap-1.5 rounded-lg border bg-card px-2 py-1 shadow-soft">
+          <div className="flex min-w-0 items-center gap-1.5 rounded-lg border bg-card px-2 py-1 shadow-soft">
             <LayoutTemplate className="h-3.5 w-3.5 text-primary" />
             <select
               value={doc.template}
               onChange={(e) => update({ template: e.target.value as TemplateId })}
-              className="bg-transparent text-xs font-semibold focus:outline-none cursor-pointer"
+              aria-label="Modèle de CV"
+              className="min-w-0 w-full max-w-40 bg-transparent text-xs font-semibold focus:outline-none cursor-pointer sm:max-w-64"
             >
               {templateMeta.map((t) => (
                 <option key={t.id} value={t.id}>
@@ -174,9 +175,9 @@ function Editor() {
             </span>
           </div>
 
-          <Button onClick={print} size="sm">
+          <Button onClick={print} size="sm" aria-label="Exporter en PDF" title="Exporter en PDF">
             <Download className="h-3.5 w-3.5" />
-            <span>Exporter en PDF</span>
+            <span className="hidden sm:inline">Exporter en PDF</span>
           </Button>
         </div>
       </header>
