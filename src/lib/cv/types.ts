@@ -1,3 +1,5 @@
+import type { CVLayout } from "./layout";
+
 export type TemplateId =
   | "french-blue"
   | "emerald-tech"
@@ -65,7 +67,8 @@ export interface CVDocument {
   cv: CV;
   template: TemplateId;
   mode: InputMode;
-  /** Facteur de densité A4 (1 = normal, inférieur = plus serré).   ok ok ok ok  */
+  layout?: CVLayout;
+  /** Ancien facteur de densité, conservé pour les documents existants. */
   scale: number;
 }
 

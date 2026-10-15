@@ -1,4 +1,5 @@
 import { sampleEmeraldTech } from "./samples";
+import { DEFAULT_LAYOUT, normalizeLayout } from "./layout";
 import { type CVDocument, type TemplateId } from "./types";
 
 const DOC_KEY = "cvflow.doc.v1";
@@ -29,6 +30,7 @@ export const defaultDoc = (): CVDocument => ({
   template: "emerald-tech",
   mode: "form",
   scale: 1,
+  layout: { ...DEFAULT_LAYOUT },
 });
 
 export function loadDoc(): CVDocument {
@@ -46,6 +48,7 @@ export function loadDoc(): CVDocument {
         ...fallback,
         ...stored,
         template: validTemplate,
+        layout: normalizeLayout(stored.layout),
         cv: {
           ...fallback.cv,
           ...stored.cv,
