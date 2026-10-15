@@ -243,7 +243,7 @@ export function AdelinePalmerston({ cv }: { cv: CV }) {
         {cv.education.length > 0 && <>
           <div style={{ marginLeft: -45 }}><Head icon={icons.cap} c="Education" mt={0} iconBox={45} /></div>
           {cv.education.map((e, i) => (
-            <div key={e.id} style={{ marginTop: i === 0 ? 19 : 28.2 }}>
+            <div key={e.id} style={{ marginTop: i === 0 ? 24 : 40 }}>
               <Timeline line={[11, 10]}>
                 <div style={{ fontWeight: 700, fontSize: 18.7, lineHeight: "24px" }}>{dateLabel(e.start, e.end)}</div>
                 <div style={{ fontWeight: 700, fontSize: 15.5, lineHeight: "25px", marginTop: 1.8, textTransform: "uppercase" }}>{e.school}</div>
@@ -254,9 +254,9 @@ export function AdelinePalmerston({ cv }: { cv: CV }) {
           ))}
         </>}
         {cv.experiences.length > 0 && <>
-          <div style={{ marginLeft: -40, marginTop: 31.8 }}><Head icon={icons.award} c="Experience" mt={0} iconBox={45} /></div>
+          <div style={{ marginLeft: -40, marginTop: 45 }}><Head icon={icons.award} c="Experience" mt={0} iconBox={45} /></div>
           {cv.experiences.map((x, i) => (
-            <div key={x.id} style={{ marginTop: i === 0 ? 15 : 32.5 }}>
+            <div key={x.id} style={{ marginTop: i === 0 ? 24 : 45 }}>
               <Timeline line={[11.2, -1]}>
                 <div style={{ fontWeight: 700, fontSize: 18.7, lineHeight: "24px" }}>{dateLabel(x.start, x.end)}</div>
                 <div style={{ fontWeight: 700, fontSize: 15.5, lineHeight: "25px", marginTop: 1.8, textTransform: "uppercase" }}>{x.role}</div>

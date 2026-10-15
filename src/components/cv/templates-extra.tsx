@@ -217,7 +217,7 @@ export function ElviraMontanez({ cv }: { cv: CV }) {
             {contacts.map((c, i) => <div key={i} style={{ wordBreak: "break-all" }}>{c}</div>)}
           </div>
         </div>
-        <div style={{ position: "absolute", left: 150, top: 350, width: 400, bottom: 50, overflowWrap: "anywhere" }}>
+        <div data-a4-column="main" style={{ position: "absolute", left: 150, top: 350, width: 400, bottom: 50, overflowWrap: "anywhere" }}>
           <H c="Work Experience" />
           <div style={{ marginLeft: -77, marginTop: -26 }} />
           {cv.experiences.map((x) => (
@@ -237,17 +237,17 @@ export function ElviraMontanez({ cv }: { cv: CV }) {
             </div>
           ))}
         </div>
-        <div style={{ position: "absolute", left: 634, top: 350, width: 260, bottom: 50, overflowWrap: "anywhere" }}>
+        <div data-a4-column="sidebar" style={{ position: "absolute", left: 634, top: 350, width: 260, bottom: 50, overflowWrap: "anywhere" }}>
           {cv.summary && <div style={{ marginBottom: 30 }}><H c="Profile" /><p style={{ margin: "-12px 0 0", fontSize: 15.5, lineHeight: "23px" }}>{cv.summary}</p></div>}
           <H c="Relevant Skills" />
           {cv.skills.map((s, i) => (
-            <div key={i} style={{ position: "relative", paddingLeft: 33, fontSize: 19, lineHeight: "30px" }}>
+            <div key={i} style={{ position: "relative", paddingLeft: 33, fontSize: 17, lineHeight: "27px" }}>
               <span style={{ position: "absolute", left: 16, top: 10, width: 8, height: 8, borderRadius: "50%", background: "#000" }} />{s}
             </div>
           ))}
           {!!cv.highlights?.length && <div style={{ marginTop: 40 }}><H c="Volunteer Work and Affiliations" />
             {cv.highlights.map((h, i) => (
-              <div key={i} style={{ marginBottom: 34 }}>
+              <div key={i} style={{ marginBottom: 24 }}>
                 <div style={{ fontWeight: 700, fontSize: 16.5, lineHeight: "27px" }}>{h.title}</div>
                 <div style={{ fontStyle: "italic", fontSize: 16.5 }}>{h.text}</div>
               </div>
@@ -294,7 +294,7 @@ export function EmmaBrooks({ cv }: { cv: CV }) {
         </div>
         <div style={{ position: "absolute", left: 0, top: 607, width: 920, height: 1.5, background: "#e0623f" }} />
         <div style={{ position: "absolute", left: 626, top: 608, width: 1, height: 614, background: "#444" }} />
-        <div style={{ position: "absolute", left: 37, top: 628, width: 570, bottom: 45, overflowWrap: "anywhere" }}>
+        <div data-a4-column="main" style={{ position: "absolute", left: 37, top: 628, width: 570, bottom: 45, overflowWrap: "anywhere" }}>
           <H c="EXPERIENCE" />
           <div style={{ position: "relative" }}>
             <div style={{ position: "absolute", left: 98, top: 6, bottom: 20, width: 1.5, background: red }} />
@@ -311,7 +311,7 @@ export function EmmaBrooks({ cv }: { cv: CV }) {
             ))}
           </div>
         </div>
-        <div style={{ position: "absolute", left: 649, top: 628, width: 250, bottom: 45, overflowWrap: "anywhere", display: "flex", flexDirection: "column", gap: 16 }}>
+        <div data-a4-column="sidebar" style={{ position: "absolute", left: 649, top: 628, width: 250, bottom: 45, overflowWrap: "anywhere", display: "flex", flexDirection: "column", gap: 16 }}>
           <section><H c="EDUCATION" />
             {cv.education.map((e) => <div key={e.id} style={{ marginBottom: 12 }}><RH c={e.degree.toUpperCase()} /><R c={[e.school, e.end].filter(Boolean).join(" | ")} /></div>)}
           </section>

@@ -154,7 +154,7 @@ function EmeraldTech({ cv }: { cv: CV }) {
         .dev-photo { position: absolute; top: 48px; left: 49px; width: 174px; height: 174px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 9px 20px rgba(10,24,40,.45); }
         .dev-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .dev-initial { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #2c5583; color: #fff; font-family: var(--font-head); font-weight: 700; font-size: 56px; }
-        .dev-side-inner { position: relative; padding: 246px 28px 32px 28px; display: flex; flex-direction: column; justify-content: space-between; height: 1123px; box-sizing: border-box; }
+        .dev-side-inner { position: relative; padding: 242px 28px 40px 28px; display: flex; flex-direction: column; justify-content: space-between; height: 1123px; box-sizing: border-box; }
         
         .dev-side h2 { font-family: var(--font-head); font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; margin: 14px 0 7px; padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,.28); }
         .dev-side h2:first-child { border-bottom: 0; }

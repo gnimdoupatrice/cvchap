@@ -68,7 +68,7 @@ export function DanielMorton({ cv }: { cv: CV }) {
       </div>
 
       {/* colonne gauche */}
-      <aside style={{ position: "absolute", left: 60, top: 330, width: 264, bottom: 60, overflowWrap: "anywhere", color: "#fff", display: "flex", flexDirection: "column", gap: 28 }}>
+      <aside style={{ position: "absolute", left: 60, top: 330, width: 264, bottom: 60, overflowWrap: "anywhere", color: "#fff", display: "flex", flexDirection: "column", gap: 18, justifyContent: "space-between" }}>
         <section><H c="CONTACT" light />
           <Bullets dot="#fff" size={14} items={[cv.personal.phone, cv.personal.email, cv.personal.link, cv.personal.location]} gap={2} />
         </section>
@@ -85,7 +85,7 @@ export function DanielMorton({ cv }: { cv: CV }) {
       </aside>
 
       {/* colonne droite avec timeline */}
-      <main style={{ position: "absolute", left: 424, top: 266, right: 56, bottom: 55, overflowWrap: "anywhere", borderLeft: `2px solid ${dark}`, paddingLeft: 32, display: "flex", flexDirection: "column", gap: 26 }}>
+      <main style={{ position: "absolute", left: 424, top: 266, right: 56, bottom: 55, overflowWrap: "anywhere", borderLeft: `2px solid ${dark}`, paddingLeft: 32, display: "flex", flexDirection: "column", gap: 26, justifyContent: "space-between" }}>
         {cv.summary && <section><H c="PROFILE" /><p style={{ margin: 0, fontSize: 14, lineHeight: 1.5 }}>{cv.summary}</p></section>}
         {cv.education.length > 0 && <section><H c="EDUCATION" />
           {cv.education.map((e) => (
@@ -141,7 +141,7 @@ export function RichardSanchez({ cv }: { cv: CV }) {
         <div style={{ width: 64, height: 4, background: navy, marginTop: 10 }} />
       </div>
 
-      <aside style={{ position: "absolute", left: 36, top: 330, width: 210, bottom: 45, color: "#fff", display: "flex", flexDirection: "column", gap: 19 }}>
+      <aside style={{ position: "absolute", left: 36, top: 330, width: 210, bottom: 45, color: "#fff", display: "flex", flexDirection: "column", gap: 16 }}>
         <section><SH c="CONTACT" />
           {[cv.personal.phone, cv.personal.email, cv.personal.location, cv.personal.link].filter(Boolean).map((v, i) => (
             <div key={i} style={{ fontSize: 12.5, marginBottom: 10, display: "flex", gap: 10, alignItems: "flex-start", wordBreak: "break-word" }}>
@@ -159,7 +159,7 @@ export function RichardSanchez({ cv }: { cv: CV }) {
           ))}
         </section>}
         {cv.skills.length > 0 && <section><SH c="SKILLS" /><Bullets dot="#fff" size={12.5} items={cv.skills} gap={4} /></section>}
-        {cv.languages.length > 0 && <section><SH c="LANGUAGES" /><Bullets dot="#fff" size={12.5} items={cv.languages} gap={3} /></section>}
+        {cv.languages.length > 0 && <section><SH c="LANGUAGES" /><Bullets dot="#fff" size={12.5} items={cv.languages} gap={1} /></section>}
       </aside>
 
       <main style={{ position: "absolute", left: 293, top: 330, right: 40, bottom: 45, color: "#444", overflowWrap: "anywhere", display: "flex", flexDirection: "column", gap: 22 }}>
@@ -173,8 +173,8 @@ export function RichardSanchez({ cv }: { cv: CV }) {
                   <div style={{ fontWeight: 700, fontSize: 16, minWidth: 0, color: "#333" }}>{x.company}</div>
                   <div style={{ fontSize: 13.5, flex: "none", whiteSpace: "nowrap", textTransform: "uppercase" }}>{dates(x.start, x.end)}</div>
                 </div>
-                <div style={{ fontSize: 16, lineHeight: 1.5, marginBottom: 10 }}>{x.role}</div>
-                <Bullets dot="#444" size={14} items={x.bullets} lh={1.55} gap={5} />
+                <div style={{ fontSize: 16, lineHeight: 1.5, marginBottom: 8 }}>{x.role}</div>
+                <Bullets dot="#444" size={14} items={x.bullets} lh={1.5} gap={2} />
               </div>
             ))}
           </div>
