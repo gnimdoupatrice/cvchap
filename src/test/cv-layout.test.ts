@@ -1,10 +1,15 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { DEFAULT_LAYOUT, findOptimalLayout, normalizeLayout } from "@/lib/cv/layout";
 import { defaultDoc, loadDoc, saveDoc } from "@/lib/cv/storage";
+import { A4_H, A4_W } from "@/components/cv/A4Preview";
 
 afterEach(() => localStorage.clear());
 
 describe("A4 layout", () => {
+  it("retains the required fixed A4 dimensions", () => {
+    expect(A4_W).toBe(794);
+    expect(A4_H).toBe(1123);
+  });
   it("keeps older guest documents readable with default settings", () => {
     localStorage.setItem("cvflow.doc.v1", JSON.stringify({ ...defaultDoc(), layout: undefined }));
     expect(loadDoc().layout).toEqual(DEFAULT_LAYOUT);

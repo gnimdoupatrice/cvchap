@@ -174,7 +174,7 @@ export function RichardSanchez({ cv }: { cv: CV }) {
                   <div style={{ fontSize: 13.5, flex: "none", whiteSpace: "nowrap", textTransform: "uppercase" }}>{dates(x.start, x.end)}</div>
                 </div>
                 <div style={{ fontSize: 16, lineHeight: 1.5, marginBottom: 8 }}>{x.role}</div>
-                <Bullets dot="#444" size={14} items={x.bullets} lh={1.5} gap={2} />
+                <Bullets dot="#444" size={14} items={x.bullets} lh={1.5} gap={1} />
               </div>
             ))}
           </div>

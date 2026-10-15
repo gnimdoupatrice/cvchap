@@ -221,7 +221,7 @@ export function ElviraMontanez({ cv }: { cv: CV }) {
           <H c="Work Experience" />
           <div style={{ marginLeft: -77, marginTop: -26 }} />
           {cv.experiences.map((x) => (
-            <div key={x.id} style={{ position: "relative", marginBottom: 34 }}>
+            <div key={x.id} style={{ position: "relative", marginBottom: 54 }}>
               <Ic kind="work" />
               <div style={{ fontWeight: 700, fontSize: 19 }}>{x.role}{x.company ? ` | ${x.company}` : ""}</div>
               <div style={{ fontStyle: "italic", fontSize: 19, marginTop: 4 }}>{dates(x.start, eSafe(x.end))}</div>
@@ -230,7 +230,7 @@ export function ElviraMontanez({ cv }: { cv: CV }) {
           ))}
           <div style={{ marginTop: 30 }}><H c="Education History" /></div>
           {cv.education.map((e) => (
-            <div key={e.id} style={{ position: "relative", marginBottom: 34 }}>
+            <div key={e.id} style={{ position: "relative", marginBottom: 44 }}>
               <Ic kind="edu" />
               <div style={{ fontWeight: 700, fontSize: 19, lineHeight: "29px" }}>{e.degree}{e.school ? ` | ${e.school}` : ""}</div>
               <div style={{ fontStyle: "italic", fontSize: 19 }}>{dates(e.start, eSafe(e.end))}</div>
