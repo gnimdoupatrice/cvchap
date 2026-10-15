@@ -15,5 +15,6 @@
 - AI calls go through server functions in `src/lib/ai.functions.ts` → `src/lib/ai/gateway.server.ts`; never call the model from the browser.
 - PDF export uses the browser print engine with A4 `@page` CSS so text stays vector/selectable (ATS-friendly).
 - Optional portrait images remain embedded as local data URLs so guest CVs and print exports work without remote storage.
-- The only active CV template is the editable HTML/CSS reproduction of “Français Simple Moderne Bleu”; keep its fixed 794 × 1123 A4 geometry so print and preview remain identical.
+- All catalogue templates retain their fixed A4 geometry; the shared TemplateLayout adapter applies document typography and spacing without changing template artwork, so print and preview remain identical.
+- Document layout settings are normalized in the shared CV layout module; optimization measures rendered text (including clipped and transformed columns) rather than root scroll height, because fixed-height templates hide overflow.
 - Additional CV templates live in `src/components/cv/templates-new.tsx` (dispatched from `templates.tsx`) so existing template files stay untouched; sample portraits are bundled under `src/assets/cv/`.

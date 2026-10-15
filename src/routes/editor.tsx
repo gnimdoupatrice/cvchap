@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   AlertTriangle,
   Download,
@@ -22,6 +22,9 @@ import { coachExperience, improveText } from "@/lib/ai.functions";
 import { FREE_CREDITS, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
 import type { CVDocument, TemplateId } from "@/lib/cv/types";
 import { templateMeta } from "@/components/cv/templates";
+import { LayoutControls } from "@/components/cv/LayoutControls";
+import { normalizeLayout, type CVLayout } from "@/lib/cv/layout";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/editor")({
   head: () => ({
@@ -54,7 +57,8 @@ function Editor() {
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState<Pending | null>(null);
   const [upsell, setUpsell] = useState(false);
-  const fitting = useRef(false);
+  const [optimizeRequest, setOptimizeRequest] = useState(0);
+  const [optimizing, setOptimizing] = useState(false);
   const improve = useServerFn(improveText);
   const coach = useServerFn(coachExperience);
 
@@ -71,23 +75,21 @@ function Editor() {
 
   const onOverflow = useCallback((o: boolean) => {
     setOverflow(o);
-    if (!fitting.current) return;
-    setDoc((d) => {
-      if (!d) return d;
-      if (!o || d.scale <= 0.72) {
-        fitting.current = false;
-        if (o) toast.error("Le contenu reste trop long : raccourcissez quelques lignes.");
-        else toast.success("Votre CV tient sur une page.");
-        return d;
-      }
-      return { ...d, scale: Math.round((d.scale - 0.03) * 100) / 100 };
-    });
   }, []);
 
   const fitToPage = () => {
-    fitting.current = true;
-    update({ scale: doc && doc.scale > 0.72 ? Math.round((doc.scale - 0.03) * 100) / 100 : 0.72 });
+    setOptimizing(true);
+    setOptimizeRequest((n) => n + 1);
   };
+  const onOptimized = useCallback((layout: CVLayout | null) => {
+    setOptimizing(false);
+    if (!layout) {
+      toast.error("Le contenu est trop long pour une page lisible. Raccourcissez quelques lignes.");
+      return;
+    }
+    setDoc((d) => d ? { ...d, layout } : d);
+    toast.success("Police et espacements ajustés au format A4.");
+  }, []);
 
   const spend = async (
     run: () => Promise<{ ok: true; text: string } | { ok: false; error: string; status: number }>,
@@ -122,7 +124,7 @@ function Editor() {
       <Toaster />
       {/* Barre supérieure */}
       <header className="flex h-14 items-center justify-between border-b px-4 no-print sm:px-6">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <Link
             to="/"
             className="flex items-center gap-2 font-semibold tracking-tight text-foreground"
@@ -135,12 +137,13 @@ function Editor() {
           <span className="text-muted-foreground/40">/</span>
 
           {/* Sélecteur parmi les 5 modèles */}
-          <div className="flex items-center gap-1.5 rounded-lg border bg-card px-2 py-1 shadow-soft">
+          <div className="flex min-w-0 items-center gap-1.5 rounded-lg border bg-card px-2 py-1 shadow-soft">
             <LayoutTemplate className="h-3.5 w-3.5 text-primary" />
             <select
               value={doc.template}
               onChange={(e) => update({ template: e.target.value as TemplateId })}
-              className="bg-transparent text-xs font-semibold focus:outline-none cursor-pointer"
+              aria-label="Modèle de CV"
+              className="min-w-0 w-full max-w-40 bg-transparent text-xs font-semibold focus:outline-none cursor-pointer sm:max-w-64"
             >
               {templateMeta.map((t) => (
                 <option key={t.id} value={t.id}>
@@ -154,13 +157,15 @@ function Editor() {
         {/* Actions à droite */}
         <div className="flex items-center gap-2">
           {overflow && (
-            <button
+            <Button
               onClick={fitToPage}
-              className="flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-700 hover:bg-amber-500/20"
+              disabled={optimizing}
+              variant="outline" size="sm"
+              className="text-destructive"
             >
               <AlertTriangle className="h-3.5 w-3.5" />
               <span className="hidden md:inline">Adapter à 1 page</span>
-            </button>
+            </Button>
           )}
 
           <div className="hidden sm:flex items-center gap-1 rounded-full border bg-card px-2.5 py-1 text-xs text-muted-foreground">
@@ -170,10 +175,10 @@ function Editor() {
             </span>
           </div>
 
-          <button onClick={print} className="btn-primary text-xs py-1.5 px-3">
+          <Button onClick={print} size="sm" aria-label="Exporter en PDF" title="Exporter en PDF">
             <Download className="h-3.5 w-3.5" />
-            <span>Exporter en PDF</span>
-          </button>
+            <span className="hidden sm:inline">Exporter en PDF</span>
+          </Button>
         </div>
       </header>
 
@@ -226,6 +231,8 @@ function Editor() {
             </div>
           </div>
 
+          <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
+
           {doc.mode === "form" ? (
             <FormEditor cv={doc.cv} onChange={(cv) => update({ cv })} askAI={askAI} busy={busy} />
           ) : (
@@ -246,7 +253,7 @@ function Editor() {
             tab === "preview" ? "block" : "hidden sm:flex"
           }`}
         >
-          <A4Preview doc={doc} onOverflowChange={onOverflow} />
+          <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized} />
         </section>
       </div>
 
