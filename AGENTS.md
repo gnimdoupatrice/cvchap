@@ -16,5 +16,6 @@
 - PDF export uses the browser print engine with A4 `@page` CSS so text stays vector/selectable (ATS-friendly).
 - Optional portrait images remain embedded as local data URLs so guest CVs and print exports work without remote storage.
 - All catalogue templates retain their fixed A4 geometry; the shared TemplateLayout adapter applies document typography and spacing without changing template artwork, so print and preview remain identical.
+- Calibrate targeted template columns in their native coordinate space and mark transformed columns with `data-a4-column`; this preserves artwork while allowing independent overflow checks.
 - Document layout settings are normalized in the shared CV layout module; optimization measures rendered text (including clipped and transformed columns) rather than root scroll height, because fixed-height templates hide overflow.
 - Additional CV templates live in `src/components/cv/templates-new.tsx` (dispatched from `templates.tsx`) so existing template files stay untouched; sample portraits are bundled under `src/assets/cv/`.

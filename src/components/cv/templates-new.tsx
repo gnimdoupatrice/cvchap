@@ -44,7 +44,7 @@ export function DanielMorton({ cv }: { cv: CV }) {
   const H = ({ c, light }: { c: string; light?: boolean }) => (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, marginLeft: light ? 0 : -40 }}>
       <span style={{ width: 14, height: 14, borderRadius: "50%", background: teal, flex: "none", marginLeft: light ? 0 : 0, position: "relative", zIndex: 2 }} />
-      <span style={{ fontWeight: 700, fontSize: 18, color: light ? "#fff" : dark, marginLeft: light ? 0 : 12 }}>{c}</span>
+      <span style={{ fontWeight: 700, fontSize: light ? 20 : 19, lineHeight: 1.3, color: light ? "#fff" : dark, marginLeft: light ? 0 : 12 }}>{c}</span>
     </div>
   );
   const certs = cv.certifications ?? [];
@@ -68,44 +68,44 @@ export function DanielMorton({ cv }: { cv: CV }) {
       </div>
 
       {/* colonne gauche */}
-      <aside style={{ position: "absolute", left: 80, top: 330, width: 260, bottom: 120, color: "#fff", display: "flex", flexDirection: "column", gap: 26 }}>
+      <aside style={{ position: "absolute", left: 60, top: 330, width: 264, bottom: 60, overflowWrap: "anywhere", color: "#fff", display: "flex", flexDirection: "column", gap: 18, justifyContent: "space-between" }}>
         <section><H c="CONTACT" light />
-          <Bullets dot="#fff" size={13} items={[cv.personal.phone, cv.personal.email, cv.personal.link, cv.personal.location]} gap={2} />
+          <Bullets dot="#fff" size={14} items={[cv.personal.phone, cv.personal.email, cv.personal.link, cv.personal.location]} gap={2} />
         </section>
-        {cv.skills.length > 0 && <section><H c="SOFT SKILLS" light /><Bullets dot="#fff" size={13} items={cv.skills} gap={2} /></section>}
+        {cv.skills.length > 0 && <section><H c="SOFT SKILLS" light /><Bullets dot="#fff" size={14} items={cv.skills} gap={5} lh={1.5} /></section>}
         {highlights.length > 0 && <section><H c="CERTIFICATIONS" light />
           {highlights.map((h, i) => (
             <div key={i} style={{ marginBottom: 8 }}>
-              <div style={{ fontWeight: 700, fontSize: 13 }}>{h.title}</div>
-              <div style={{ fontStyle: "italic", fontSize: 13, lineHeight: 1.4 }}>{h.text}</div>
+              <div style={{ fontWeight: 700, fontSize: 14, lineHeight: 1.4 }}>{h.title}</div>
+              <div style={{ fontStyle: "italic", fontSize: 14, lineHeight: 1.5 }}>{h.text}</div>
             </div>
           ))}
         </section>}
-        {cv.languages.length > 0 && <section><H c="LANGUES" light /><Bullets dot="#fff" size={13} items={cv.languages} gap={2} /></section>}
+        {cv.languages.length > 0 && <section><H c="LANGUES" light /><Bullets dot="#fff" size={13.5} items={cv.languages} gap={3} lh={1.45} /></section>}
       </aside>
 
       {/* colonne droite avec timeline */}
-      <main style={{ position: "absolute", left: 424, top: 266, right: 76, bottom: 70, borderLeft: `2px solid ${dark}`, paddingLeft: 32, display: "flex", flexDirection: "column", gap: 22 }}>
-        {cv.summary && <section><H c="PROFILE" /><p style={{ margin: 0, fontSize: 13, lineHeight: 1.4 }}>{cv.summary}</p></section>}
+      <main style={{ position: "absolute", left: 424, top: 266, right: 56, bottom: 55, overflowWrap: "anywhere", borderLeft: `2px solid ${dark}`, paddingLeft: 32, display: "flex", flexDirection: "column", gap: 26, justifyContent: "space-between" }}>
+        {cv.summary && <section><H c="PROFILE" /><p style={{ margin: 0, fontSize: 14, lineHeight: 1.5 }}>{cv.summary}</p></section>}
         {cv.education.length > 0 && <section><H c="EDUCATION" />
           {cv.education.map((e) => (
             <div key={e.id} style={{ marginBottom: 8 }}>
-              <div style={{ fontSize: 13 }}>{e.degree}</div>
-              <Bullets dot={dark} size={13} items={[`${e.school}${e.start || e.end ? " | " + dates(e.start, e.end) : ""}`]} />
+              <div style={{ fontSize: 14 }}>{e.degree}</div>
+              <Bullets dot={dark} size={14} items={[`${e.school}${e.start || e.end ? " | " + dates(e.start, e.end) : ""}`]} />
             </div>
           ))}
         </section>}
         {cv.experiences.length > 0 && <section><H c="PROJECT EXPERIENCE" />
           {cv.experiences.map((x) => (
             <div key={x.id} style={{ marginBottom: 8 }}>
-              <div style={{ fontWeight: 700, fontSize: 13 }}>{x.role}{x.company ? ` · ${x.company}` : ""}</div>
-              {(x.start || x.end) && <div style={{ fontStyle: "italic", fontSize: 12 }}>{dates(x.start, x.end)}</div>}
-              <Bullets dot={dark} size={13} items={x.bullets} gap={1} />
+              <div style={{ fontWeight: 700, fontSize: 14 }}>{x.role}{x.company ? ` · ${x.company}` : ""}</div>
+              {(x.start || x.end) && <div style={{ fontStyle: "italic", fontSize: 13 }}>{dates(x.start, x.end)}</div>}
+              <Bullets dot={dark} size={14} items={x.bullets} gap={1} />
             </div>
           ))}
         </section>}
-        {certs.length > 0 && <section><H c="ACHIEVEMENTS" /><Bullets dot={dark} size={13} items={certs} gap={1} /></section>}
-        {cv.interests.length > 0 && <section><H c="INTERESTS" /><Bullets dot={dark} size={13} items={cv.interests} gap={1} /></section>}
+        {certs.length > 0 && <section><H c="ACHIEVEMENTS" /><Bullets dot={dark} size={14} items={certs} gap={1} /></section>}
+        {cv.interests.length > 0 && <section><H c="INTERESTS" /><Bullets dot={dark} size={14} items={cv.interests} gap={1} /></section>}
       </main>
     </div>
   );
@@ -116,7 +116,7 @@ export function RichardSanchez({ cv }: { cv: CV }) {
   const navy = "#163550", sky = "#5aa9f5", ink = "#1f1f1f";
   const [first, last] = splitName(cv.personal.name);
   const SH = ({ c }: { c: string }) => (
-    <div style={{ fontFamily: "Montserrat,sans-serif", fontWeight: 700, fontSize: 19, letterSpacing: ".14em", borderBottom: "1px solid #fff", paddingBottom: 6, marginBottom: 14 }}>{c}</div>
+    <div style={{ fontFamily: "Montserrat,sans-serif", fontWeight: 700, fontSize: 18, letterSpacing: ".14em", borderBottom: "1px solid #fff", paddingBottom: 6, marginBottom: 14 }}>{c}</div>
   );
   const MH = ({ c }: { c: string }) => (
     <div style={{ fontFamily: "Montserrat,sans-serif", fontWeight: 700, fontSize: 19, letterSpacing: ".14em", color: ink, borderBottom: `1px solid ${navy}`, paddingBottom: 6, marginBottom: 14 }}>{c}</div>
@@ -141,46 +141,46 @@ export function RichardSanchez({ cv }: { cv: CV }) {
         <div style={{ width: 64, height: 4, background: navy, marginTop: 10 }} />
       </div>
 
-      <aside style={{ position: "absolute", left: 57, top: 330, width: 190, bottom: 40, color: "#fff", display: "flex", flexDirection: "column", gap: 28 }}>
+      <aside style={{ position: "absolute", left: 36, top: 330, width: 210, bottom: 45, color: "#fff", display: "flex", flexDirection: "column", gap: 16 }}>
         <section><SH c="CONTACT" />
           {[cv.personal.phone, cv.personal.email, cv.personal.location, cv.personal.link].filter(Boolean).map((v, i) => (
-            <div key={i} style={{ fontSize: 12.5, marginBottom: 14, display: "flex", gap: 10, alignItems: "flex-start", wordBreak: "break-word" }}>
+            <div key={i} style={{ fontSize: 12.5, marginBottom: 10, display: "flex", gap: 10, alignItems: "flex-start", wordBreak: "break-word" }}>
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: sky, flex: "none", marginTop: 4 }} />{v}
             </div>
           ))}
         </section>
         {cv.education.length > 0 && <section><SH c="EDUCATION" />
           {cv.education.map((e) => (
-            <div key={e.id} style={{ marginBottom: 16 }}>
+            <div key={e.id} style={{ marginBottom: 12 }}>
               <div style={{ fontFamily: "Montserrat,sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: ".12em" }}>{dates(e.start, e.end)}</div>
               <div style={{ fontWeight: 700, fontSize: 12.5, textTransform: "uppercase", margin: "3px 0 5px" }}>{e.school}</div>
               <Bullets dot="#fff" size={12.5} items={[e.degree]} />
             </div>
           ))}
         </section>}
-        {cv.skills.length > 0 && <section><SH c="SKILLS" /><Bullets dot="#fff" size={12.5} items={cv.skills} gap={6} /></section>}
-        {cv.languages.length > 0 && <section><SH c="LANGUAGES" /><Bullets dot="#fff" size={12.5} items={cv.languages} gap={6} /></section>}
+        {cv.skills.length > 0 && <section><SH c="SKILLS" /><Bullets dot="#fff" size={12.5} items={cv.skills} gap={4} /></section>}
+        {cv.languages.length > 0 && <section><SH c="LANGUAGES" /><Bullets dot="#fff" size={12.5} items={cv.languages} gap={1} /></section>}
       </aside>
 
-      <main style={{ position: "absolute", left: 293, top: 330, right: 40, bottom: 40, color: "#444", display: "flex", flexDirection: "column", gap: 22 }}>
-        {cv.summary && <section><MH c="PROFILE" /><p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.45, textAlign: "justify" }}>{cv.summary}</p></section>}
+      <main style={{ position: "absolute", left: 293, top: 330, right: 40, bottom: 45, color: "#444", overflowWrap: "anywhere", display: "flex", flexDirection: "column", gap: 22 }}>
+        {cv.summary && <section><MH c="PROFILE" /><p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, textAlign: "justify" }}>{cv.summary}</p></section>}
         {cv.experiences.length > 0 && <section><MH c="WORK EXPERIENCE" />
           <div style={{ borderLeft: `1.5px solid ${navy}`, marginLeft: 4, paddingLeft: 20 }}>
             {cv.experiences.map((x) => (
-              <div key={x.id} style={{ marginBottom: 16, position: "relative" }}>
+              <div key={x.id} style={{ marginBottom: 24, position: "relative" }}>
                 <span style={{ position: "absolute", left: -24.5, top: 4, width: 7, height: 7, borderRadius: "50%", background: navy }} />
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: "#333" }}>{x.company}</div>
-                  <div style={{ fontSize: 12.5, whiteSpace: "nowrap", textTransform: "uppercase" }}>{dates(x.start, x.end)}</div>
+                  <div style={{ fontWeight: 700, fontSize: 16, minWidth: 0, color: "#333" }}>{x.company}</div>
+                  <div style={{ fontSize: 13.5, flex: "none", whiteSpace: "nowrap", textTransform: "uppercase" }}>{dates(x.start, x.end)}</div>
                 </div>
-                <div style={{ fontSize: 14, marginBottom: 8 }}>{x.role}</div>
-                <Bullets dot="#444" size={12.5} items={x.bullets} />
+                <div style={{ fontSize: 16, lineHeight: 1.5, marginBottom: 8 }}>{x.role}</div>
+                <Bullets dot="#444" size={14} items={x.bullets} lh={1.5} gap={1} />
               </div>
             ))}
           </div>
         </section>}
         {!!cv.references?.length && <section><MH c="REFERENCE" />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 20 }}>
             {cv.references.slice(0, 2).map((r, i) => (
               <div key={i}>
                 <div style={{ fontWeight: 700, fontSize: 16, color: "#555" }}>{r.name}</div>

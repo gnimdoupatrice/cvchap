@@ -142,21 +142,21 @@ function EmeraldTech({ cv }: { cv: CV }) {
           --bar-bg: rgba(255,255,255,.25);
           --font-head: "Poppins", "Segoe UI", Arial, sans-serif;
           --font-body: "Liberation Sans", Arial, Helvetica, sans-serif;
-          width: 794px; min-height: 1123px; display: flex; background: #fff;
+          width: 794px; height: 1123px; max-height: 1123px; display: flex; background: #fff;
           font-family: var(--font-body); color: var(--text);
           -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;
           position: relative; overflow: hidden;
         }
         .dev-page *, .dev-page *::before, .dev-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
         
-        .dev-side { width: 274px; min-height: 1123px; flex: none; background: var(--navy); color: #fff; position: relative; overflow: hidden; }
+        .dev-side { width: 274px; height: 1123px; flex: none; background: var(--navy); color: #fff; position: relative; overflow: hidden; }
         .dev-halo { position: absolute; top: 0; left: 0; width: 272px; height: 272px; border-radius: 50%; background: var(--circle); }
         .dev-photo { position: absolute; top: 48px; left: 49px; width: 174px; height: 174px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 9px 20px rgba(10,24,40,.45); }
         .dev-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .dev-initial { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #2c5583; color: #fff; font-family: var(--font-head); font-weight: 700; font-size: 56px; }
-        .dev-side-inner { position: relative; padding: 250px 28px 24px 28px; display: flex; flex-direction: column; justify-content: space-between; min-height: 1123px; box-sizing: border-box; }
+        .dev-side-inner { position: relative; padding: 242px 28px 40px 28px; display: flex; flex-direction: column; justify-content: space-between; height: 1123px; box-sizing: border-box; }
         
-        .dev-side h2 { font-family: var(--font-head); font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; margin: 18px 0 8px; padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,.28); }
+        .dev-side h2 { font-family: var(--font-head); font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; margin: 14px 0 7px; padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,.28); }
         .dev-side h2:first-child { border-bottom: 0; }
         .dev-side .dev-coord h2 { border-bottom: 0; margin-bottom: 4px; margin-top: 0; }
         .dev-label { color: var(--gold); font-family: var(--font-head); font-weight: 600; font-size: 9px; letter-spacing: .06em; text-transform: uppercase; margin-top: 10px; }
@@ -169,10 +169,10 @@ function EmeraldTech({ cv }: { cv: CV }) {
         .dev-bar { height: 9px; border-radius: 5px; background: var(--bar-bg); margin-top: 3px; overflow: hidden; }
         .dev-bar span { display: block; height: 100%; background: #fff; border-radius: 5px; }
         
-        .dev-side ul { list-style: none; font-size: 11.5px; line-height: 1.45; }
+        .dev-side ul { list-style: none; font-size: 11.5px; line-height: 1.4; }
         .dev-side ul li { margin-bottom: 3px; }
         
-        .dev-main { flex: 1; padding: 20px 28px 24px 28px; display: flex; flex-direction: column; justify-content: space-between; }
+        .dev-main { flex: 1; min-width: 0; padding: 20px 28px 24px 28px; display: flex; flex-direction: column; justify-content: space-between; }
         .dev-main h1 { font-family: var(--font-head); font-weight: 700; font-size: 30px; line-height: 1.15; color: var(--navy-title); letter-spacing: .01em; text-transform: uppercase; }
         .dev-subtitle { font-family: var(--font-head); font-weight: 600; font-size: 13.5px; color: var(--blue-link); letter-spacing: .03em; text-transform: uppercase; margin-top: 8px; margin-bottom: 6px; }
         .dev-main h2 { font-family: var(--font-head); font-weight: 700; font-size: 16px; color: var(--navy-title); margin: 18px 0 10px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 4px; }
@@ -500,7 +500,7 @@ function AlfredBold({ cv }: { cv: CV }) {
     <div className="ab-page">
       <style>{`
         .ab-page {
-          width: 794px; min-height: 1123px; position: relative; background: #fff;
+          width: 794px; height: 1123px; max-height: 1123px; position: relative; background: #fff;
           font-family: 'Jost', 'Segoe UI', sans-serif; color: #222; overflow: hidden;
           -webkit-print-color-adjust: exact; print-color-adjust: exact;
         }
@@ -510,23 +510,23 @@ function AlfredBold({ cv }: { cv: CV }) {
         .ab-side-white { left: 0; top: 0; width: 327px; height: 267px; background: #fff; }
         .ab-photo { left: 49px; top: 36px; width: 231px; height: 231px; border-radius: 50%; overflow: hidden; background: #333; z-index: 2; border: 3px solid #222; }
         .ab-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .ab-flow { left: 42px; top: 290px; width: 260px; color: #fff; display: flex; flex-direction: column; gap: 18px; }
-        .ab-h { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 4px; }
-        .ab-t { font-size: 12px; line-height: 18px; color: #eee; }
+        .ab-flow { left: 42px; top: 290px; width: 260px; bottom: 45px; overflow-wrap: anywhere; color: #fff; display: flex; flex-direction: column; gap: 28px; justify-content: space-between; }
+        .ab-h { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 17px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 4px; }
+        .ab-t { font-size: 14px; line-height: 21px; color: #eee; }
         .ab-item { margin-bottom: 7px; }
-        .ab-label { font-size: 9.5px; text-transform: uppercase; color: #aaa; letter-spacing: 0.05em; }
-        .ab-val { font-size: 12px; font-weight: 500; }
+        .ab-label { font-size: 11px; text-transform: uppercase; color: #aaa; letter-spacing: 0.05em; }
+        .ab-val { font-size: 14px; line-height: 21px; font-weight: 500; }
         .ab-lang { margin-bottom: 5px; }
-        .ab-main { left: 360px; top: 36px; width: 404px; }
+        .ab-main { left: 360px; top: 36px; width: 404px; bottom: 45px; overflow-wrap: anywhere; }
         .ab-name-1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 46px; line-height: 48px; text-transform: uppercase; color: #222; letter-spacing: -0.02em; }
         .ab-name-2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 46px; line-height: 48px; text-transform: uppercase; color: #222; letter-spacing: -0.02em; }
         .ab-job { font-family: 'Jost', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #555; margin-top: 8px; margin-bottom: 6px; }
-        .ab-sec-h { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; text-transform: uppercase; color: #222; margin: 20px 0 12px; border-bottom: 2px solid #222; padding-bottom: 4px; letter-spacing: 0.04em; }
-        .ab-timeline { position: relative; padding-left: 18px; border-left: 2px solid #222; margin-bottom: 14px; }
+        .ab-sec-h { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 18px; text-transform: uppercase; color: #222; margin: 26px 0 16px; border-bottom: 2px solid #222; padding-bottom: 4px; letter-spacing: 0.04em; }
+        .ab-timeline { position: relative; padding-left: 18px; border-left: 2px solid #222; margin-bottom: 24px; }
         .ab-timeline::before { content: ""; position: absolute; left: -5px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: #222; }
-        .ab-tl-role { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; color: #111; }
-        .ab-tl-sub { font-size: 12px; color: #555; margin-bottom: 5px; font-weight: 500; }
-        .ab-tl-body { font-size: 12px; line-height: 1.5; color: #333; text-align: justify; text-justify: inter-word; hyphens: auto; }
+        .ab-tl-role { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px; line-height: 1.4; color: #111; }
+        .ab-tl-sub { font-size: 14px; line-height: 1.4; color: #555; margin-bottom: 5px; font-weight: 500; }
+        .ab-tl-body { font-size: 14px; line-height: 1.55; color: #333; text-align: justify; text-justify: inter-word; hyphens: auto; }
         .ab-tl-body li { margin-bottom: 4px; }
       `}</style>
 
@@ -586,7 +586,7 @@ function AlfredBold({ cv }: { cv: CV }) {
         <div className="ab-job">{cv.title || "INFORMATICIEN & FULL-STACK DEV"}</div>
 
         {cv.summary && (
-          <div style={{ marginTop: "14px", fontSize: "12.5px", lineHeight: "1.55", color: "#333", textAlign: "justify", textJustify: "inter-word" }}>
+          <div style={{ marginTop: "14px", fontSize: "14px", lineHeight: "1.55", color: "#333", textAlign: "justify", textJustify: "inter-word" }}>
             {cv.summary}
           </div>
         )}

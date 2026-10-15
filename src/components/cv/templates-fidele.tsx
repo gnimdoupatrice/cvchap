@@ -217,53 +217,53 @@ export function AdelinePalmerston({ cv }: { cv: CV }) {
       <div style={abs({ left: 362.5, top: 230, fontSize: 21.3, lineHeight: "28px" })}>{cv.title}</div>
 
       {/* colonne gauche */}
-      <aside style={abs({ left: 72, top: 347.8 - 28 + 28, width: 228, bottom: 20, display: "flex", flexDirection: "column" })}>
+      <aside style={abs({ left: 32, top: 347.8, width: 237, bottom: 45, paddingRight: 12, boxSizing: "border-box", overflowWrap: "anywhere", display: "flex", flexDirection: "column" })}>
         <Head icon={icons.user} c="About Me" mt={0} iconBox={38.5} />
-        {cv.summary && <p style={{ margin: "15.8px 0 0 -6.7px", width: 235, fontSize: 12.45, lineHeight: "16px", textAlign: "justify" }}>{cv.summary}</p>}
-        <Head icon={icons.card} c="Contact" mt={59} iconBox={38.5} />
+        {cv.summary && <p style={{ margin: "16px 0 0", width: "100%", fontSize: 14, lineHeight: "20px", textAlign: "justify" }}>{cv.summary}</p>}
+        <Head icon={icons.card} c="Contact" mt={34} iconBox={38.5} />
         <div style={{ marginTop: 15.5, display: "flex", flexDirection: "column", gap: 15 }}>
           {contacts.filter(([v]) => v).map(([v, ic], i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", fontSize: 14.2, lineHeight: "22px", minHeight: 22, wordBreak: "break-word" }}>
-              <span style={{ width: 32, display: "flex", paddingLeft: 4 }}>{ic}</span><span>{v}</span>
+              <span style={{ width: 32, flex: "none", display: "flex", paddingLeft: 4 }}>{ic}</span><span style={{ minWidth: 0, overflowWrap: "anywhere" }}>{v}</span>
             </div>
           ))}
         </div>
         {cv.skills.length > 0 && <>
-          <Head icon={icons.bulb} c="Skills" mt={58} iconBox={38.5} />
-          <div style={{ marginTop: 7.8 }}>{cv.skills.map((s, i) => <Bul key={i} c={s} size={13.3} h={34} textLeft={20} />)}</div>
+          <Head icon={icons.bulb} c="Skills" mt={34} iconBox={38.5} />
+          <div style={{ marginTop: 7.8 }}>{cv.skills.map((s, i) => <Bul key={i} c={s} size={14} h={32} textLeft={20} />)}</div>
         </>}
         {cv.languages.length > 0 && <>
           <Head icon={icons.lang} c="Language" mt={32} iconBox={38.5} />
-          <div style={{ marginTop: 6 }}>{cv.languages.map((s, i) => <Bul key={i} c={s} size={14.2} h={34.7} textLeft={23} />)}</div>
+          <div style={{ marginTop: 6 }}>{cv.languages.map((s, i) => <Bul key={i} c={s} size={14} h={32} textLeft={23} />)}</div>
         </>}
       </aside>
 
       {/* colonne droite */}
-      <main style={abs({ left: 407, top: 347.8, right: 40, bottom: 20, display: "flex", flexDirection: "column" })}>
+      <main style={abs({ left: 355, top: 347.8, right: 35, bottom: 45, overflowWrap: "anywhere", display: "flex", flexDirection: "column" })}>
         {cv.education.length > 0 && <>
           <div style={{ marginLeft: -45 }}><Head icon={icons.cap} c="Education" mt={0} iconBox={45} /></div>
           {cv.education.map((e, i) => (
-            <div key={e.id} style={{ marginTop: i === 0 ? 19 : 28.2 }}>
+            <div key={e.id} style={{ marginTop: i === 0 ? 24 : 40 }}>
               <Timeline line={[11, 10]}>
                 <div style={{ fontWeight: 700, fontSize: 18.7, lineHeight: "24px" }}>{dateLabel(e.start, e.end)}</div>
-                <div style={{ fontWeight: 700, fontSize: 14.2, lineHeight: "23.3px", marginTop: 1.8, textTransform: "uppercase" }}>{e.school}</div>
-                <div style={{ fontSize: 14.2, lineHeight: "22.6px", marginLeft: 1.5 }}>{e.degree}</div>
-                {e.note && <div style={{ fontSize: 14.2, lineHeight: "22.6px" }}>{e.note}</div>}
+                <div style={{ fontWeight: 700, fontSize: 15.5, lineHeight: "25px", marginTop: 1.8, textTransform: "uppercase" }}>{e.school}</div>
+                <div style={{ fontSize: 15, lineHeight: "24px", marginLeft: 1.5 }}>{e.degree}</div>
+                {e.note && <div style={{ fontSize: 15, lineHeight: "24px" }}>{e.note}</div>}
               </Timeline>
             </div>
           ))}
         </>}
         {cv.experiences.length > 0 && <>
-          <div style={{ marginLeft: -40, marginTop: 31.8 }}><Head icon={icons.award} c="Experience" mt={0} iconBox={45} /></div>
+          <div style={{ marginLeft: -40, marginTop: 45 }}><Head icon={icons.award} c="Experience" mt={0} iconBox={45} /></div>
           {cv.experiences.map((x, i) => (
-            <div key={x.id} style={{ marginTop: i === 0 ? 15 : 32.5 }}>
+            <div key={x.id} style={{ marginTop: i === 0 ? 24 : 45 }}>
               <Timeline line={[11.2, -1]}>
                 <div style={{ fontWeight: 700, fontSize: 18.7, lineHeight: "24px" }}>{dateLabel(x.start, x.end)}</div>
-                <div style={{ fontWeight: 700, fontSize: 14.2, lineHeight: "23.3px", marginTop: 1.8, textTransform: "uppercase" }}>{x.role}</div>
-                <div style={{ fontSize: 14.2, lineHeight: "23.3px", marginLeft: 1.5 }}>{x.company}</div>
+                <div style={{ fontWeight: 700, fontSize: 15.5, lineHeight: "25px", marginTop: 1.8, textTransform: "uppercase" }}>{x.role}</div>
+                <div style={{ fontSize: 15.5, lineHeight: "25px", marginLeft: 1.5 }}>{x.company}</div>
                 <div style={{ marginTop: 2.6 }}>
                   {x.bullets.filter(Boolean).map((b, k) => (
-                    <div key={k} style={{ position: "relative", paddingLeft: 29, fontSize: 16.9, lineHeight: "23px", width: 330 }}>
+                    <div key={k} style={{ position: "relative", paddingLeft: 29, fontSize: 16, lineHeight: "25px", width: "100%", boxSizing: "border-box" }}>
                       <span style={{ position: "absolute", left: 13, top: 9.5, width: 5, height: 5, borderRadius: "50%", background: ink }} />{b}
                     </div>
                   ))}
