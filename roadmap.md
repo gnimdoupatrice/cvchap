@@ -5,6 +5,6 @@
 - [x] Tester les réglages, la sauvegarde et l’aperçu ordinateur/mobile.
 
 # Corrections des sept modèles ciblés
-- [ ] Recaler Adeline et sécuriser la colonne gauche Emerald.
-- [ ] Agrandir et équilibrer Daniel, Richard, Emma, Elvira et Alfred.
-- [ ] Vérifier les sept feuilles A4, leurs colonnes et les tests.
+- [x] Recaler Adeline et sécuriser la colonne gauche Emerald.
+- [x] Agrandir et équilibrer Daniel, Richard, Emma, Elvira et Alfred.
+- [x] Vérifier les sept feuilles A4, leurs colonnes et les tests.
