@@ -165,11 +165,11 @@ function Home() {
           })}
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-wrap justify-center gap-8">
           {visibleTemplates.map((t) => (
             <div
               key={t.id}
-              className="group relative flex flex-col rounded-2xl border bg-card p-4 shadow-soft transition-all duration-200 hover:shadow-md"
+              className="group relative flex w-full max-w-[380px] flex-col rounded-2xl border bg-card p-4 shadow-soft transition-all duration-200 hover:shadow-md sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)]"
             >
               {/* En-tête de la carte */}
               <div className="flex items-start justify-between mb-3 min-h-[46px]">
