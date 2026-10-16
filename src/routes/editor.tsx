@@ -25,6 +25,10 @@ import { templateMeta } from "@/components/cv/templates";
 import { LayoutControls } from "@/components/cv/LayoutControls";
 import { normalizeLayout, type CVLayout } from "@/lib/cv/layout";
 import { Button } from "@/components/ui/button";
+import { AuthDialog } from "@/components/cv/AuthDialog";
+import { useSession } from "@/hooks/use-session";
+import { supabase } from "@/lib/supabase";
+import { LogOut, UserRound } from "lucide-react";
 
 export const Route = createFileRoute("/editor")({
   head: () => ({
@@ -61,6 +65,8 @@ function Editor() {
   const [optimizing, setOptimizing] = useState(false);
   const improve = useServerFn(improveText);
   const coach = useServerFn(coachExperience);
+  const { user, ready: sessionReady } = useSession();
+  const [authOpen, setAuthOpen] = useState(false);
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -72,6 +78,16 @@ function Editor() {
   }, [doc]);
 
   const update = (patch: Partial<CVDocument>) => setDoc((d) => (d ? { ...d, ...patch } : d));
+  // Les modifications du contenu sont toujours enregistrées en local (aucune perte),
+  // mais déclenchent la passerelle de connexion si l'utilisateur n'est pas connecté.
+  const updateCV = (cv: CVDocument["cv"]) => {
+    update({ cv });
+    if (sessionReady && !user && !authOpen) setAuthOpen(true);
+  };
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    toast.success("Déconnecté. Votre brouillon reste sur cet appareil.");
+  };
 
   const onOverflow = useCallback((o: boolean) => {
     setOverflow(o);
@@ -174,6 +190,21 @@ function Editor() {
               <b>{credits}</b> IA restantes
             </span>
           </div>
+
+          {user ? (
+            <div className="flex items-center gap-1 rounded-full border bg-card py-0.5 pl-2.5 pr-0.5 text-xs">
+              <UserRound className="h-3 w-3 text-primary" />
+              <span className="hidden max-w-40 truncate md:inline" title={user.email ?? ""}>{user.email}</span>
+              <Button variant="ghost" size="sm" className="h-7 px-2" onClick={signOut} aria-label="Se déconnecter" title="Se déconnecter">
+                <LogOut className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          ) : (
+            <Button variant="outline" size="sm" onClick={() => setAuthOpen(true)}>
+              <UserRound className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Se connecter</span>
+            </Button>
+          )}
 
           <Button onClick={print} size="sm" aria-label="Exporter en PDF" title="Exporter en PDF">
             <Download className="h-3.5 w-3.5" />
