@@ -3,10 +3,8 @@ import { useMemo, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
-  Check,
   ChevronLeft,
   ChevronRight,
-  FileCheck2,
   FileText,
   FolderLock,
   Maximize2,
