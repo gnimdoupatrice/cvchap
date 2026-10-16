@@ -19,3 +19,4 @@
 - Calibrate targeted template columns in their native coordinate space and mark transformed columns with `data-a4-column`; this preserves artwork while allowing independent overflow checks.
 - Document layout settings are normalized in the shared CV layout module; optimization measures rendered text (including clipped and transformed columns) rather than root scroll height, because fixed-height templates hide overflow.
 - Additional CV templates live in `src/components/cv/templates-new.tsx` (dispatched from `templates.tsx`) so existing template files stay untouched; sample portraits are bundled under `src/assets/cv/`.
+- Auth uses Lovable Cloud email/password via `src/lib/supabase.ts` (re-exports the generated client + config diagnostics); the editor gates CV content edits behind `AuthDialog` while still saving the draft to localStorage, so no input is lost — template/layout changes stay free.
