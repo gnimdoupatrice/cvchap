@@ -76,7 +76,8 @@ function Home() {
   const goToTemplate = (delta: number) => {
     if (exploringIndex < 0) return;
     const next = (exploringIndex + delta + templateMeta.length) % templateMeta.length;
-    setExploringTemplate(templateMeta[next].id);
+    const nextTemplate = templateMeta[next];
+    if (nextTemplate) setExploringTemplate(nextTemplate.id);
   };
 
   return (
