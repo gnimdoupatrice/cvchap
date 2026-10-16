@@ -265,11 +265,11 @@ function Editor() {
           <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
 
           {doc.mode === "form" ? (
-            <FormEditor cv={doc.cv} onChange={(cv) => update({ cv })} askAI={askAI} busy={busy} />
+            <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
           ) : (
             <CoachEditor
               cv={doc.cv}
-              onChange={(cv) => update({ cv })}
+              onChange={updateCV}
               askCoach={(input, before, apply) => {
                 void spend(() => coach({ data: input }), before, apply);
               }}
@@ -287,6 +287,8 @@ function Editor() {
           <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized} />
         </section>
       </div>
+
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
 
       {/* Modale avant/après IA */}
       {pending && (
