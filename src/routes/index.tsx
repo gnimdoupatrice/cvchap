@@ -83,47 +83,55 @@ function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* En-tête */}
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <div className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
+      <header className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-4 sm:flex sm:justify-between sm:px-6 sm:py-5">
+        <div className="flex min-w-0 items-center gap-2 font-semibold tracking-tight">
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
             <FileText className="h-4 w-4" />
           </span>
-          CVflow
+          <span className="truncate">CVflow</span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => navigate({ to: "/editor" })} className="btn-ghost text-sm">
-            Se connecter
+          <button
+            onClick={() => navigate({ to: "/editor" })}
+            className="btn-ghost border bg-card px-3 py-2 text-sm"
+            aria-label="Se connecter"
+          >
+            <UserRound className="h-4 w-4" />
+            <span className="hidden sm:inline">Se connecter</span>
           </button>
-          <button onClick={scrollToCatalogue} className="btn-primary px-4 py-2 text-sm">
+          <button onClick={scrollToCatalogue} className="btn-primary hidden px-4 py-2 text-sm sm:inline-flex">
             Découvrir les modèles <ArrowRight className="h-4 w-4" />
           </button>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="mx-auto max-w-4xl px-6 pb-8 pt-10 text-center sm:pt-16">
-        <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-soft">
-          <Ruler className="h-3.5 w-3.5 text-primary" /> 15 modèles A4 calés au millimètre · zéro débordement
+      <section className="mx-auto max-w-4xl px-6 pb-6 pt-6 text-center sm:pb-8 sm:pt-16">
+        <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-[11px] font-medium text-muted-foreground shadow-soft sm:text-xs">
+          <Ruler className="h-3.5 w-3.5 shrink-0 text-primary" /> 15 modèles A4 · zéro débordement
         </span>
-        <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
+        <h1 className="mt-5 text-balance text-3xl font-semibold tracking-tight sm:mt-6 sm:text-6xl">
           Des CV conçus au millimètre, prêts à être personnalisés.
         </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-balance text-lg text-muted-foreground">
+        <p className="mx-auto mt-4 max-w-2xl text-balance text-base text-muted-foreground sm:mt-5 sm:text-lg">
           Chaque modèle respecte strictement la géométrie A4 et se remplit harmonieusement.
           Personnalisez-le en quelques minutes, puis retrouvez-le sauvegardé dans votre espace personnel.
         </p>
+        <button onClick={scrollToCatalogue} className="btn-primary mt-6 px-5 py-2.5 text-sm sm:hidden">
+          Découvrir les modèles <ArrowRight className="h-4 w-4" />
+        </button>
 
-        {/* Profils rapides */}
+        {/* Profils rapides — ruban défilable sur mobile */}
         <div className="mt-8 flex flex-col items-center gap-3">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Démarrer directement avec un profil type
+            Démarrer avec un profil type
           </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {samples.map((s) => (
+          <div className="no-scrollbar fade-x -mx-6 flex w-[calc(100%+3rem)] snap-x gap-2 overflow-x-auto px-6 pb-1 sm:mx-0 sm:w-full sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0">
+            {uniqueSamples.map((s) => (
               <button
                 key={s.id}
                 onClick={() => start(s.id as TemplateId)}
-                className="btn-ghost border bg-card shadow-soft hover:border-primary/50 text-xs py-1.5 px-3"
+                className="btn-ghost shrink-0 snap-start whitespace-nowrap border bg-card shadow-soft hover:border-primary/50 text-xs py-2 px-3"
               >
                 {s.label} <ArrowRight className="h-3 w-3" />
               </button>
@@ -142,7 +150,7 @@ function Home() {
         </div>
 
         {/* Barre de filtres */}
-        <div className="mb-10 flex flex-wrap justify-center gap-2">
+        <div className="no-scrollbar -mx-6 mb-8 flex snap-x gap-2 overflow-x-auto px-6 pb-1 sm:mx-0 sm:mb-10 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0">
           {categories.map((cat) => {
             const count =
               cat === "Tous"
@@ -153,7 +161,8 @@ function Home() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition ${
+                aria-pressed={active}
+                className={`shrink-0 snap-start whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition ${
                   active
                     ? "border-primary bg-primary text-primary-foreground shadow-soft"
                     : "bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
@@ -165,27 +174,16 @@ function Home() {
           })}
         </div>
 
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="flex flex-wrap justify-center gap-5 sm:gap-8">
           {visibleTemplates.map((t) => (
             <div
               key={t.id}
-              className="group relative flex w-full max-w-[380px] flex-col rounded-2xl border bg-card p-4 shadow-soft transition-all duration-200 hover:shadow-md sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)]"
+              className="group relative flex w-full max-w-[380px] flex-col rounded-2xl border bg-card p-3 shadow-soft transition-all duration-200 hover:shadow-md sm:p-4 sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)]"
             >
-              {/* En-tête de la carte */}
-              <div className="flex items-start justify-between mb-3 min-h-[46px]">
-                <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-                    {t.category}
-                  </span>
-                  <h3 className="text-base font-bold text-foreground leading-snug">{t.name}</h3>
-                  <p className="text-xs text-muted-foreground line-clamp-1">{t.hint}</p>
-                </div>
-              </div>
-
-              {/* Miniature A4 cliquable */}
+              {/* Miniature A4 cliquable : toute la vignette ouvre l'aperçu */}
               <button
                 onClick={() => setExploringTemplate(t.id)}
-                className="relative w-full overflow-hidden rounded-xl border bg-muted/30 p-3 text-left"
+                className="relative w-full overflow-hidden rounded-xl border bg-muted/30 p-2.5 text-left sm:p-3"
                 aria-label={`Aperçu du modèle ${t.name}`}
               >
                 <div className="overflow-hidden rounded-sm shadow-md ring-1 ring-border">
@@ -193,24 +191,24 @@ function Home() {
                     <CVTemplate cv={sampleMap[t.id]} template={t.id} />
                   </A4Thumbnail>
                 </div>
-                <span className="absolute top-2.5 right-2.5 flex items-center gap-1 rounded-lg bg-background/90 px-2.5 py-1 text-xs font-semibold shadow backdrop-blur-xs transition group-hover:bg-background">
-                  <ZoomIn className="h-3.5 w-3.5 text-primary" /> Aperçu
+                <span className="absolute top-2 right-2 grid h-8 w-8 place-items-center rounded-full bg-background/90 shadow backdrop-blur-xs transition group-hover:bg-background">
+                  <ZoomIn className="h-4 w-4 text-primary" />
                 </span>
               </button>
 
-              {/* Actions sous la carte */}
-              <div className="mt-4 flex gap-2">
-                <button
-                  onClick={() => setExploringTemplate(t.id)}
-                  className="flex flex-1 items-center justify-center gap-1 rounded-xl border bg-card px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <Maximize2 className="h-3.5 w-3.5" /> Explorer
-                </button>
+              {/* Pied de carte : nom + action unique */}
+              <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+                <div className="min-w-0">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
+                    {t.category}
+                  </span>
+                  <h3 className="truncate text-sm font-bold leading-snug text-foreground sm:text-base">{t.name}</h3>
+                </div>
                 <button
                   onClick={() => start(t.id)}
-                  className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+                  className="flex shrink-0 items-center gap-1 rounded-xl bg-primary px-3.5 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
                 >
-                  Personnaliser ce modèle <ArrowRight className="h-3.5 w-3.5" />
+                  Personnaliser <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
