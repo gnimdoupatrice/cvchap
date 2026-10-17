@@ -1,4 +1,4 @@
-import { RotateCcw, Sparkles, Type, Rows3 } from "lucide-react";
+import { RotateCcw, Sparkles, Type, Rows3, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { DEFAULT_LAYOUT, FONT_MIN, FONT_MAX, SPACING_MIN, SPACING_MAX, type CVLayout } from "@/lib/cv/layout";
@@ -7,10 +7,13 @@ export function LayoutControls({ value, onChange, onOptimize, optimizing, overfl
   value: CVLayout; onChange: (value: CVLayout) => void; onOptimize: () => void; optimizing: boolean; overflow: boolean;
 }) {
   return (
-    <div className="mb-6 border-y py-4">
-      <div className="mb-4 flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold">Mise en page A4</h2>
-        <Button variant="ghost" size="icon" aria-label="Réinitialiser la mise en page" title="Réinitialiser la mise en page" onClick={() => onChange(DEFAULT_LAYOUT)}><RotateCcw /></Button>
+    <details className="group mt-8 rounded-xl border bg-card px-4 py-3 shadow-soft">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center gap-2 text-sm font-semibold"><SlidersHorizontal className="size-4 text-primary" />Ajuster la mise en page A4</span>
+        <span className={`text-xs ${overflow ? "text-destructive" : "text-muted-foreground"}`}>{overflow ? "Hors page" : "Format A4"}<ChevronDown className="ml-1 inline size-3.5 transition group-open:rotate-180" /></span>
+      </summary>
+      <div className="mb-2 mt-4 flex justify-end">
+        <Button variant="ghost" size="sm" aria-label="Réinitialiser la mise en page" onClick={() => onChange(DEFAULT_LAYOUT)}><RotateCcw />Réinitialiser</Button>
       </div>
       <div className="grid gap-5">
         <div>
@@ -30,6 +33,6 @@ export function LayoutControls({ value, onChange, onOptimize, optimizing, overfl
           <span aria-live="polite" className={`text-xs ${overflow ? "text-destructive" : "text-muted-foreground"}`}>{overflow ? "Contenu hors page" : "Format A4"}</span>
         </div>
       </div>
-    </div>
+    </details>
   );
 }
