@@ -7,7 +7,7 @@ import {
   ChevronRight,
   FileText,
   FolderLock,
-  Maximize2,
+  UserRound,
   Ruler,
   Sparkles,
   X,
@@ -45,6 +45,11 @@ function Home() {
   const navigate = useNavigate();
   const [exploringTemplate, setExploringTemplate] = useState<TemplateId | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("Tous");
+
+  const uniqueSamples = useMemo(() => {
+    const seen = new Set<string>();
+    return samples.filter((s) => (seen.has(s.label) ? false : (seen.add(s.label), true)));
+  }, []);
 
   const categories = useMemo(() => {
     const cats = Array.from(new Set(templateMeta.map((t) => t.category)));
