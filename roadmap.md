@@ -8,3 +8,7 @@
 - [x] Recaler Adeline et sécuriser la colonne gauche Emerald.
 - [x] Agrandir et équilibrer Daniel, Richard, Emma, Elvira et Alfred.
 - [x] Vérifier les sept feuilles A4, leurs colonnes et les tests.
+# Refonte mobile-first
+- [x] Option 1 : page d'accueil mobile.
+- [ ] Option 2 : éditeur mobile (contenu d'abord, réglages A4 repliables, barre d'action basse).
+- [ ] Option 3 : direction artistique globale (palette, surfaces).
