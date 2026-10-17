@@ -505,3 +505,17 @@
     print-color-adjust: exact;
   }
 }
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility fade-x {
+  mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+  @media (min-width: 40rem) {
+    mask-image: none;
+  }
+}
