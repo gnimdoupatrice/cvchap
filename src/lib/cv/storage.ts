@@ -2,8 +2,9 @@ import { sampleEmeraldTech } from "./samples";
 import { DEFAULT_LAYOUT, normalizeLayout } from "./layout";
 import { type CVDocument, type TemplateId } from "./types";
 
-const DOC_KEY = "cvflow.doc.v1";
-const CREDITS_KEY = "cvflow.credits.v1";
+// Legacy unowned drafts are deliberately not assigned to the next signed-in account.
+const scopedKey = (kind: "doc" | "credits", userId?: string) =>
+  `cvflow.${kind}.v2.${userId ? `user:${userId}` : "discovery"}`;
 export const FREE_CREDITS = 5;
 
 const VALID_TEMPLATES: TemplateId[] = [
@@ -33,9 +34,9 @@ export const defaultDoc = (): CVDocument => ({
   layout: { ...DEFAULT_LAYOUT },
 });
 
-export function loadDoc(): CVDocument {
+export function loadDoc(userId?: string): CVDocument {
   try {
-    const raw = localStorage.getItem(DOC_KEY);
+    const raw = localStorage.getItem(scopedKey("doc", userId));
     if (raw) {
       const stored = JSON.parse(raw) as Partial<CVDocument>;
       const fallback = defaultDoc();
@@ -54,23 +55,23 @@ export function loadDoc(): CVDocument {
           ...stored.cv,
           personal: { ...fallback.cv.personal, ...stored.cv?.personal },
           experiences:
-            stored.cv?.experiences && stored.cv.experiences.length > 0
+             Array.isArray(stored.cv?.experiences)
               ? stored.cv.experiences
               : fallback.cv.experiences,
           education:
-            stored.cv?.education && stored.cv.education.length > 0
+             Array.isArray(stored.cv?.education)
               ? stored.cv.education
               : fallback.cv.education,
           skills:
-            stored.cv?.skills && stored.cv.skills.length > 0
+             Array.isArray(stored.cv?.skills)
               ? stored.cv.skills
               : fallback.cv.skills,
           languages:
-            stored.cv?.languages && stored.cv.languages.length > 0
+             Array.isArray(stored.cv?.languages)
               ? stored.cv.languages
               : fallback.cv.languages,
           interests:
-            stored.cv?.interests && stored.cv.interests.length > 0
+             Array.isArray(stored.cv?.interests)
               ? stored.cv.interests
               : fallback.cv.interests,
         },
@@ -82,17 +83,17 @@ export function loadDoc(): CVDocument {
   return defaultDoc();
 }
 
-export function saveDoc(doc: CVDocument) {
+export function saveDoc(doc: CVDocument, userId?: string) {
   try {
-    localStorage.setItem(DOC_KEY, JSON.stringify(doc));
+    localStorage.setItem(scopedKey("doc", userId), JSON.stringify(doc));
   } catch (e) {
     console.error("Impossible de sauvegarder le CV :", e);
   }
 }
 
-export function loadCredits(): number {
+export function loadCredits(userId?: string): number {
   try {
-    const raw = localStorage.getItem(CREDITS_KEY);
+    const raw = localStorage.getItem(scopedKey("credits", userId));
     if (raw !== null) {
       const parsed = parseInt(raw, 10);
       return Number.isNaN(parsed) ? FREE_CREDITS : parsed;
@@ -101,8 +102,8 @@ export function loadCredits(): number {
   return FREE_CREDITS;
 }
 
-export function saveCredits(c: number) {
+export function saveCredits(c: number, userId?: string) {
   try {
-    localStorage.setItem(CREDITS_KEY, String(c));
+    localStorage.setItem(scopedKey("credits", userId), String(c));
   } catch {}
 }
