@@ -34,6 +34,11 @@ export const defaultDoc = (): CVDocument => ({
   layout: { ...DEFAULT_LAYOUT },
 });
 
+export function hasStoredDoc(userId: string): boolean {
+  try { return localStorage.getItem(scopedKey("doc", userId)) !== null; }
+  catch { return false; }
+}
+
 export function loadDoc(userId?: string): CVDocument {
   try {
     const raw = localStorage.getItem(scopedKey("doc", userId));

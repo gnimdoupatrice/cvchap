@@ -75,7 +75,6 @@ export function CoachEditor({
         <h3 className="mt-2 text-xl font-semibold tracking-tight">{current.q}</h3>
         <textarea
           key={current.key}
-          autoFocus
           className="input mt-4 min-h-32"
           placeholder={current.ph}
           value={answers[current.key]}
