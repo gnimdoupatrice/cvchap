@@ -21,13 +21,15 @@ async function run(system: string, prompt: string): Promise<Result> {
 export const improveText = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({ kind: z.enum(["summary", "bullets"]), text: z.string().min(1).max(4000), context: z.string().max(300) }).parse(d),
+    z.object({ kind: z.enum(["summary", "bullets", "rephrase"]), text: z.string().min(1).max(4000), context: z.string().max(300) }).parse(d),
   )
   .handler(async ({ data }) => {
     const task =
       data.kind === "summary"
         ? "Réécris ce résumé de profil en 2 à 3 phrases percutantes (max 60 mots)."
-        : "Réécris ces réalisations, une par ligne, même nombre de lignes.";
+        : data.kind === "rephrase"
+          ? "Reformule ce texte dans un style professionnel de CV, en conservant strictement les faits et la longueur approximative."
+          : "Réécris ces réalisations, une par ligne, même nombre de lignes.";
     return run(RULES, `${task}\nContexte : ${data.context}\n\nTexte :\n${data.text}`);
   });
 

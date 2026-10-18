@@ -1,14 +1,18 @@
-import { ImagePlus, Plus, Sparkles, Trash2 } from "lucide-react";
+import { ImagePlus, Plus, Sparkles, Trash2, Wand2 } from "lucide-react";
 import { uid, type CV } from "@/lib/cv/types";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { VoiceInput } from "./VoiceInput";
 
-export type AskAI = (kind: "summary" | "bullets", text: string, context: string, apply: (t: string) => void) => void;
+export type AskAI = (kind: "summary" | "bullets" | "rephrase", text: string, context: string, apply: (t: string) => void) => void;
 
-function Field({ label, children }: { label: string; children: ReactNode }) {
+function Field({ label, children, onVoice }: { label: string; children: ReactNode; onVoice?: (text: string) => void }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-medium text-muted-foreground">{label}</span>
+      <span className="mb-1 flex items-center justify-between gap-2">
+        <span className="text-xs font-medium text-muted-foreground">{label}</span>
+        {onVoice && <VoiceInput onTranscript={onVoice} />}
+      </span>
       {children}
     </label>
   );
@@ -42,10 +46,10 @@ export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (c
     <div className="space-y-4">
       <Section title="Coordonnées">
         <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="Nom complet"><input className="input" value={p.name} onChange={(e) => set("personal", { ...p, name: e.target.value })} /></Field>
+          <Field label="Nom complet" onVoice={(t) => set("personal", { ...p, name: t })}><input className="input" value={p.name} onChange={(e) => set("personal", { ...p, name: e.target.value })} /></Field>
           <Field label="E-mail"><input className="input" value={p.email} onChange={(e) => set("personal", { ...p, email: e.target.value })} /></Field>
           <Field label="Téléphone"><input className="input" value={p.phone} onChange={(e) => set("personal", { ...p, phone: e.target.value })} /></Field>
-          <Field label="Ville"><input className="input" value={p.location} onChange={(e) => set("personal", { ...p, location: e.target.value })} /></Field>
+          <Field label="Ville" onVoice={(t) => set("personal", { ...p, location: t })}><input className="input" value={p.location} onChange={(e) => set("personal", { ...p, location: e.target.value })} /></Field>
           <div className="sm:col-span-2"><Field label="Lien (LinkedIn, portfolio…)"><input className="input" value={p.link} onChange={(e) => set("personal", { ...p, link: e.target.value })} /></Field></div>
           <div className="sm:col-span-2">
             <Field label="Photo de profil">
@@ -62,18 +66,29 @@ export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (c
       </Section>
 
       <Section title="Titre du CV">
-        <input className="input" placeholder="Ex. Développeuse Full-Stack" value={cv.title} onChange={(e) => set("title", e.target.value)} />
+        <div className="flex items-start gap-2">
+          <input className="input flex-1" placeholder="Ex. Développeuse Full-Stack" value={cv.title} onChange={(e) => set("title", e.target.value)} />
+          <VoiceInput onTranscript={(t) => set("title", t)} />
+        </div>
       </Section>
 
       <Section
         title="Résumé"
         action={
-          <button disabled={busy || !cv.summary.trim()} className="btn-ai" onClick={() => askAI("summary", cv.summary, cv.title, (t) => set("summary", t))}>
-            <Sparkles className="h-3.5 w-3.5" /> Optimiser
-          </button>
+          <div className="flex items-center gap-2">
+            <button disabled={busy || !cv.summary.trim()} className="btn-ai" onClick={() => askAI("rephrase", cv.summary, cv.title, (t) => set("summary", t))}>
+              <Wand2 className="h-3.5 w-3.5" /> Reformuler
+            </button>
+            <button disabled={busy || !cv.summary.trim()} className="btn-ai" onClick={() => askAI("summary", cv.summary, cv.title, (t) => set("summary", t))}>
+              <Sparkles className="h-3.5 w-3.5" /> Optimiser
+            </button>
+          </div>
         }
       >
-        <textarea className="input min-h-24" value={cv.summary} onChange={(e) => set("summary", e.target.value)} placeholder="2 à 3 phrases sur votre profil" />
+        <div className="flex items-start gap-2">
+          <textarea className="input min-h-24 flex-1" value={cv.summary} onChange={(e) => set("summary", e.target.value)} placeholder="2 à 3 phrases sur votre profil" />
+          <VoiceInput onTranscript={(t) => set("summary", cv.summary ? `${cv.summary} ${t}` : t)} />
+        </div>
       </Section>
 
       <Section
@@ -95,7 +110,10 @@ export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (c
                 <Field label="Fin"><input className="input" value={x.end} onChange={(e) => upd({ end: e.target.value })} /></Field>
               </div>
               <Field label="Réalisations (une par ligne)">
-                <textarea className="input min-h-24" value={x.bullets.join("\n")} onChange={(e) => upd({ bullets: e.target.value.split("\n") })} />
+                <div className="flex items-start gap-2">
+                  <textarea className="input min-h-24 flex-1" value={x.bullets.join("\n")} onChange={(e) => upd({ bullets: e.target.value.split("\n") })} />
+                  <VoiceInput onTranscript={(t) => upd({ bullets: [...x.bullets.filter(Boolean), t] })} />
+                </div>
               </Field>
               <div className="flex justify-between">
                 <button className="btn-ghost text-xs text-destructive" onClick={() => set("experiences", cv.experiences.filter((e) => e.id !== x.id))}>
