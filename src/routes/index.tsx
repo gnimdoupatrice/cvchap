@@ -16,8 +16,12 @@ import {
 import { CVTemplate, templateMeta } from "@/components/cv/templates";
 import { A4Thumbnail } from "@/components/cv/A4Thumbnail";
 import { sampleMap, samples } from "@/lib/cv/samples";
-import { defaultDoc, saveDoc } from "@/lib/cv/storage";
+import { defaultDoc, hasStoredDoc, loadDoc, saveDoc } from "@/lib/cv/storage";
 import type { TemplateId } from "@/lib/cv/types";
+import { AuthDialog } from "@/components/cv/AuthDialog";
+import { useSession } from "@/hooks/use-session";
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,13 +30,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "15 modèles A4 fidèles au millimètre, Coach IA, sauvegarde dans votre espace personnel et export PDF compatible ATS.",
+          "15 modèles A4, personnalisation après connexion, Coach IA et export PDF compatible ATS. Brouillons enregistrés sur votre appareil.",
       },
       { property: "og:title", content: "CVflow — Le catalogue de CV intelligent" },
       {
         property: "og:description",
         content:
-          "Modèles A4 haute fidélité, Coach IA et export PDF instantané, sauvegardés dans votre espace personnel.",
+          "Explorez les modèles A4, connectez-vous pour personnaliser et exporter. Brouillons conservés sur votre appareil.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -45,6 +49,8 @@ function Home() {
   const navigate = useNavigate();
   const [exploringTemplate, setExploringTemplate] = useState<TemplateId | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("Tous");
+  const { user, ready } = useSession();
+  const [authOpen, setAuthOpen] = useState(false);
 
   const uniqueSamples = useMemo(() => {
     const seen = new Set<string>();
@@ -65,9 +71,10 @@ function Home() {
   );
 
   const start = (templateToUse: TemplateId) => {
-    const doc = defaultDoc();
+    if (!ready) return;
+    const doc = user && hasStoredDoc(user.id) ? loadDoc(user.id) : defaultDoc();
     const cvData = sampleMap[templateToUse] || sampleMap["emerald-tech"];
-    saveDoc({ ...doc, cv: cvData, template: templateToUse });
+    saveDoc({ ...doc, cv: user && hasStoredDoc(user.id) ? doc.cv : cvData, template: templateToUse }, user?.id);
     navigate({ to: "/editor" });
   };
 
@@ -87,6 +94,8 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Toaster />
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} onAuthenticated={() => navigate({ to: "/editor" })} />
       {/* En-tête */}
       <header className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-4 sm:flex sm:justify-between sm:px-6 sm:py-5">
         <div className="flex min-w-0 items-center gap-2 font-semibold tracking-tight">
@@ -96,14 +105,16 @@ function Home() {
           <span className="truncate">CVflow</span>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate({ to: "/editor" })}
-            className="btn-ghost border bg-card px-3 py-2 text-sm"
-            aria-label="Se connecter"
+          <Button
+            variant="outline"
+            disabled={!ready}
+            onClick={() => user ? navigate({ to: "/editor" }) : setAuthOpen(true)}
+            aria-label={user ? "Continuer mon CV" : "Se connecter"}
+            title={user?.email}
           >
             <UserRound className="h-4 w-4" />
-            <span className="hidden sm:inline">Se connecter</span>
-          </button>
+            <span className="hidden sm:inline">{user ? "Continuer mon CV" : "Se connecter"}</span>
+          </Button>
           <button onClick={scrollToCatalogue} className="btn-primary hidden px-4 py-2 text-sm sm:inline-flex">
             Découvrir les modèles <ArrowRight className="h-4 w-4" />
           </button>
@@ -120,7 +131,7 @@ function Home() {
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-balance text-base text-muted-foreground sm:mt-5 sm:text-lg">
           Chaque modèle respecte strictement la géométrie A4 et se remplit harmonieusement.
-          Personnalisez-le en quelques minutes, puis retrouvez-le sauvegardé dans votre espace personnel.
+          Explorez les modèles, puis connectez-vous pour personnaliser et exporter votre CV.
         </p>
         <button onClick={scrollToCatalogue} className="btn-primary mt-6 px-5 py-2.5 text-sm sm:hidden">
           Découvrir les modèles <ArrowRight className="h-4 w-4" />
@@ -232,13 +243,13 @@ function Home() {
             ],
             [
               FolderLock,
-              "Espace privé et sauvegarde",
-              "Vos CV personnalisés sont sauvegardés dans votre espace personnel, retrouvez-les à tout moment.",
+              "Brouillon local par compte",
+              "Votre brouillon est conservé sur cet appareil et séparé des autres comptes. La sauvegarde en ligne n’est pas encore disponible.",
             ],
             [
               Sparkles,
-              "Import intelligent & IA",
-              "Importez votre texte ou vos documents : l'IA vous aide à remplir votre CV rapidement.",
+              "Rédaction assistée par IA",
+              "Améliorez vos textes ou préparez vos réalisations avec le Coach IA, après connexion.",
             ],
           ].map(([Icon, t, d]) => {
             const I = Icon as typeof Ruler;

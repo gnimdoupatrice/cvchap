@@ -12,3 +12,10 @@
 - [x] Option 1 : page d'accueil mobile.
 - [x] Option 2 : éditeur mobile (contenu d'abord, réglages A4 repliables, barre d'action basse).
 - [x] Option 3 : direction artistique globale (palette, surfaces).
+
+# Cohérence du parcours de connexion
+- [x] Ouvrir la connexion depuis l'accueil et refléter la session.
+- [x] Bloquer la saisie, le coach et l'export avant connexion.
+- [x] Isoler les brouillons par compte et protéger les appels IA.
+- [x] Corriger les promesses de sauvegarde ; 17 tests et parcours déconnecté ordinateur/téléphone vérifiés.
+- [ ] Vérifier la connexion réelle et le rechargement du brouillon connecté : aucun compte existant disponible pour ouvrir une session de test.

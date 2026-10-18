@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const RULES = `Tu es un expert en recrutement et en rédaction de CV en français.
 Règles : commence chaque ligne par un verbe d'action fort au passé composé nominalisé ou à l'infinitif (ex. « Piloté », « Conçu », « Réduit »), mets en avant des résultats chiffrés quand ils existent, n'invente jamais de chiffres absents, reste concis (max 22 mots par ligne), compatible ATS (pas d'emoji, pas de symboles décoratifs).
@@ -18,6 +19,7 @@ async function run(system: string, prompt: string): Promise<Result> {
 }
 
 export const improveText = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z.object({ kind: z.enum(["summary", "bullets"]), text: z.string().min(1).max(4000), context: z.string().max(300) }).parse(d),
   )
@@ -30,6 +32,7 @@ export const improveText = createServerFn({ method: "POST" })
   });
 
 export const coachExperience = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z
       .object({

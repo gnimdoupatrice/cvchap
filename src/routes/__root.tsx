@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "CVflow — Créez un CV percutant avec l'IA" },
       {
         name: "description",
-        content: "9 modèles A4 au millimètre, Coach IA et export PDF compatible ATS.",
+        content: "15 modèles A4, personnalisation après connexion, Coach IA et export PDF compatible ATS.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
