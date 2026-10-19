@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CVDocument } from "@/lib/cv/types";
 import { CVTemplate } from "./templates";
-import { applyTemplateLayout, measureTemplate } from "./TemplateLayout";
+import { applyTemplateLayout, measureTemplate, listTemplateElements, type CVElement } from "./TemplateLayout";
 import { findOptimalLayout, normalizeLayout, type CVLayout } from "@/lib/cv/layout";
 
 export const A4_W = 794; // 210mm @ 96dpi
@@ -16,11 +16,17 @@ export function A4Preview({
   onOverflowChange,
   optimizeRequest = 0,
   onOptimized,
+  onElements,
+  onSelectElement,
+  selectedElement,
 }: {
   doc: CVDocument;
   onOverflowChange: (overflow: boolean) => void;
   optimizeRequest?: number;
   onOptimized?: (layout: CVLayout | null) => void;
+  onElements?: (elements: CVElement[]) => void;
+  onSelectElement?: (key: string) => void;
+  selectedElement?: string;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -50,11 +56,13 @@ export function A4Preview({
       onOverflowChange(measured.overflow);
     };
     check();
+    const layoutRoot = el.querySelector<HTMLElement>("[data-cv-layout]");
+    if (layoutRoot) onElements?.(listTemplateElements(layoutRoot));
     const observer = new ResizeObserver(check);
     observer.observe(el);
     void document.fonts.ready.then(check);
     return () => { active = false; observer.disconnect(); };
-  }, [doc, zoom, onOverflowChange]);
+  }, [doc, zoom, onOverflowChange, onElements]);
 
   useEffect(() => {
     if (!optimizeRequest || handledRequest.current === optimizeRequest) return;
@@ -67,7 +75,7 @@ export function A4Preview({
       const result = findOptimalLayout((layout) => {
         applyTemplateLayout(el, layout);
         return !measureTemplate(el).overflow;
-      });
+      }, normalizeLayout(doc.layout));
       applyTemplateLayout(el, normalizeLayout(doc.layout));
       onOptimized?.(result);
     });
@@ -86,7 +94,15 @@ export function A4Preview({
             className="cv-paper relative shadow-paper"
             style={{ width: A4_W, height: A4_H }}
           >
-            <div ref={contentRef}>
+            <div ref={contentRef} onClick={(event) => {
+              if (!(event.target instanceof Element)) return;
+              const element = event.target.closest<HTMLElement>("[data-cv-element]");
+              if (element?.dataset.cvElement) onSelectElement?.(element.dataset.cvElement);
+            }} onPointerOver={(event) => {
+              if (!(event.target instanceof Element)) return;
+              const element = event.target.closest<HTMLElement>("[data-cv-element]");
+              if (element) element.title = "Personnaliser cet élément";
+            }} data-selected-element={selectedElement}>
               <CVTemplate cv={doc.cv} template={doc.template} layout={normalizeLayout(doc.layout)} />
             </div>
             {overflow && (

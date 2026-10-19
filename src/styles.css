@@ -72,6 +72,12 @@
 }
 
 :root {
+  --cv-custom-ink: #20242b;
+  --cv-custom-blue: #2458a6;
+  --cv-custom-green: #18634e;
+  --cv-custom-red: #922b40;
+  --cv-custom-violet: #703c76;
+  --cv-custom-light: #ffffff;
   --radius: 0.75rem;
   --background: oklch(0.975 0.006 85);
   --foreground: oklch(0.2 0.035 265);
@@ -512,6 +518,15 @@
     display: none;
   }
 }
+
+.cv-swatch[data-color="original"] { background: var(--paper-tint); }
+.cv-swatch[data-color="ink"] { background: var(--cv-custom-ink); }
+.cv-swatch[data-color="blue"] { background: var(--cv-custom-blue); }
+.cv-swatch[data-color="green"] { background: var(--cv-custom-green); }
+.cv-swatch[data-color="red"] { background: var(--cv-custom-red); }
+.cv-swatch[data-color="violet"] { background: var(--cv-custom-violet); }
+.cv-swatch[data-color="light"] { background: var(--cv-custom-light); }
+@media (prefers-reduced-motion: reduce) { .animate-pulse { animation: none; } }
 
 @utility fade-x {
   mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
