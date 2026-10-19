@@ -1,4 +1,8 @@
 # Mise en page A4
+- [ ] Terminer le formulaire unique avec coach intégré, micro et reformulation sur chaque champ.
+- [ ] Ajouter import de CV/brouillon et note vocale globale avec validation avant application.
+- [ ] Ajouter styles globaux et individuels, harmonisation et contrôle avant PDF.
+- [ ] Tester la saisie, les réglages persistants, l’A4 et les parcours ordinateur/mobile.
 - [x] Ajouter les réglages de police et d’espacement persistants.
 - [x] Appliquer les réglages à tous les modèles et à l’impression.
 - [x] Optimiser le remplissage A4 et vérifier les débordements.
