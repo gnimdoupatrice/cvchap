@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { ExtractedCV } from "./cv/extraction";
 
 const RULES = `Tu es un expert en recrutement et en rédaction de CV en français.
 Règles : commence chaque ligne par un verbe d'action fort au passé composé nominalisé ou à l'infinitif (ex. « Piloté », « Conçu », « Réduit »), mets en avant des résultats chiffrés quand ils existent, n'invente jamais de chiffres absents, reste concis (max 22 mots par ligne), compatible ATS (pas d'emoji, pas de symboles décoratifs).
@@ -55,3 +56,14 @@ Action concrète : ${data.action}
 Résultat mesurable : ${data.result}`,
     ),
   );
+
+export const extractDraft = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ text: z.string().min(1).max(30000) }).parse(data))
+  .handler(async ({ data }): Promise<{ ok: true; cv: ExtractedCV } | { ok: false; error: string; status: number }> => {
+    const key = process.env["LOVABLE_API_KEY"];
+    if (!key) return { ok: false, error: "Le service IA n’est pas configuré.", status: 401 };
+    const { extractCV, AiError } = await import("./ai/gateway.server");
+    try { return { ok: true, cv: await extractCV(data.text, key) }; }
+    catch (error) { return { ok: false, error: error instanceof Error ? error.message : "L’extraction du CV a échoué.", status: error instanceof AiError ? error.status : 500 }; }
+  });
