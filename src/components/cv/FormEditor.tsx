@@ -5,190 +5,67 @@ import { Button } from "@/components/ui/button";
 import { VoiceInput } from "./VoiceInput";
 
 export type AskAI = (kind: "summary" | "bullets" | "rephrase", text: string, context: string, apply: (t: string) => void) => void;
-
-function Field({ label, children, onVoice }: { label: string; children: ReactNode; onVoice?: (text: string) => void }) {
-  return (
-    <label className="block">
-      <span className="mb-1 flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
-        {onVoice && <VoiceInput onTranscript={onVoice} />}
-      </span>
-      {children}
-    </label>
-  );
-}
-
 export function Section({ title, children, action }: { title: string; children: ReactNode; action?: ReactNode }) {
-  return (
-    <section className="rounded-2xl border bg-card p-5 shadow-soft">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-sm font-semibold">{title}</h2>
-        {action}
-      </div>
-      <div className="space-y-3">{children}</div>
-    </section>
-  );
+  return <section className="border-b pb-6 pt-2"><div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h2 className="text-sm font-semibold">{title}</h2>{action}</div><div className="space-y-3">{children}</div></section>;
 }
-
+export function TextField({ label, value, onChange, askAI, busy, context = "", multiline = false, placeholder = "" }: {
+  label: string; value: string; onChange: (text: string) => void; askAI: AskAI; busy: boolean; context?: string; multiline?: boolean; placeholder?: string;
+}) {
+  return <div className="min-w-0"><div className="mb-1 flex items-center justify-between gap-2"><label className="text-xs font-medium text-muted-foreground">{label}</label><div className="flex shrink-0 gap-1">
+    <VoiceInput disabled={busy} label={`Dicter : ${label}`} onTranscript={(text) => onChange(multiline && value.trim() ? `${value}\n${text}` : text)} />
+    <Button type="button" size="icon" variant="ghost" className="size-8 text-primary" title={`Reformuler : ${label}`} aria-label={`Reformuler : ${label}`} disabled={busy || !value.trim()} onClick={() => askAI("rephrase", value, `${context} — Champ ${label}. Conserver exactement noms, contacts et dates ; reformuler seulement si pertinent.`, onChange)}><Wand2 className="size-3.5" /></Button>
+  </div></div>
+  {multiline ? <textarea aria-label={label} className="input min-h-24" value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} /> : <input aria-label={label} className="input" value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} />}
+  </div>;
+}
 export function FormEditor({ cv, onChange, askAI, busy }: { cv: CV; onChange: (cv: CV) => void; askAI: AskAI; busy: boolean }) {
-  const set = <K extends keyof CV>(k: K, v: CV[K]) => onChange({ ...cv, [k]: v });
+  const set = <K extends keyof CV>(key: K, value: CV[K]) => onChange({ ...cv, [key]: value });
   const p = cv.personal;
+  const field = (label: string, value: string, onChange: (text: string) => void, multiline = false) => <TextField label={label} value={value} onChange={onChange} multiline={multiline} askAI={askAI} busy={busy} context={cv.title} />;
   const readPhoto = (file?: File) => {
-    if (!file) return;
+    if (!file || !file.type.startsWith("image/")) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") set("personal", { ...p, photo: reader.result });
-    };
+    reader.onload = () => { if (typeof reader.result === "string") set("personal", { ...p, photo: reader.result }); };
     reader.readAsDataURL(file);
   };
-
-  return (
-    <div className="space-y-4">
-      <Section title="Coordonnées">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="Nom complet" onVoice={(t) => set("personal", { ...p, name: t })}><input className="input" value={p.name} onChange={(e) => set("personal", { ...p, name: e.target.value })} /></Field>
-          <Field label="E-mail"><input className="input" value={p.email} onChange={(e) => set("personal", { ...p, email: e.target.value })} /></Field>
-          <Field label="Téléphone"><input className="input" value={p.phone} onChange={(e) => set("personal", { ...p, phone: e.target.value })} /></Field>
-          <Field label="Ville" onVoice={(t) => set("personal", { ...p, location: t })}><input className="input" value={p.location} onChange={(e) => set("personal", { ...p, location: e.target.value })} /></Field>
-          <div className="sm:col-span-2"><Field label="Lien (LinkedIn, portfolio…)"><input className="input" value={p.link} onChange={(e) => set("personal", { ...p, link: e.target.value })} /></Field></div>
-          <div className="sm:col-span-2">
-            <Field label="Photo de profil">
-              <div className="flex items-center gap-3">
-                {p.photo && <img src={p.photo} alt="Aperçu du portrait" className="h-14 w-14 rounded-full object-cover" />}
-                <Button asChild variant="outline" size="sm">
-                  <label><ImagePlus /> {p.photo ? "Changer" : "Choisir une photo"}<input className="sr-only" type="file" accept="image/*" onChange={(e) => readPhoto(e.target.files?.[0])} /></label>
-                </Button>
-                {p.photo && <Button type="button" variant="ghost" size="sm" onClick={() => { const { photo: _photo, ...withoutPhoto } = p; set("personal", withoutPhoto); }}>Retirer</Button>}
-              </div>
-            </Field>
-          </div>
-        </div>
-      </Section>
-
-      <Section title="Titre du CV">
-        <div className="flex items-start gap-2">
-          <input className="input flex-1" placeholder="Ex. Développeuse Full-Stack" value={cv.title} onChange={(e) => set("title", e.target.value)} />
-          <VoiceInput onTranscript={(t) => set("title", t)} />
-        </div>
-      </Section>
-
-      <Section
-        title="Résumé"
-        action={
-          <div className="flex items-center gap-2">
-            <button disabled={busy || !cv.summary.trim()} className="btn-ai" onClick={() => askAI("rephrase", cv.summary, cv.title, (t) => set("summary", t))}>
-              <Wand2 className="h-3.5 w-3.5" /> Reformuler
-            </button>
-            <button disabled={busy || !cv.summary.trim()} className="btn-ai" onClick={() => askAI("summary", cv.summary, cv.title, (t) => set("summary", t))}>
-              <Sparkles className="h-3.5 w-3.5" /> Optimiser
-            </button>
-          </div>
-        }
-      >
-        <div className="flex items-start gap-2">
-          <textarea className="input min-h-24 flex-1" value={cv.summary} onChange={(e) => set("summary", e.target.value)} placeholder="2 à 3 phrases sur votre profil" />
-          <VoiceInput onTranscript={(t) => set("summary", cv.summary ? `${cv.summary} ${t}` : t)} />
-        </div>
-      </Section>
-
-      <Section
-        title="Expériences"
-        action={
-          <button className="btn-ghost text-xs" onClick={() => set("experiences", [...cv.experiences, { id: uid(), role: "", company: "", start: "", end: "", bullets: [] }])}>
-            <Plus className="h-3.5 w-3.5" /> Ajouter
-          </button>
-        }
-      >
-        {cv.experiences.map((x, i) => {
-          const upd = (patch: Partial<typeof x>) => set("experiences", cv.experiences.map((e) => (e.id === x.id ? { ...e, ...patch } : e)));
-          return (
-            <div key={x.id} className="space-y-3 rounded-xl border p-4">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <Field label="Poste"><input className="input" value={x.role} onChange={(e) => upd({ role: e.target.value })} /></Field>
-                <Field label="Entreprise"><input className="input" value={x.company} onChange={(e) => upd({ company: e.target.value })} /></Field>
-                <Field label="Début"><input className="input" value={x.start} onChange={(e) => upd({ start: e.target.value })} /></Field>
-                <Field label="Fin"><input className="input" value={x.end} onChange={(e) => upd({ end: e.target.value })} /></Field>
-              </div>
-              <Field label="Réalisations (une par ligne)">
-                <div className="flex items-start gap-2">
-                  <textarea className="input min-h-24 flex-1" value={x.bullets.join("\n")} onChange={(e) => upd({ bullets: e.target.value.split("\n") })} />
-                  <VoiceInput onTranscript={(t) => upd({ bullets: [...x.bullets.filter(Boolean), t] })} />
-                </div>
-              </Field>
-              <div className="flex justify-between">
-                <button className="btn-ghost text-xs text-destructive" onClick={() => set("experiences", cv.experiences.filter((e) => e.id !== x.id))}>
-                  <Trash2 className="h-3.5 w-3.5" /> Supprimer
-                </button>
-                <button
-                  disabled={busy || !x.bullets.join("").trim()}
-                  className="btn-ai"
-                  onClick={() =>
-                    askAI("bullets", x.bullets.filter(Boolean).join("\n"), `${x.role} chez ${x.company}`, (t) =>
-                      upd({ bullets: t.split("\n").map((l) => l.replace(/^[-•*]\s*/, "").trim()).filter(Boolean) }),
-                    )
-                  }
-                >
-                  <Sparkles className="h-3.5 w-3.5" /> Optimiser l'expérience {i + 1}
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </Section>
-
-      <Section
-        title="Formations"
-        action={
-          <button className="btn-ghost text-xs" onClick={() => set("education", [...cv.education, { id: uid(), degree: "", school: "", start: "", end: "" }])}>
-            <Plus className="h-3.5 w-3.5" /> Ajouter
-          </button>
-        }
-      >
-        {cv.education.map((x) => {
-          const upd = (patch: Partial<typeof x>) => set("education", cv.education.map((e) => (e.id === x.id ? { ...e, ...patch } : e)));
-          return (
-            <div key={x.id} className="grid gap-3 rounded-xl border p-4 sm:grid-cols-2">
-              <Field label="Diplôme"><input className="input" value={x.degree} onChange={(e) => upd({ degree: e.target.value })} /></Field>
-              <Field label="Établissement"><input className="input" value={x.school} onChange={(e) => upd({ school: e.target.value })} /></Field>
-              <Field label="Début"><input className="input" value={x.start} onChange={(e) => upd({ start: e.target.value })} /></Field>
-              <Field label="Fin"><input className="input" value={x.end} onChange={(e) => upd({ end: e.target.value })} /></Field>
-              <button className="btn-ghost justify-self-start text-xs text-destructive" onClick={() => set("education", cv.education.filter((e) => e.id !== x.id))}>
-                <Trash2 className="h-3.5 w-3.5" /> Supprimer
-              </button>
-            </div>
-          );
-        })}
-      </Section>
-
-      <Section title="Compétences">
-        <input
-          className="input"
-          placeholder="Séparées par des virgules"
-          value={cv.skills.join(", ")}
-          onChange={(e) => set("skills", e.target.value.split(",").map((s) => s.trimStart()))}
-          onBlur={() => set("skills", cv.skills.map((s) => s.trim()).filter(Boolean))}
-        />
-      </Section>
-
-      <Section title="Langues">
-        <textarea
-          className="input min-h-20"
-          placeholder="Une langue par ligne, par exemple : Anglais — courant"
-          value={cv.languages.join("\n")}
-          onChange={(e) => set("languages", e.target.value.split("\n"))}
-          onBlur={() => set("languages", cv.languages.map((s) => s.trim()).filter(Boolean))}
-        />
-      </Section>
-
-      <Section title="Centres d’intérêt / Loisirs">
-        <input
-          className="input"
-          placeholder="Séparés par des virgules"
-          value={cv.interests.join(", ")}
-          onChange={(e) => set("interests", e.target.value.split(",").map((s) => s.trimStart()))}
-          onBlur={() => set("interests", cv.interests.map((s) => s.trim()).filter(Boolean))}
-        />
-      </Section>
-    </div>
-  );
+  return <div className="space-y-6">
+    <Section title="Coordonnées"><div className="grid gap-3 sm:grid-cols-2">
+      {field("Nom complet", p.name, (name) => set("personal", { ...p, name }))}
+      {field("E-mail", p.email, (email) => set("personal", { ...p, email }))}
+      {field("Téléphone", p.phone, (phone) => set("personal", { ...p, phone }))}
+      {field("Ville", p.location, (location) => set("personal", { ...p, location }))}
+      <div className="sm:col-span-2">{field("Lien (LinkedIn, portfolio…)", p.link, (link) => set("personal", { ...p, link }))}</div>
+      <div className="sm:col-span-2"><span className="mb-2 block text-xs text-muted-foreground">Photo de profil</span><div className="flex flex-wrap items-center gap-3">
+        {p.photo && <img src={p.photo} alt="Aperçu du portrait" className="size-14 rounded-full object-cover" />}
+        <Button asChild variant="outline" size="sm"><label><ImagePlus />{p.photo ? "Changer" : "Choisir une photo"}<input aria-label="Photo de profil" className="sr-only" type="file" accept="image/*" onChange={(e) => readPhoto(e.target.files?.[0])} /></label></Button>
+        {p.photo && <Button variant="ghost" size="sm" onClick={() => { const { photo: _photo, ...rest } = p; set("personal", rest); }}>Retirer</Button>}
+      </div></div>
+    </div></Section>
+    <Section title="Titre du CV">{field("Titre professionnel", cv.title, text => set("title", text))}</Section>
+    <Section title="Résumé" action={<Button variant="outline" size="sm" disabled={busy || !cv.summary.trim()} onClick={() => askAI("summary", cv.summary, cv.title, text => set("summary", text))}><Sparkles />Optimiser</Button>}>
+      {field("Présentation du profil", cv.summary, text => set("summary", text), true)}
+    </Section>
+    <Section title="Expériences" action={<Button variant="ghost" size="sm" onClick={() => set("experiences", [...cv.experiences, { id: uid(), role: "", company: "", start: "", end: "", bullets: [] }])}><Plus />Ajouter</Button>}>
+      {cv.experiences.map((x, i) => {
+        const upd = (patch: Partial<typeof x>) => set("experiences", cv.experiences.map(e => e.id === x.id ? { ...e, ...patch } : e));
+        return <div key={x.id} className="space-y-3 border-l-2 pl-3"><div className="flex items-center justify-between"><h3 className="text-xs font-semibold">Expérience {i + 1}</h3><Button size="icon" variant="ghost" className="size-8 text-destructive" aria-label={`Supprimer l’expérience ${i + 1}`} onClick={() => set("experiences", cv.experiences.filter(e => e.id !== x.id))}><Trash2 className="size-3.5" /></Button></div>
+          <div className="grid gap-3 sm:grid-cols-2">{field("Poste", x.role, role => upd({ role }))}{field("Entreprise", x.company, company => upd({ company }))}{field("Début de l’expérience", x.start, start => upd({ start }))}{field("Fin de l’expérience", x.end, end => upd({ end }))}</div>
+          {field("Réalisations (une par ligne)", x.bullets.join("\n"), text => upd({ bullets: text.split("\n") }), true)}
+          <Button variant="outline" size="sm" className="max-w-full whitespace-normal" disabled={busy || !x.bullets.join("").trim()} onClick={() => askAI("bullets", x.bullets.filter(Boolean).join("\n"), `${x.role} chez ${x.company}`, text => upd({ bullets: text.split("\n").map(l => l.replace(/^[-•*]\s*/, "").trim()).filter(Boolean) }))}><Sparkles />Optimiser les réalisations</Button>
+        </div>;
+      })}
+    </Section>
+    <Section title="Formations" action={<Button variant="ghost" size="sm" onClick={() => set("education", [...cv.education, { id: uid(), degree: "", school: "", start: "", end: "" }])}><Plus />Ajouter</Button>}>
+      {cv.education.map((x, i) => {
+        const upd = (patch: Partial<typeof x>) => set("education", cv.education.map(e => e.id === x.id ? { ...e, ...patch } : e));
+        return <div key={x.id} className="space-y-3 border-l-2 pl-3"><div className="flex items-center justify-between"><h3 className="text-xs font-semibold">Formation {i + 1}</h3><Button size="icon" variant="ghost" className="size-8 text-destructive" aria-label={`Supprimer la formation ${i + 1}`} onClick={() => set("education", cv.education.filter(e => e.id !== x.id))}><Trash2 className="size-3.5" /></Button></div>
+          <div className="grid gap-3 sm:grid-cols-2">{field("Diplôme", x.degree, degree => upd({ degree }))}{field("Établissement", x.school, school => upd({ school }))}{field("Début de la formation", x.start, start => upd({ start }))}{field("Fin de la formation", x.end, end => upd({ end }))}</div>
+          {field("Précision sur la formation", x.note ?? "", note => upd({ note }))}
+        </div>;
+      })}
+    </Section>
+    <Section title="Compétences">{field("Compétences (une par ligne)", cv.skills.join("\n"), text => set("skills", text.split("\n")), true)}</Section>
+    <Section title="Langues">{field("Langues et niveaux (une par ligne)", cv.languages.join("\n"), text => set("languages", text.split("\n")), true)}</Section>
+    <Section title="Centres d’intérêt / Loisirs">{field("Centres d’intérêt (un par ligne)", cv.interests.join("\n"), text => set("interests", text.split("\n")), true)}</Section>
+  </div>;
 }

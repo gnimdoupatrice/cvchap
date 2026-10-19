@@ -1,7 +1,9 @@
+import { normalizeStyle, type CVStyle } from "./style";
 export interface CVLayout {
   fontSize: number;
   sectionSpacing: number;
   sidebarFontSize?: number;
+  style?: CVStyle;
 }
 
 export const DEFAULT_LAYOUT: CVLayout = { fontSize: 100, sectionSpacing: 100 };
@@ -17,11 +19,14 @@ export function normalizeLayout(value?: Partial<CVLayout>): CVLayout {
     fontSize: clamp(value?.fontSize, FONT_MIN, FONT_MAX),
     sectionSpacing: clamp(value?.sectionSpacing, SPACING_MIN, SPACING_MAX),
     ...(value?.sidebarFontSize !== undefined ? { sidebarFontSize: clamp(value.sidebarFontSize, FONT_MIN, FONT_MAX) } : {}),
+    ...(value?.style ? { style: normalizeStyle(value.style) } : {}),
   };
 }
 
 /** Find the largest readable setting that fits; never modify document content. */
-export function findOptimalLayout(fits: (layout: CVLayout) => boolean): CVLayout | null {
+export function findOptimalLayout(fits: (layout: CVLayout) => boolean, current?: CVLayout): CVLayout | null {
+  const evaluate = fits;
+  fits = (candidate) => evaluate({ ...candidate, ...(current?.style ? { style: current.style } : {}) });
   if (!fits({ fontSize: FONT_MIN, sidebarFontSize: FONT_MIN, sectionSpacing: SPACING_MIN })) return null;
   let low = FONT_MIN;
   let high = FONT_MAX;
@@ -44,5 +49,5 @@ export function findOptimalLayout(fits: (layout: CVLayout) => boolean): CVLayout
     if (fits({ fontSize: low, sidebarFontSize: sidebarLow, sectionSpacing: mid })) spacingLow = mid;
     else spacingHigh = mid - 1;
   }
-  return { fontSize: low, sidebarFontSize: sidebarLow, sectionSpacing: spacingLow };
+  return { fontSize: low, sidebarFontSize: sidebarLow, sectionSpacing: spacingLow, ...(current?.style ? { style: current.style } : {}) };
 }

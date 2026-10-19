@@ -769,7 +769,7 @@ function AdelineCapsule({ cv }: { cv: CV }) {
    DISPATCHEUR PRINCIPAL : 9 MODÈLES A4 ACTIFS  
    ======================================================== */
 export function CVTemplate({ cv, template, layout }: { cv: CV; template?: TemplateId; layout?: CVLayout }) {
-  return <TemplateLayout {...(layout ? { settings: layout } : {})}><TemplateContent cv={cv} template={template ?? "emerald-tech"} /></TemplateLayout>;
+  return <TemplateLayout template={template ?? "emerald-tech"} {...(layout ? { settings: layout } : {})}><TemplateContent cv={cv} template={template ?? "emerald-tech"} /></TemplateLayout>;
 }
 
 function TemplateContent({ cv, template }: { cv: CV; template?: TemplateId }) {
