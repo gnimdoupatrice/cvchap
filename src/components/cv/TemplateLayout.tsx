@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { normalizeLayout, type CVLayout } from "@/lib/cv/layout";
-import type { CVColor } from "@/lib/cv/style";
+import type { CVColor, ElementStyle } from "@/lib/cv/style";
 
 type Baseline = { element: HTMLElement; style: string | null; font: number; line: number; top: number; bottom: number; gap: number };
 const baselines = new WeakMap<HTMLElement, Baseline[]>();
@@ -22,6 +22,26 @@ export function listTemplateElements(root: HTMLElement): CVElement[] {
   return result;
 }
 function colorValue(color?: CVColor) { return color && color !== "original" ? `var(--cv-custom-${color})` : null; }
+/** Parent key of an element key ("tpl:0.3.1" → "tpl:0.3"), or null at the root. */
+export function parentElementKey(key: string) {
+  const i = key.indexOf(":");
+  const path = key.slice(i + 1);
+  const dot = path.lastIndexOf(".");
+  return dot < 0 ? null : `${key.slice(0, i + 1)}${path.slice(0, dot)}`;
+}
+export function cascadeOverride(key: string, elements?: Record<string, ElementStyle>): ElementStyle | undefined {
+  if (!elements || !key) return undefined;
+  const merged: ElementStyle = {};
+  let size = 100;
+  for (let k: string | null = key; k; k = parentElementKey(k)) {
+    const o = elements[k];
+    if (!o) continue;
+    if (o.fontSize !== undefined) size = size * o.fontSize / 100;
+    if (merged.fontFamily === undefined && o.fontFamily) merged.fontFamily = o.fontFamily;
+    if (merged.color === undefined && o.color) merged.color = o.color;
+  }
+  return { ...merged, fontSize: Math.round(size) };
+}
 
 export function applyTemplateLayout(root: HTMLElement, value: CVLayout) {
   let entries = baselines.get(root);
@@ -39,7 +59,8 @@ export function applyTemplateLayout(root: HTMLElement, value: CVLayout) {
   for (const entry of entries) {
     const { element } = entry;
     if (entry.style === null) element.removeAttribute("style"); else element.setAttribute("style", entry.style);
-    const override = settings.style?.elements?.[element.dataset["cvElement"] ?? ""];
+    // Section-level overrides cascade to children; the closest override wins per property.
+    const override = cascadeOverride(element.dataset["cvElement"] ?? "", settings.style?.elements);
     const columnFont = element.closest("aside") ? settings.sidebarFontSize ?? settings.fontSize : settings.fontSize;
     const factor = (entry.font >= 24 ? Math.min(1.15, columnFont / 100) : columnFont / 100) * (override?.fontSize ?? 100) / 100;
     element.style.setProperty("font-size", `${entry.font * factor}px`, "important");
