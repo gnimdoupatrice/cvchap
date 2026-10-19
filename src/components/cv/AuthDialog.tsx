@@ -1,16 +1,19 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { isSupabaseConfigured, supabase, supabaseConfigError } from "@/lib/supabase";
 
-export function AuthDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+export function AuthDialog({ open, onOpenChange, onAuthenticated }: { open: boolean; onOpenChange: (o: boolean) => void; onAuthenticated?: () => void }) {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  useEffect(() => {
+    if (!open) { setPassword(""); setSent(false); }
+  }, [open]);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -20,8 +23,9 @@ export function AuthDialog({ open, onOpenChange }: { open: boolean; onOpenChange
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success("Connecté. Votre brouillon est conservé.");
+        toast.success("Connecté. Vous pouvez personnaliser votre CV.");
         onOpenChange(false);
+        onAuthenticated?.();
       } else {
         const { data, error } = await supabase.auth.signUp({
           email,
@@ -29,7 +33,7 @@ export function AuthDialog({ open, onOpenChange }: { open: boolean; onOpenChange
           options: { emailRedirectTo: `${window.location.origin}/editor` },
         });
         if (error) throw error;
-        if (data.session) onOpenChange(false);
+        if (data.session) { onOpenChange(false); onAuthenticated?.(); }
         else setSent(true);
       }
     } catch (err) {
@@ -46,7 +50,8 @@ export function AuthDialog({ open, onOpenChange }: { open: boolean; onOpenChange
         <DialogHeader>
           <DialogTitle>{mode === "signin" ? "Connectez-vous pour personnaliser" : "Créez votre espace"}</DialogTitle>
           <DialogDescription>
-            Votre brouillon est conservé sur cet appareil pendant la connexion : rien de ce que vous avez saisi n’est perdu.
+            Un compte est nécessaire pour remplir votre CV, utiliser l’IA et exporter.
+            Les brouillons sont conservés sur cet appareil ; ils ne sont pas encore sauvegardés en ligne.
           </DialogDescription>
         </DialogHeader>
 
@@ -78,13 +83,13 @@ export function AuthDialog({ open, onOpenChange }: { open: boolean; onOpenChange
               {loading && <Loader2 className="animate-spin" />}
               {mode === "signin" ? "Se connecter" : "Créer mon compte"}
             </Button>
-            <button
+            <Button variant="ghost" size="sm"
               type="button"
               className="w-full text-center text-xs text-muted-foreground hover:text-foreground"
-              onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+              onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setSent(false); }}
             >
               {mode === "signin" ? "Pas encore de compte ? S’inscrire" : "Déjà un compte ? Se connecter"}
-            </button>
+            </Button>
           </form>
         )}
       </DialogContent>

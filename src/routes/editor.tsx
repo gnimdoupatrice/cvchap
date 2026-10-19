@@ -19,13 +19,14 @@ import { BeforeAfter } from "@/components/cv/BeforeAfter";
 import { CoachEditor } from "@/components/cv/CoachEditor";
 import { FormEditor, type AskAI } from "@/components/cv/FormEditor";
 import { coachExperience, improveText } from "@/lib/ai.functions";
-import { FREE_CREDITS, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
+import { FREE_CREDITS, hasStoredDoc, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
 import type { CVDocument, TemplateId } from "@/lib/cv/types";
 import { templateMeta } from "@/components/cv/templates";
 import { LayoutControls } from "@/components/cv/LayoutControls";
 import { normalizeLayout, type CVLayout } from "@/lib/cv/layout";
 import { Button } from "@/components/ui/button";
 import { AuthDialog } from "@/components/cv/AuthDialog";
+import { ContentGate } from "@/components/cv/ContentGate";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/lib/supabase";
 import { LogOut, UserRound } from "lucide-react";
@@ -67,26 +68,39 @@ function Editor() {
   const coach = useServerFn(coachExperience);
   const { user, ready: sessionReady } = useSession();
   const [authOpen, setAuthOpen] = useState(false);
+  const [documentOwner, setDocumentOwner] = useState<string | null>(null);
+  const owner = user?.id ?? null;
+  const editable = sessionReady && Boolean(user) && documentOwner === owner;
 
   useEffect(() => {
-    setDoc(loadDoc());
-    setCredits(loadCredits());
-  }, []);
+    if (!sessionReady) return;
+    const id = user?.id;
+    // A new account starts from the public sample; an existing draft always wins.
+    setDoc(id && hasStoredDoc(id) ? loadDoc(id) : loadDoc());
+    setDocumentOwner(id ?? null);
+    setCredits(loadCredits(id));
+    setPending(null);
+    setUpsell(false);
+    if (id) setAuthOpen(false);
+  }, [sessionReady, user?.id]);
 
   useEffect(() => {
-    if (doc) saveDoc(doc);
-  }, [doc]);
+    if (doc && sessionReady && documentOwner === owner) saveDoc(doc, owner ?? undefined);
+  }, [doc, sessionReady, documentOwner, owner]);
 
   const update = (patch: Partial<CVDocument>) => setDoc((d) => (d ? { ...d, ...patch } : d));
-  // Les modifications du contenu sont toujours enregistrées en local (aucune perte),
-  // mais déclenchent la passerelle de connexion si l'utilisateur n'est pas connecté.
   const updateCV = (cv: CVDocument["cv"]) => {
+    if (!editable) { setAuthOpen(true); return; }
     update({ cv });
-    if (sessionReady && !user && !authOpen) setAuthOpen(true);
   };
   const signOut = async () => {
-    await supabase.auth.signOut();
-    toast.success("Déconnecté. Votre brouillon reste sur cet appareil.");
+    if (doc && user) saveDoc(doc, user.id);
+    const { error } = await supabase.auth.signOut();
+    if (error) { toast.error("La déconnexion a échoué. Réessayez."); return; }
+    setDoc(loadDoc());
+    setDocumentOwner(null);
+    setPending(null);
+    toast.success("Déconnecté. Votre brouillon reste séparé sur cet appareil.");
   };
 
   const onOverflow = useCallback((o: boolean) => {
@@ -112,14 +126,19 @@ function Editor() {
     before: string,
     apply: (t: string) => void
   ) => {
+    if (!editable || !user) { setAuthOpen(true); return; }
+    if (busy) return;
+    const requestOwner = user.id;
     if (credits <= 0) return setUpsell(true);
     setBusy(true);
     try {
       const r = await run();
+      const { data } = await supabase.auth.getUser();
+      if (data.user?.id !== requestOwner) return;
       if (!r.ok) return void toast.error(r.error);
       const left = credits - 1;
       setCredits(left);
-      saveCredits(left);
+      saveCredits(left, requestOwner);
       setPending({ before, after: r.text, apply });
     } catch {
       toast.error("Impossible de joindre le service IA.");
@@ -131,9 +150,12 @@ function Editor() {
   const askAI: AskAI = (kind, text, context, apply) =>
     spend(() => improve({ data: { kind, text, context } }), text, apply);
 
-  const print = () => window.print();
+  const print = () => {
+    if (!editable) { setAuthOpen(true); return; }
+    window.print();
+  };
 
-  if (!doc) return <div className="grid min-h-screen place-items-center">Chargement…</div>;
+  if (!doc || !sessionReady || documentOwner !== owner) return <div className="grid min-h-screen place-items-center">Chargement…</div>;
 
   return (
     <div className="flex h-screen flex-col bg-background">
@@ -187,7 +209,7 @@ function Editor() {
           <div className="hidden sm:flex items-center gap-1 rounded-full border bg-card px-2.5 py-1 text-xs text-muted-foreground">
             <Sparkles className="h-3 w-3 text-primary" />
             <span>
-              <b>{credits}</b> IA restantes
+              <b>{credits}</b> essais IA sur cet appareil
             </span>
           </div>
 
@@ -200,7 +222,7 @@ function Editor() {
               </Button>
             </div>
           ) : (
-            <Button variant="outline" size="sm" onClick={() => setAuthOpen(true)}>
+            <Button variant="outline" size="sm" onClick={() => setAuthOpen(true)} aria-label="Se connecter">
               <UserRound className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Se connecter</span>
             </Button>
@@ -242,6 +264,10 @@ function Editor() {
             </div>
           </div>
 
+          <p className="mb-4 text-xs text-muted-foreground">
+            {editable ? "Brouillon enregistré sur cet appareil pour votre compte. Sauvegarde en ligne non disponible." : "Connectez-vous ou créez votre compte pour remplir votre CV, utiliser l’IA et exporter."}
+          </p>
+          <ContentGate key={owner ?? "discovery"} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
           {doc.mode === "form" ? (
             <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
           ) : (
@@ -254,6 +280,7 @@ function Editor() {
               busy={busy}
             />
           )}
+          </ContentGate>
 
           <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
         </section>
@@ -276,7 +303,7 @@ function Editor() {
               <AlertTriangle className="h-3 w-3" /> Contenu hors page · Ajuster automatiquement
             </button>
           ) : (
-            <span className="text-muted-foreground">Page A4 conforme · {credits} IA restantes</span>
+            <span className="text-muted-foreground">{editable ? `Brouillon local · ${credits} essais IA` : "Exploration des modèles"}</span>
           )}
         </div>
         <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
@@ -308,6 +335,7 @@ function Editor() {
           before={pending.before}
           after={pending.after}
           onAccept={() => {
+            if (!editable) { setPending(null); setAuthOpen(true); return; }
             pending.apply(pending.after);
             setPending(null);
             toast.success("Optimisation appliquée.");
@@ -331,10 +359,10 @@ function Editor() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <h3 className="mt-4 text-lg font-bold">Vos 5 crédits IA offerts ont été utilisés</h3>
+            <h3 className="mt-4 text-lg font-bold">Vos essais IA sur cet appareil sont épuisés</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Vous pouvez continuer à éditer manuellement votre CV et l'exporter en PDF sans aucune
-              limite. La formule Premium illimitée arrive très prochainement.
+              Vous pouvez continuer à rédiger votre CV et l'exporter avec votre compte.
+              Ce compteur est local : il n’est pas encore synchronisé entre vos appareils.
             </p>
             <button
               onClick={() => setUpsell(false)}
