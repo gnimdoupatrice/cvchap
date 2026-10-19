@@ -150,8 +150,10 @@ function Editor() {
   const askAI: AskAI = (kind, text, context, apply) =>
     spend(() => improve({ data: { kind, text, context } }), text, apply);
 
+  const [exportCheck, setExportCheck] = useState(false);
   const print = () => {
     if (!editable) { setAuthOpen(true); return; }
+    if (overflow) { setExportCheck(true); return; }
     window.print();
   };
 
@@ -291,7 +293,20 @@ function Editor() {
             tab === "preview" ? "block" : "hidden sm:flex"
           }`}
         >
-          <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized} />
+          <div className="w-full">
+            <div className="no-print mx-auto mb-1 flex max-w-[794px] flex-wrap items-center justify-between gap-2 rounded-lg border bg-card px-3 py-2 text-xs shadow-soft">
+              <span className={`flex items-center gap-1.5 font-semibold ${overflow ? "text-destructive" : "text-primary"}`}>
+                <span className={`h-2 w-2 rounded-full ${overflow ? "bg-destructive" : "bg-primary"}`} />
+                {overflow ? "Dépassement détecté : le contenu sort de la page A4" : "Format A4 parfait : tout tient sur une page"}
+              </span>
+              {overflow && (
+                <Button size="sm" variant="outline" onClick={fitToPage} disabled={optimizing} className="h-7 text-destructive">
+                  <Wand2 className="h-3.5 w-3.5" /> {optimizing ? "Ajustement…" : "Adapter automatiquement à 1 page"}
+                </Button>
+              )}
+            </div>
+            <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized} />
+          </div>
         </section>
       </div>
 
@@ -328,6 +343,19 @@ function Editor() {
       </nav>
 
       <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
+
+      {exportCheck && (
+        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 p-4">
+          <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl">
+            <h3 className="flex items-center gap-2 text-lg font-bold"><AlertTriangle className="h-5 w-5 text-destructive" /> Votre CV dépasse une page</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Une partie du contenu sera coupée ou imprimée sur une deuxième page. Voulez-vous l’adapter automatiquement avant de télécharger ?</p>
+            <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+              <Button className="flex-1" onClick={() => { setExportCheck(false); fitToPage(); }}><Wand2 className="h-4 w-4" /> Adapter à 1 page</Button>
+              <Button variant="outline" className="flex-1" onClick={() => { setExportCheck(false); window.print(); }}>Télécharger quand même</Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modale avant/après IA */}
       {pending && (
