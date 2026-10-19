@@ -213,31 +213,11 @@ function Editor() {
         </div>
       </header>
 
-      {/* Onglets mobile */}
-      <div className="flex border-b bg-card sm:hidden no-print">
-        <button
-          onClick={() => setTab("write")}
-          className={`flex-1 py-2.5 text-center text-xs font-semibold ${
-            tab === "write" ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
-          }`}
-        >
-          Écrire
-        </button>
-        <button
-          onClick={() => setTab("preview")}
-          className={`flex-1 py-2.5 text-center text-xs font-semibold ${
-            tab === "preview" ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
-          }`}
-        >
-          Aperçu A4
-        </button>
-      </div>
-
       {/* Corps Split Screen */}
       <div className="flex flex-1 overflow-hidden">
         {/* Colonne gauche : Saisie */}
         <section
-          className={`w-full overflow-y-auto border-r p-4 sm:w-1/2 lg:w-5/12 sm:p-6 no-print ${
+          className={`w-full overflow-y-auto border-r p-4 pb-28 sm:w-1/2 lg:w-5/12 sm:p-6 no-print ${
             tab === "write" ? "block" : "hidden sm:block"
           }`}
         >
@@ -245,7 +225,7 @@ function Editor() {
             <div className="flex rounded-lg border bg-muted/40 p-0.5">
               <button
                 onClick={() => update({ mode: "form" })}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-semibold ${
+                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${
                   doc.mode === "form" ? "bg-card shadow-soft text-foreground" : "text-muted-foreground"
                 }`}
               >
@@ -253,7 +233,7 @@ function Editor() {
               </button>
               <button
                 onClick={() => update({ mode: "coach" })}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-semibold ${
+                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${
                   doc.mode === "coach" ? "bg-card shadow-soft text-foreground" : "text-muted-foreground"
                 }`}
               >
@@ -261,8 +241,6 @@ function Editor() {
               </button>
             </div>
           </div>
-
-          <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
 
           {doc.mode === "form" ? (
             <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
@@ -276,17 +254,51 @@ function Editor() {
               busy={busy}
             />
           )}
+
+          <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
         </section>
 
         {/* Colonne droite : Aperçu A4 en direct */}
         <section
-          className={`flex-1 overflow-y-auto bg-muted/30 p-4 sm:p-6 flex justify-center ${
+          className={`flex-1 overflow-y-auto bg-muted/30 p-4 pb-28 sm:p-6 flex justify-center ${
             tab === "preview" ? "block" : "hidden sm:flex"
           }`}
         >
           <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized} />
         </section>
       </div>
+
+      {/* Barre d'action basse (mobile) */}
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2.5 shadow-soft backdrop-blur sm:hidden no-print">
+        <div className="mb-2 flex items-center justify-center gap-1.5 text-[11px] font-medium">
+          {overflow ? (
+            <button onClick={fitToPage} disabled={optimizing} className="flex items-center gap-1 text-destructive">
+              <AlertTriangle className="h-3 w-3" /> Contenu hors page · Ajuster automatiquement
+            </button>
+          ) : (
+            <span className="text-muted-foreground">Page A4 conforme · {credits} IA restantes</span>
+          )}
+        </div>
+        <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
+          <button
+            onClick={() => setTab("write")}
+            aria-pressed={tab === "write"}
+            className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold ${tab === "write" ? "bg-primary/10 text-primary" : "text-muted-foreground"}`}
+          >
+            <PenLine className="h-3.5 w-3.5" /> Écrire
+          </button>
+          <button
+            onClick={() => setTab("preview")}
+            aria-pressed={tab === "preview"}
+            className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold ${tab === "preview" ? "bg-primary/10 text-primary" : "text-muted-foreground"}`}
+          >
+            <Maximize2 className="h-3.5 w-3.5" /> Aperçu A4
+          </button>
+          <Button onClick={print} className="h-auto rounded-xl px-4 text-xs">
+            <Download className="h-3.5 w-3.5" /> PDF
+          </Button>
+        </div>
+      </nav>
 
       <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
 
