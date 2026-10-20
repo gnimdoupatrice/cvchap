@@ -9,7 +9,6 @@ import {
   Maximize2,
   PenLine,
   Sparkles,
-  Wand2,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
