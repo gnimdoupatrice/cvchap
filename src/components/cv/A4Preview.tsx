@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { CVDocument } from "@/lib/cv/types";
 import { CVTemplate } from "./templates";
 import { applyTemplateLayout, measureTemplate, listTemplateElements, type CVElement } from "./TemplateLayout";
@@ -19,6 +19,7 @@ export function A4Preview({
   onElements,
   onSelectElement,
   selectedElement,
+  toolbar,
 }: {
   doc: CVDocument;
   onOverflowChange: (overflow: boolean) => void;
@@ -27,7 +28,9 @@ export function A4Preview({
   onElements?: (elements: CVElement[]) => void;
   onSelectElement?: (key: string) => void;
   selectedElement?: string;
+  toolbar?: ReactNode;
 }) {
+  const [rect, setRect] = useState<{ top: number; left: number } | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(0.6);
@@ -64,6 +67,19 @@ export function A4Preview({
     return () => { active = false; observer.disconnect(); };
   }, [doc, zoom, onOverflowChange, onElements]);
 
+  useLayoutEffect(() => {
+    const root = contentRef.current;
+    const wrap = wrapRef.current;
+    root?.querySelectorAll(".cv-selected").forEach((el) => el.classList.remove("cv-selected"));
+    if (!root || !wrap || !selectedElement) { setRect(null); return; }
+    const target = Array.from(root.querySelectorAll<HTMLElement>("[data-cv-element]")).find((el) => el.dataset["cvElement"] === selectedElement);
+    if (!target) { setRect(null); return; }
+    target.classList.add("cv-selected");
+    const r = target.getBoundingClientRect();
+    const w = wrap.getBoundingClientRect();
+    setRect({ top: r.top - w.top, left: Math.max(4, Math.min(r.left - w.left, w.width - 300)) });
+  }, [selectedElement, doc, zoom]);
+
   useEffect(() => {
     if (!optimizeRequest || handledRequest.current === optimizeRequest) return;
     const el = contentRef.current?.querySelector<HTMLElement>("[data-cv-layout]");
@@ -83,7 +99,12 @@ export function A4Preview({
   }, [optimizeRequest, doc.layout, onOptimized]);
 
   return (
-    <div ref={wrapRef} className="flex w-full justify-center py-4">
+    <div ref={wrapRef} className="relative flex w-full justify-center py-4">
+      {toolbar && rect && (
+        <div className="absolute z-30 no-print" style={{ top: Math.max(0, rect.top - 48), left: rect.left }} onClick={(e) => e.stopPropagation()}>
+          {toolbar}
+        </div>
+      )}
       <div style={{ width: A4_W * zoom, height: A4_H * zoom }}>
         <div
           className="cv-zoom origin-top-left"

@@ -534,3 +534,7 @@
     mask-image: none;
   }
 }
+
+.cv-selected { outline: 2px dashed var(--primary); outline-offset: 2px; border-radius: 2px; }
+#cv-page [data-cv-element] { cursor: pointer; }
+@media print { .cv-selected { outline: none !important; } }
