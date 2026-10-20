@@ -1,9 +1,8 @@
 # Mise en page A4
-- [x] Terminer le formulaire unique avec coach intégré, micro et reformulation sur chaque champ.
-- [x] Coach IA : import de CV, note vocale ou texte libre, liste de ce qui manque, compléter ou passer.
-- [x] Styles globaux, par section, par élément et par mot/chiffre ; harmonisation et contrôle avant PDF.
-- [x] Connexion exigée pour l'adaptation A4, les réglages de mise en page et le style.
-- [ ] Tester connecté la saisie, le coach et les réglages de style : aucun compte de test disponible.
+- [ ] Terminer le formulaire unique avec coach intégré, micro et reformulation sur chaque champ.
+- [ ] Ajouter import de CV/brouillon et note vocale globale avec validation avant application.
+- [ ] Ajouter styles globaux et individuels, harmonisation et contrôle avant PDF.
+- [ ] Tester la saisie, les réglages persistants, l’A4 et les parcours ordinateur/mobile.
 - [x] Ajouter les réglages de police et d’espacement persistants.
 - [x] Appliquer les réglages à tous les modèles et à l’impression.
 - [x] Optimiser le remplissage A4 et vérifier les débordements.

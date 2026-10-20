@@ -9,7 +9,6 @@ import {
   Maximize2,
   PenLine,
   Sparkles,
-  Wand2,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -17,13 +16,14 @@ import { Toaster } from "@/components/ui/sonner";
 import { A4Preview } from "@/components/cv/A4Preview";
 import { BeforeAfter } from "@/components/cv/BeforeAfter";
 import { CoachEditor } from "@/components/cv/CoachEditor";
-import { CoachHub } from "@/components/cv/CoachHub";
-import { StyleControls } from "@/components/cv/StyleControls";
-import type { CVElement } from "@/components/cv/TemplateLayout";
-import { mergeExtractedCV, type ExtractedCV } from "@/lib/cv/extraction";
-import { auditStyle, harmonizeStyle, type CVStyle } from "@/lib/cv/style";
 import { FormEditor, type AskAI } from "@/components/cv/FormEditor";
 import { coachExperience, extractDraft, improveText } from "@/lib/ai.functions";
+import { AssistantTools, ImportReview } from "@/components/cv/AssistantTools";
+import { StyleControls } from "@/components/cv/StyleControls";
+import { ElementToolbar } from "@/components/cv/ElementToolbar";
+import type { CVElement } from "@/components/cv/TemplateLayout";
+import { mergeExtractedCV, type ExtractedCV } from "@/lib/cv/extraction";
+import type { CVStyle } from "@/lib/cv/style";
 import { FREE_CREDITS, hasStoredDoc, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
 import type { CVDocument, TemplateId } from "@/lib/cv/types";
 import { templateMeta } from "@/components/cv/templates";
@@ -69,12 +69,12 @@ function Editor() {
   const [upsell, setUpsell] = useState(false);
   const [optimizeRequest, setOptimizeRequest] = useState(0);
   const [optimizing, setOptimizing] = useState(false);
-  const improve = useServerFn(improveText);
-  const coach = useServerFn(coachExperience);
-  const extractCV = useServerFn(extractDraft);
   const [elements, setElements] = useState<CVElement[]>([]);
   const [selected, setSelected] = useState("");
-  const [picked, setPicked] = useState("");
+  const [review, setReview] = useState<ExtractedCV | null>(null);
+  const extract = useServerFn(extractDraft);
+  const improve = useServerFn(improveText);
+  const coach = useServerFn(coachExperience);
   const { user, ready: sessionReady } = useSession();
   const [authOpen, setAuthOpen] = useState(false);
   const [documentOwner, setDocumentOwner] = useState<string | null>(null);
@@ -116,13 +116,7 @@ function Editor() {
     setOverflow(o);
   }, []);
 
-  const requireAccount = () => {
-    if (editable) return true;
-    setAuthOpen(true);
-    return false;
-  };
   const fitToPage = () => {
-    if (!requireAccount()) return;
     setOptimizing(true);
     setOptimizeRequest((n) => n + 1);
   };
@@ -165,50 +159,28 @@ function Editor() {
   const askAI: AskAI = (kind, text, context, apply) =>
     spend(() => improve({ data: { kind, text, context } }), text, apply);
 
-  /** Coach hub extraction: one AI trial per analysis, result reviewed before filling the CV. */
-  const extract = async (text: string): Promise<ExtractedCV | null> => {
-    if (!editable || !user) { setAuthOpen(true); return null; }
-    if (busy) return null;
-    if (credits <= 0) { setUpsell(true); return null; }
-    const requestOwner = user.id;
+  const setStyle = (style: CVStyle) => {
+    if (!editable) { setAuthOpen(true); return; }
+    setDoc((d) => d ? { ...d, layout: { ...normalizeLayout(d.layout), style } } : d);
+  };
+  const selectElement = (key: string) => {
+    if (!editable) { setAuthOpen(true); return; }
+    setSelected(key);
+    requestAnimationFrame(() => document.getElementById("style-controls")?.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+  };
+  const onExtract = async (text: string) => {
+    if (!editable || !user) { setAuthOpen(true); return; }
     setBusy(true);
     try {
-      const r = await extractCV({ data: { text } });
-      const { data } = await supabase.auth.getUser();
-      if (data.user?.id !== requestOwner) return null;
-      if (!r.ok) { toast.error(r.error); return null; }
-      const left = credits - 1;
-      setCredits(left);
-      saveCredits(left, requestOwner);
-      return r.cv;
-    } catch {
-      toast.error("Impossible de joindre le service IA.");
-      return null;
-    } finally {
-      setBusy(false);
-    }
+      const r = await extract({ data: { text } });
+      if (!r.ok) { toast.error(r.error); return; }
+      setReview(r.cv);
+    } catch { toast.error("Impossible de joindre le service IA."); }
+    finally { setBusy(false); }
   };
 
-  const onElements = useCallback((next: CVElement[]) => {
-    setElements((old) => old.length === next.length && old.every((e, i) => e.key === next[i]?.key && e.label === next[i]?.label) ? old : next);
-  }, []);
-  const updateLayout = (layout: CVLayout) => { if (requireAccount()) update({ layout }); };
-  const updateStyle = (style: CVStyle) => {
-    if (!requireAccount() || !doc) return;
-    update({ layout: { ...normalizeLayout(doc.layout), style } });
-  };
-  const styleIssues = auditStyle(doc?.layout?.style);
-  const harmonize = () => {
-    if (!requireAccount() || !doc) return;
-    update({ layout: { ...normalizeLayout(doc.layout), style: harmonizeStyle(doc.layout?.style) } });
-    setSelected("");
-    toast.success("Style harmonisé : polices, couleurs et tailles réalignées. Votre texte n’a pas changé.");
-  };
-
-  const [exportCheck, setExportCheck] = useState(false);
   const print = () => {
     if (!editable) { setAuthOpen(true); return; }
-    if (overflow || styleIssues.length) { setExportCheck(true); return; }
     window.print();
   };
 
@@ -300,68 +272,28 @@ function Editor() {
             tab === "write" ? "block" : "hidden sm:block"
           }`}
         >
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex rounded-lg border bg-muted/40 p-0.5">
-              <button
-                onClick={() => update({ mode: "form" })}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${
-                  doc.mode === "form" ? "bg-card shadow-soft text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                <PenLine className="h-3 w-3" /> Formulaire
-              </button>
-              <button
-                onClick={() => update({ mode: "coach" })}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${
-                  doc.mode === "coach" ? "bg-card shadow-soft text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                <Wand2 className="h-3 w-3 text-primary" /> Coach IA
-              </button>
-            </div>
-          </div>
-
           <p className="mb-4 text-xs text-muted-foreground">
             {editable ? "Brouillon enregistré sur cet appareil pour votre compte. Sauvegarde en ligne non disponible." : "Connectez-vous ou créez votre compte pour remplir votre CV, utiliser l’IA et exporter."}
           </p>
           <ContentGate key={owner ?? "discovery"} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
-          {doc.mode === "form" ? (
-            <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
-          ) : (
-            <div className="space-y-6">
-              <CoachHub
-                busy={busy}
-                extract={extract}
-                onApply={(draft) => { updateCV(mergeExtractedCV(doc.cv, draft)); toast.success("Votre CV a été rempli. Vérifiez l’aperçu."); }}
-              />
-              <details className="group rounded-2xl border bg-card p-5 shadow-soft">
-                <summary className="cursor-pointer list-none text-sm font-semibold [&::-webkit-details-marker]:hidden">Approfondir une expérience (défi, action, résultat)</summary>
-                <div className="mt-4">
-                  <CoachEditor
-                    cv={doc.cv}
-                    onChange={updateCV}
-                    askCoach={(input, before, apply) => {
-                      void spend(() => coach({ data: input }), before, apply);
-                    }}
-                    busy={busy}
-                  />
-                </div>
-              </details>
+          <div className="mb-6 rounded-xl border bg-primary/5 p-4">
+            <span className="mb-2 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">Coach &amp; Import intelligent</span>
+            <AssistantTools cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} onExtract={onExtract}
+              askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} />
+          </div>
+          <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
+          <details className="mt-6 rounded-lg border p-3">
+            <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Assistant en 3 questions</summary>
+            <div className="mt-3">
+              <CoachEditor cv={doc.cv} onChange={updateCV} askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} busy={busy} />
             </div>
-          )}
+          </details>
           </ContentGate>
 
-          <ContentGate key={`style-${owner ?? "discovery"}`} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
-            <LayoutControls value={normalizeLayout(doc.layout)} onChange={updateLayout} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
-            <StyleControls
-              value={doc.layout?.style ?? {}}
-              onChange={updateStyle}
-              elements={elements}
-              selected={selected}
-              onSelect={setSelected}
-              pickedText={picked}
-            />
-          </ContentGate>
+          <div id="style-controls">
+            <StyleControls value={normalizeLayout(doc.layout).style ?? {}} onChange={setStyle} elements={elements} selected={selected} onSelect={selectElement} />
+          </div>
+          <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
         </section>
 
         {/* Colonne droite : Aperçu A4 en direct */}
@@ -370,35 +302,9 @@ function Editor() {
             tab === "preview" ? "block" : "hidden sm:flex"
           }`}
         >
-          <div className="w-full">
-            <div className="no-print mx-auto mb-1 flex max-w-[794px] flex-wrap items-center justify-between gap-2 rounded-lg border bg-card px-3 py-2 text-xs shadow-soft">
-              <span className={`flex items-center gap-1.5 font-semibold ${overflow ? "text-destructive" : "text-primary"}`}>
-                <span className={`h-2 w-2 rounded-full ${overflow ? "bg-destructive" : "bg-primary"}`} />
-                {overflow ? "Dépassement détecté : le contenu sort de la page A4" : "Format A4 parfait : tout tient sur une page"}
-              </span>
-              {overflow && (
-                <Button size="sm" variant="outline" onClick={fitToPage} disabled={optimizing} className="h-7 text-destructive">
-                  <Wand2 className="h-3.5 w-3.5" /> {optimizing ? "Ajustement…" : "Adapter automatiquement à 1 page"}
-                </Button>
-              )}
-              {styleIssues.length > 0 && (
-                <span className="flex w-full flex-wrap items-center justify-between gap-2 border-t pt-2">
-                  <span className="text-destructive" title={styleIssues.join(" ")}>Style : {styleIssues.length} point(s) à harmoniser</span>
-                  <Button size="sm" variant="outline" className="h-7" onClick={harmonize}><Sparkles className="h-3.5 w-3.5" /> Harmoniser en 1 clic</Button>
-                </span>
-              )}
-            </div>
-            <A4Preview
-              doc={doc}
-              onOverflowChange={onOverflow}
-              optimizeRequest={optimizeRequest}
-              onOptimized={onOptimized}
-              onElements={onElements}
-              selectedElement={selected}
-              onSelectElement={(key) => { if (requireAccount()) setSelected(key); }}
-              onPickText={(text) => { if (editable) setPicked(text); }}
-            />
-          </div>
+          <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized}
+            onElements={setElements} onSelectElement={selectElement} selectedElement={selected}
+            toolbar={editable && selected ? <ElementToolbar style={normalizeLayout(doc.layout).style ?? {}} selected={selected} onChange={setStyle} onSelect={selectElement} onClose={() => setSelected("")} /> : null} />
         </section>
       </div>
 
@@ -436,18 +342,11 @@ function Editor() {
 
       <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
 
-      {exportCheck && (
-        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 p-4">
-          <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-bold"><AlertTriangle className="h-5 w-5 text-destructive" /> Vérification avant téléchargement</h3>
-            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-              {overflow && <li>Le CV dépasse une page A4 : une partie sera coupée ou imprimée sur une deuxième page.</li>}
-              {styleIssues.map((issue) => <li key={issue}>{issue}</li>)}
-            </ul>
-            <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-              <Button className="flex-1" onClick={() => { setExportCheck(false); if (styleIssues.length) harmonize(); if (overflow) fitToPage(); }}><Wand2 className="h-4 w-4" /> {styleIssues.length ? "Harmoniser en 1 clic" : "Adapter à 1 page"}</Button>
-              <Button variant="outline" className="flex-1" onClick={() => { setExportCheck(false); window.print(); }}>Télécharger quand même</Button>
-            </div>
+      {review && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
+          <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border bg-card p-6 shadow-xl">
+            <h3 className="mb-4 text-lg font-bold">Vérifiez avant d’appliquer</h3>
+            <ImportReview draft={review} onCancel={() => setReview(null)} onAccept={() => { updateCV(mergeExtractedCV(doc.cv, review)); setReview(null); toast.success("Votre CV a été rempli."); }} />
           </div>
         </div>
       )}

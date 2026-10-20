@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { CVDocument } from "@/lib/cv/types";
 import { CVTemplate } from "./templates";
 import { applyTemplateLayout, measureTemplate, listTemplateElements, type CVElement } from "./TemplateLayout";
@@ -19,7 +19,6 @@ export function A4Preview({
   onElements,
   onSelectElement,
   selectedElement,
-  onPickText,
   toolbar,
 }: {
   doc: CVDocument;
@@ -29,10 +28,9 @@ export function A4Preview({
   onElements?: (elements: CVElement[]) => void;
   onSelectElement?: (key: string) => void;
   selectedElement?: string;
-  onPickText?: (text: string) => void;
-  /** Contextual toolbar shown just above the selected element. */
-  toolbar?: React.ReactNode;
+  toolbar?: ReactNode;
 }) {
+  const [rect, setRect] = useState<{ top: number; left: number } | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(0.6);
@@ -69,46 +67,18 @@ export function A4Preview({
     return () => { active = false; observer.disconnect(); };
   }, [doc, zoom, onOverflowChange, onElements]);
 
-  // Word accents use the CSS Highlight API: no DOM mutation inside React-managed templates, and it prints.
   useLayoutEffect(() => {
     const root = contentRef.current;
-    const words = normalizeLayout(doc.layout).style?.words ?? [];
-    const registry = typeof CSS !== "undefined" && "highlights" in CSS ? CSS.highlights : null;
-    if (!root || !registry || typeof Highlight === "undefined") return;
-    const groups = new Map<string, Range[]>();
-    const push = (name: string, range: Range) => groups.set(name, [...(groups.get(name) ?? []), range]);
-    if (words.length) {
-      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-        const text = node.textContent ?? "";
-        for (const word of words) {
-          for (let at = text.indexOf(word.text); at >= 0; at = text.indexOf(word.text, at + word.text.length)) {
-            const range = new Range();
-            range.setStart(node, at);
-            range.setEnd(node, at + word.text.length);
-            push(`cv-word-${word.color}`, range);
-            if (word.mark) push("cv-word-mark", range);
-          }
-        }
-      }
-    }
-    for (const [name, ranges] of groups) registry.set(name, new Highlight(...ranges));
-    return () => { for (const name of groups.keys()) registry.delete(name); };
-  });
-
-  const frameRef = useRef<HTMLDivElement>(null);
-  const [anchor, setAnchor] = useState<{ top: number; left: number } | null>(null);
-  useLayoutEffect(() => {
-    const root = contentRef.current;
-    if (!root || !selectedElement) { if (anchor) setAnchor(null); return; }
-    const element = root.querySelector<HTMLElement>(`[data-cv-element="${CSS.escape(selectedElement)}"]`);
-    element?.classList.add("cv-selected");
-    const frame = frameRef.current?.getBoundingClientRect();
-    const box = element?.getBoundingClientRect();
-    const next = frame && box ? { top: Math.round(box.top - frame.top), left: Math.round(Math.max(0, Math.min(box.left - frame.left, frame.width - 280))) } : null;
-    if (next?.top !== anchor?.top || next?.left !== anchor?.left) setAnchor(next);
-    return () => element?.classList.remove("cv-selected");
-  });
+    const wrap = wrapRef.current;
+    root?.querySelectorAll(".cv-selected").forEach((el) => el.classList.remove("cv-selected"));
+    if (!root || !wrap || !selectedElement) { setRect(null); return; }
+    const target = Array.from(root.querySelectorAll<HTMLElement>("[data-cv-element]")).find((el) => el.dataset["cvElement"] === selectedElement);
+    if (!target) { setRect(null); return; }
+    target.classList.add("cv-selected");
+    const r = target.getBoundingClientRect();
+    const w = wrap.getBoundingClientRect();
+    setRect({ top: r.top - w.top, left: Math.max(4, Math.min(r.left - w.left, w.width - 300)) });
+  }, [selectedElement, doc, zoom]);
 
   useEffect(() => {
     if (!optimizeRequest || handledRequest.current === optimizeRequest) return;
@@ -129,13 +99,13 @@ export function A4Preview({
   }, [optimizeRequest, doc.layout, onOptimized]);
 
   return (
-    <div ref={wrapRef} className="flex w-full justify-center py-4">
-      <div ref={frameRef} className="relative" style={{ width: A4_W * zoom, height: A4_H * zoom }}>
-        {toolbar && anchor && (
-          <div className="no-print absolute z-20" style={{ top: Math.max(-44, anchor.top - 44), left: anchor.left }} onClick={(e) => e.stopPropagation()}>
-            {toolbar}
-          </div>
-        )}
+    <div ref={wrapRef} className="relative flex w-full justify-center py-4">
+      {toolbar && rect && (
+        <div className="absolute z-30 no-print" style={{ top: Math.max(0, rect.top - 48), left: rect.left }} onClick={(e) => e.stopPropagation()}>
+          {toolbar}
+        </div>
+      )}
+      <div style={{ width: A4_W * zoom, height: A4_H * zoom }}>
         <div
           className="cv-zoom origin-top-left"
           style={{ transform: `scale(${zoom})`, width: A4_W }}
@@ -153,10 +123,7 @@ export function A4Preview({
               if (!(event.target instanceof Element)) return;
               const element = event.target.closest<HTMLElement>("[data-cv-element]");
               if (element) element.title = "Personnaliser cet élément";
-            }} onMouseUp={() => {
-              const picked = window.getSelection()?.toString().trim() ?? "";
-              if (picked && picked.length <= 60 && !picked.includes("\n")) onPickText?.(picked);
-            }} className={onSelectElement ? "cursor-pointer" : undefined}>
+            }} data-selected-element={selectedElement}>
               <CVTemplate cv={doc.cv} template={doc.template} layout={normalizeLayout(doc.layout)} />
             </div>
             {overflow && (

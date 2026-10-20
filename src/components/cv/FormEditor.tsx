@@ -9,7 +9,7 @@ export function Section({ title, children, action }: { title: string; children: 
   return <section className="border-b pb-6 pt-2"><div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h2 className="text-sm font-semibold">{title}</h2>{action}</div><div className="space-y-3">{children}</div></section>;
 }
 export function TextField({ label, value, onChange, askAI, busy, context = "", multiline = false, placeholder = "" }: {
-  label: string; value: string; onChange: (text: string) => void; askAI: AskAI; busy: boolean; context?: string | undefined; multiline?: boolean; placeholder?: string;
+  label: string; value: string; onChange: (text: string) => void; askAI: AskAI; busy: boolean; context?: string; multiline?: boolean; placeholder?: string;
 }) {
   return <div className="min-w-0"><div className="mb-1 flex items-center justify-between gap-2"><label className="text-xs font-medium text-muted-foreground">{label}</label><div className="flex shrink-0 gap-1">
     <VoiceInput disabled={busy} label={`Dicter : ${label}`} onTranscript={(text) => onChange(multiline && value.trim() ? `${value}\n${text}` : text)} />

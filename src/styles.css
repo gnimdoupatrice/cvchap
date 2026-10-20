@@ -526,15 +526,6 @@
 .cv-swatch[data-color="red"] { background: var(--cv-custom-red); }
 .cv-swatch[data-color="violet"] { background: var(--cv-custom-violet); }
 .cv-swatch[data-color="light"] { background: var(--cv-custom-light); }
-/* Accents on a single word or figure (CSS Highlight API, printed as-is). */
-::highlight(cv-word-ink) { color: var(--cv-custom-ink); }
-::highlight(cv-word-blue) { color: var(--cv-custom-blue); }
-::highlight(cv-word-green) { color: var(--cv-custom-green); }
-::highlight(cv-word-red) { color: var(--cv-custom-red); }
-::highlight(cv-word-violet) { color: var(--cv-custom-violet); }
-::highlight(cv-word-mark) { background-color: color-mix(in oklab, var(--cv-custom-blue) 16%, transparent); }
-.cv-selected { outline: 2px dashed var(--primary); outline-offset: 2px; }
-@media print { .cv-selected { outline: none !important; } }
 @media (prefers-reduced-motion: reduce) { .animate-pulse { animation: none; } }
 
 @utility fade-x {
@@ -543,3 +534,7 @@
     mask-image: none;
   }
 }
+
+.cv-selected { outline: 2px dashed var(--primary); outline-offset: 2px; border-radius: 2px; }
+#cv-page [data-cv-element] { cursor: pointer; }
+@media print { .cv-selected { outline: none !important; } }
