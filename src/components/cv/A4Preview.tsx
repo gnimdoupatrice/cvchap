@@ -20,6 +20,7 @@ export function A4Preview({
   onSelectElement,
   selectedElement,
   onPickText,
+  toolbar,
 }: {
   doc: CVDocument;
   onOverflowChange: (overflow: boolean) => void;
@@ -29,6 +30,8 @@ export function A4Preview({
   onSelectElement?: (key: string) => void;
   selectedElement?: string;
   onPickText?: (text: string) => void;
+  /** Contextual toolbar shown just above the selected element. */
+  toolbar?: React.ReactNode;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -93,11 +96,17 @@ export function A4Preview({
     return () => { for (const name of groups.keys()) registry.delete(name); };
   });
 
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [anchor, setAnchor] = useState<{ top: number; left: number } | null>(null);
   useLayoutEffect(() => {
     const root = contentRef.current;
-    if (!root || !selectedElement) return;
+    if (!root || !selectedElement) { if (anchor) setAnchor(null); return; }
     const element = root.querySelector<HTMLElement>(`[data-cv-element="${CSS.escape(selectedElement)}"]`);
     element?.classList.add("cv-selected");
+    const frame = frameRef.current?.getBoundingClientRect();
+    const box = element?.getBoundingClientRect();
+    const next = frame && box ? { top: Math.round(box.top - frame.top), left: Math.round(Math.max(0, Math.min(box.left - frame.left, frame.width - 280))) } : null;
+    if (next?.top !== anchor?.top || next?.left !== anchor?.left) setAnchor(next);
     return () => element?.classList.remove("cv-selected");
   });
 
@@ -121,7 +130,12 @@ export function A4Preview({
 
   return (
     <div ref={wrapRef} className="flex w-full justify-center py-4">
-      <div style={{ width: A4_W * zoom, height: A4_H * zoom }}>
+      <div ref={frameRef} className="relative" style={{ width: A4_W * zoom, height: A4_H * zoom }}>
+        {toolbar && anchor && (
+          <div className="no-print absolute z-20" style={{ top: Math.max(-44, anchor.top - 44), left: anchor.left }} onClick={(e) => e.stopPropagation()}>
+            {toolbar}
+          </div>
+        )}
         <div
           className="cv-zoom origin-top-left"
           style={{ transform: `scale(${zoom})`, width: A4_W }}
