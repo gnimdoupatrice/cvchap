@@ -21,3 +21,4 @@
 - Additional CV templates live in `src/components/cv/templates-new.tsx` (dispatched from `templates.tsx`) so existing template files stay untouched; sample portraits are bundled under `src/assets/cv/`.
 - Auth uses the configured email/password client via `src/lib/supabase.ts`; ContentGate intercepts editing intent before input, with an editor mutation guard and authenticated AI server middleware as defense in depth. Template/layout exploration stays public.
 - Existing account drafts take priority over discovery samples on sign-in; legacy unowned drafts are never silently assigned to an account because ownership cannot be established.
+- Word/figure accents use the CSS Highlight API over rendered template text (never DOM wrapping), because templates are React-managed and highlights still print into the PDF.

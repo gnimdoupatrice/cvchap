@@ -19,6 +19,7 @@ export function A4Preview({
   onElements,
   onSelectElement,
   selectedElement,
+  onPickText,
 }: {
   doc: CVDocument;
   onOverflowChange: (overflow: boolean) => void;
@@ -27,6 +28,7 @@ export function A4Preview({
   onElements?: (elements: CVElement[]) => void;
   onSelectElement?: (key: string) => void;
   selectedElement?: string;
+  onPickText?: (text: string) => void;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -63,6 +65,41 @@ export function A4Preview({
     void document.fonts.ready.then(check);
     return () => { active = false; observer.disconnect(); };
   }, [doc, zoom, onOverflowChange, onElements]);
+
+  // Word accents use the CSS Highlight API: no DOM mutation inside React-managed templates, and it prints.
+  useLayoutEffect(() => {
+    const root = contentRef.current;
+    const words = normalizeLayout(doc.layout).style?.words ?? [];
+    const registry = typeof CSS !== "undefined" && "highlights" in CSS ? CSS.highlights : null;
+    if (!root || !registry || typeof Highlight === "undefined") return;
+    const groups = new Map<string, Range[]>();
+    const push = (name: string, range: Range) => groups.set(name, [...(groups.get(name) ?? []), range]);
+    if (words.length) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        const text = node.textContent ?? "";
+        for (const word of words) {
+          for (let at = text.indexOf(word.text); at >= 0; at = text.indexOf(word.text, at + word.text.length)) {
+            const range = new Range();
+            range.setStart(node, at);
+            range.setEnd(node, at + word.text.length);
+            push(`cv-word-${word.color}`, range);
+            if (word.mark) push("cv-word-mark", range);
+          }
+        }
+      }
+    }
+    for (const [name, ranges] of groups) registry.set(name, new Highlight(...ranges));
+    return () => { for (const name of groups.keys()) registry.delete(name); };
+  });
+
+  useLayoutEffect(() => {
+    const root = contentRef.current;
+    if (!root || !selectedElement) return;
+    const element = root.querySelector<HTMLElement>(`[data-cv-element="${CSS.escape(selectedElement)}"]`);
+    element?.classList.add("cv-selected");
+    return () => element?.classList.remove("cv-selected");
+  });
 
   useEffect(() => {
     if (!optimizeRequest || handledRequest.current === optimizeRequest) return;
@@ -102,7 +139,10 @@ export function A4Preview({
               if (!(event.target instanceof Element)) return;
               const element = event.target.closest<HTMLElement>("[data-cv-element]");
               if (element) element.title = "Personnaliser cet élément";
-            }} data-selected-element={selectedElement}>
+            }} onMouseUp={() => {
+              const picked = window.getSelection()?.toString().trim() ?? "";
+              if (picked && picked.length <= 60 && !picked.includes("\n")) onPickText?.(picked);
+            }} className={onSelectElement ? "cursor-pointer" : undefined}>
               <CVTemplate cv={doc.cv} template={doc.template} layout={normalizeLayout(doc.layout)} />
             </div>
             {overflow && (

@@ -17,8 +17,13 @@ import { Toaster } from "@/components/ui/sonner";
 import { A4Preview } from "@/components/cv/A4Preview";
 import { BeforeAfter } from "@/components/cv/BeforeAfter";
 import { CoachEditor } from "@/components/cv/CoachEditor";
+import { CoachHub } from "@/components/cv/CoachHub";
+import { StyleControls } from "@/components/cv/StyleControls";
+import type { CVElement } from "@/components/cv/TemplateLayout";
+import { mergeExtractedCV, type ExtractedCV } from "@/lib/cv/extraction";
+import { auditStyle, harmonizeStyle, type CVStyle } from "@/lib/cv/style";
 import { FormEditor, type AskAI } from "@/components/cv/FormEditor";
-import { coachExperience, improveText } from "@/lib/ai.functions";
+import { coachExperience, extractDraft, improveText } from "@/lib/ai.functions";
 import { FREE_CREDITS, hasStoredDoc, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
 import type { CVDocument, TemplateId } from "@/lib/cv/types";
 import { templateMeta } from "@/components/cv/templates";
@@ -66,6 +71,10 @@ function Editor() {
   const [optimizing, setOptimizing] = useState(false);
   const improve = useServerFn(improveText);
   const coach = useServerFn(coachExperience);
+  const extractCV = useServerFn(extractDraft);
+  const [elements, setElements] = useState<CVElement[]>([]);
+  const [selected, setSelected] = useState("");
+  const [picked, setPicked] = useState("");
   const { user, ready: sessionReady } = useSession();
   const [authOpen, setAuthOpen] = useState(false);
   const [documentOwner, setDocumentOwner] = useState<string | null>(null);
@@ -107,7 +116,13 @@ function Editor() {
     setOverflow(o);
   }, []);
 
+  const requireAccount = () => {
+    if (editable) return true;
+    setAuthOpen(true);
+    return false;
+  };
   const fitToPage = () => {
+    if (!requireAccount()) return;
     setOptimizing(true);
     setOptimizeRequest((n) => n + 1);
   };
@@ -150,10 +165,50 @@ function Editor() {
   const askAI: AskAI = (kind, text, context, apply) =>
     spend(() => improve({ data: { kind, text, context } }), text, apply);
 
+  /** Coach hub extraction: one AI trial per analysis, result reviewed before filling the CV. */
+  const extract = async (text: string): Promise<ExtractedCV | null> => {
+    if (!editable || !user) { setAuthOpen(true); return null; }
+    if (busy) return null;
+    if (credits <= 0) { setUpsell(true); return null; }
+    const requestOwner = user.id;
+    setBusy(true);
+    try {
+      const r = await extractCV({ data: { text } });
+      const { data } = await supabase.auth.getUser();
+      if (data.user?.id !== requestOwner) return null;
+      if (!r.ok) { toast.error(r.error); return null; }
+      const left = credits - 1;
+      setCredits(left);
+      saveCredits(left, requestOwner);
+      return r.cv;
+    } catch {
+      toast.error("Impossible de joindre le service IA.");
+      return null;
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const onElements = useCallback((next: CVElement[]) => {
+    setElements((old) => old.length === next.length && old.every((e, i) => e.key === next[i]?.key && e.label === next[i]?.label) ? old : next);
+  }, []);
+  const updateLayout = (layout: CVLayout) => { if (requireAccount()) update({ layout }); };
+  const updateStyle = (style: CVStyle) => {
+    if (!requireAccount() || !doc) return;
+    update({ layout: { ...normalizeLayout(doc.layout), style } });
+  };
+  const styleIssues = auditStyle(doc?.layout?.style);
+  const harmonize = () => {
+    if (!requireAccount() || !doc) return;
+    update({ layout: { ...normalizeLayout(doc.layout), style: harmonizeStyle(doc.layout?.style) } });
+    setSelected("");
+    toast.success("Style harmonisé : polices, couleurs et tailles réalignées. Votre texte n’a pas changé.");
+  };
+
   const [exportCheck, setExportCheck] = useState(false);
   const print = () => {
     if (!editable) { setAuthOpen(true); return; }
-    if (overflow) { setExportCheck(true); return; }
+    if (overflow || styleIssues.length) { setExportCheck(true); return; }
     window.print();
   };
 
@@ -273,18 +328,40 @@ function Editor() {
           {doc.mode === "form" ? (
             <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
           ) : (
-            <CoachEditor
-              cv={doc.cv}
-              onChange={updateCV}
-              askCoach={(input, before, apply) => {
-                void spend(() => coach({ data: input }), before, apply);
-              }}
-              busy={busy}
-            />
+            <div className="space-y-6">
+              <CoachHub
+                busy={busy}
+                extract={extract}
+                onApply={(draft) => { updateCV(mergeExtractedCV(doc.cv, draft)); toast.success("Votre CV a été rempli. Vérifiez l’aperçu."); }}
+              />
+              <details className="group rounded-2xl border bg-card p-5 shadow-soft">
+                <summary className="cursor-pointer list-none text-sm font-semibold [&::-webkit-details-marker]:hidden">Approfondir une expérience (défi, action, résultat)</summary>
+                <div className="mt-4">
+                  <CoachEditor
+                    cv={doc.cv}
+                    onChange={updateCV}
+                    askCoach={(input, before, apply) => {
+                      void spend(() => coach({ data: input }), before, apply);
+                    }}
+                    busy={busy}
+                  />
+                </div>
+              </details>
+            </div>
           )}
           </ContentGate>
 
-          <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
+          <ContentGate key={`style-${owner ?? "discovery"}`} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
+            <LayoutControls value={normalizeLayout(doc.layout)} onChange={updateLayout} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
+            <StyleControls
+              value={doc.layout?.style ?? {}}
+              onChange={updateStyle}
+              elements={elements}
+              selected={selected}
+              onSelect={setSelected}
+              pickedText={picked}
+            />
+          </ContentGate>
         </section>
 
         {/* Colonne droite : Aperçu A4 en direct */}
@@ -304,8 +381,23 @@ function Editor() {
                   <Wand2 className="h-3.5 w-3.5" /> {optimizing ? "Ajustement…" : "Adapter automatiquement à 1 page"}
                 </Button>
               )}
+              {styleIssues.length > 0 && (
+                <span className="flex w-full flex-wrap items-center justify-between gap-2 border-t pt-2">
+                  <span className="text-destructive" title={styleIssues.join(" ")}>Style : {styleIssues.length} point(s) à harmoniser</span>
+                  <Button size="sm" variant="outline" className="h-7" onClick={harmonize}><Sparkles className="h-3.5 w-3.5" /> Harmoniser en 1 clic</Button>
+                </span>
+              )}
             </div>
-            <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized} />
+            <A4Preview
+              doc={doc}
+              onOverflowChange={onOverflow}
+              optimizeRequest={optimizeRequest}
+              onOptimized={onOptimized}
+              onElements={onElements}
+              selectedElement={selected}
+              onSelectElement={(key) => { if (requireAccount()) setSelected(key); }}
+              onPickText={(text) => { if (editable) setPicked(text); }}
+            />
           </div>
         </section>
       </div>
@@ -347,10 +439,13 @@ function Editor() {
       {exportCheck && (
         <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 p-4">
           <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-bold"><AlertTriangle className="h-5 w-5 text-destructive" /> Votre CV dépasse une page</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Une partie du contenu sera coupée ou imprimée sur une deuxième page. Voulez-vous l’adapter automatiquement avant de télécharger ?</p>
+            <h3 className="flex items-center gap-2 text-lg font-bold"><AlertTriangle className="h-5 w-5 text-destructive" /> Vérification avant téléchargement</h3>
+            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+              {overflow && <li>Le CV dépasse une page A4 : une partie sera coupée ou imprimée sur une deuxième page.</li>}
+              {styleIssues.map((issue) => <li key={issue}>{issue}</li>)}
+            </ul>
             <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-              <Button className="flex-1" onClick={() => { setExportCheck(false); fitToPage(); }}><Wand2 className="h-4 w-4" /> Adapter à 1 page</Button>
+              <Button className="flex-1" onClick={() => { setExportCheck(false); if (styleIssues.length) harmonize(); if (overflow) fitToPage(); }}><Wand2 className="h-4 w-4" /> {styleIssues.length ? "Harmoniser en 1 clic" : "Adapter à 1 page"}</Button>
               <Button variant="outline" className="flex-1" onClick={() => { setExportCheck(false); window.print(); }}>Télécharger quand même</Button>
             </div>
           </div>
