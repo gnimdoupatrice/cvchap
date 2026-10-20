@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { uid, type CV } from "@/lib/cv/types";
-import { Section } from "./FormEditor";
+import { Section, TextField, type AskAI } from "./FormEditor";
 
 const QUESTIONS = [
   { key: "challenge", q: "Quel défi ou problème deviez-vous résoudre ?", ph: "Ex. Le site de paiement était trop lent et les clients abandonnaient." },
@@ -16,11 +16,13 @@ export function CoachEditor({
   onChange,
   busy,
   askCoach,
+  askAI,
 }: {
   cv: CV;
   onChange: (cv: CV) => void;
   busy: boolean;
   askCoach: (input: { role: string; company: string } & Answers, before: string, apply: (t: string) => void) => void;
+  askAI: AskAI;
 }) {
   const [expId, setExpId] = useState<string>(cv.experiences[0]?.id ?? "new");
   const [step, setStep] = useState(0);
@@ -57,10 +59,9 @@ export function CoachEditor({
         </select>
         {!exp && (
           <div className="grid gap-3 sm:grid-cols-2">
-            <input className="input" placeholder="Poste" value={draft.role} onChange={(e) => setDraft({ ...draft, role: e.target.value })} />
-            <input className="input" placeholder="Entreprise" value={draft.company} onChange={(e) => setDraft({ ...draft, company: e.target.value })} />
-            <input className="input" placeholder="Début" value={draft.start} onChange={(e) => setDraft({ ...draft, start: e.target.value })} />
-            <input className="input" placeholder="Fin" value={draft.end} onChange={(e) => setDraft({ ...draft, end: e.target.value })} />
+            {([["role", "Poste"], ["company", "Entreprise"], ["start", "Début"], ["end", "Fin"]] as const).map(([key, label]) => (
+              <TextField key={key} label={label} value={draft[key]} onChange={(text) => setDraft((d) => ({ ...d, [key]: text }))} askAI={askAI} busy={busy} context="Nouvelle expérience" />
+            ))}
           </div>
         )}
       </Section>
@@ -73,13 +74,19 @@ export function CoachEditor({
         </div>
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Question {step + 1} sur 3</p>
         <h3 className="mt-2 text-xl font-semibold tracking-tight">{current.q}</h3>
-        <textarea
-          key={current.key}
-          className="input mt-4 min-h-32"
-          placeholder={current.ph}
-          value={answers[current.key]}
-          onChange={(e) => setAnswers({ ...answers, [current.key]: e.target.value })}
-        />
+        <div className="mt-4">
+          <TextField
+            key={current.key}
+            label="Votre réponse (écrite ou dictée)"
+            multiline
+            placeholder={current.ph}
+            value={answers[current.key]}
+            onChange={(text) => setAnswers((old) => ({ ...old, [current.key]: text }))}
+            askAI={askAI}
+            busy={busy}
+            context={`${role} — ${current.q}`}
+          />
+        </div>
         <div className="mt-4 flex justify-between">
           <button className="btn-ghost" disabled={step === 0} onClick={() => setStep(step - 1)}>
             <ArrowLeft className="h-4 w-4" /> Précédent
