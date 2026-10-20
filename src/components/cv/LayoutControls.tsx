@@ -13,7 +13,7 @@ export function LayoutControls({ value, onChange, onOptimize, optimizing, overfl
         <span className={`text-xs ${overflow ? "text-destructive" : "text-muted-foreground"}`}>{overflow ? "Hors page" : "Format A4"}<ChevronDown className="ml-1 inline size-3.5 transition group-open:rotate-180" /></span>
       </summary>
       <div className="mb-2 mt-4 flex justify-end">
-        <Button variant="ghost" size="sm" aria-label="Réinitialiser la mise en page" onClick={() => onChange(DEFAULT_LAYOUT)}><RotateCcw />Réinitialiser</Button>
+        <Button variant="ghost" size="sm" aria-label="Réinitialiser la mise en page" onClick={() => onChange({ ...DEFAULT_LAYOUT, ...(value.style ? { style: value.style } : {}) })}><RotateCcw />Réinitialiser</Button>
       </div>
       <div className="grid gap-5">
         <div>
