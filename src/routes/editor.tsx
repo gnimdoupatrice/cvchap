@@ -18,7 +18,13 @@ import { A4Preview } from "@/components/cv/A4Preview";
 import { BeforeAfter } from "@/components/cv/BeforeAfter";
 import { CoachEditor } from "@/components/cv/CoachEditor";
 import { FormEditor, type AskAI } from "@/components/cv/FormEditor";
-import { coachExperience, improveText } from "@/lib/ai.functions";
+import { coachExperience, extractDraft, improveText } from "@/lib/ai.functions";
+import { AssistantTools, ImportReview } from "@/components/cv/AssistantTools";
+import { StyleControls } from "@/components/cv/StyleControls";
+import { ElementToolbar } from "@/components/cv/ElementToolbar";
+import type { CVElement } from "@/components/cv/TemplateLayout";
+import { mergeExtractedCV, type ExtractedCV } from "@/lib/cv/extraction";
+import type { CVStyle } from "@/lib/cv/style";
 import { FREE_CREDITS, hasStoredDoc, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
 import type { CVDocument, TemplateId } from "@/lib/cv/types";
 import { templateMeta } from "@/components/cv/templates";
@@ -64,6 +70,10 @@ function Editor() {
   const [upsell, setUpsell] = useState(false);
   const [optimizeRequest, setOptimizeRequest] = useState(0);
   const [optimizing, setOptimizing] = useState(false);
+  const [elements, setElements] = useState<CVElement[]>([]);
+  const [selected, setSelected] = useState("");
+  const [review, setReview] = useState<ExtractedCV | null>(null);
+  const extract = useServerFn(extractDraft);
   const improve = useServerFn(improveText);
   const coach = useServerFn(coachExperience);
   const { user, ready: sessionReady } = useSession();
@@ -149,6 +159,26 @@ function Editor() {
 
   const askAI: AskAI = (kind, text, context, apply) =>
     spend(() => improve({ data: { kind, text, context } }), text, apply);
+
+  const setStyle = (style: CVStyle) => {
+    if (!editable) { setAuthOpen(true); return; }
+    setDoc((d) => d ? { ...d, layout: { ...normalizeLayout(d.layout), style } } : d);
+  };
+  const selectElement = (key: string) => {
+    if (!editable) { setAuthOpen(true); return; }
+    setSelected(key);
+    requestAnimationFrame(() => document.getElementById("style-controls")?.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+  };
+  const onExtract = async (text: string) => {
+    if (!editable || !user) { setAuthOpen(true); return; }
+    setBusy(true);
+    try {
+      const r = await extract({ data: { text } });
+      if (!r.ok) { toast.error(r.error); return; }
+      setReview(r.cv);
+    } catch { toast.error("Impossible de joindre le service IA."); }
+    finally { setBusy(false); }
+  };
 
   const print = () => {
     if (!editable) { setAuthOpen(true); return; }
@@ -243,45 +273,27 @@ function Editor() {
             tab === "write" ? "block" : "hidden sm:block"
           }`}
         >
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex rounded-lg border bg-muted/40 p-0.5">
-              <button
-                onClick={() => update({ mode: "form" })}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${
-                  doc.mode === "form" ? "bg-card shadow-soft text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                <PenLine className="h-3 w-3" /> Formulaire
-              </button>
-              <button
-                onClick={() => update({ mode: "coach" })}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${
-                  doc.mode === "coach" ? "bg-card shadow-soft text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                <Wand2 className="h-3 w-3 text-primary" /> Coach IA
-              </button>
-            </div>
-          </div>
-
           <p className="mb-4 text-xs text-muted-foreground">
             {editable ? "Brouillon enregistré sur cet appareil pour votre compte. Sauvegarde en ligne non disponible." : "Connectez-vous ou créez votre compte pour remplir votre CV, utiliser l’IA et exporter."}
           </p>
           <ContentGate key={owner ?? "discovery"} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
-          {doc.mode === "form" ? (
-            <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
-          ) : (
-            <CoachEditor
-              cv={doc.cv}
-              onChange={updateCV}
-              askCoach={(input, before, apply) => {
-                void spend(() => coach({ data: input }), before, apply);
-              }}
-              busy={busy}
-            />
-          )}
+          <div className="mb-6 rounded-xl border bg-primary/5 p-4">
+            <span className="mb-2 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">💡 Coach & Import intelligent</span>
+            <AssistantTools cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} onExtract={onExtract}
+              askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} />
+          </div>
+          <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
+          <details className="mt-6 rounded-lg border p-3">
+            <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Assistant en 3 questions</summary>
+            <div className="mt-3">
+              <CoachEditor cv={doc.cv} onChange={updateCV} askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} busy={busy} />
+            </div>
+          </details>
           </ContentGate>
 
+          <div id="style-controls">
+            <StyleControls value={normalizeLayout(doc.layout).style ?? {}} onChange={setStyle} elements={elements} selected={selected} onSelect={selectElement} />
+          </div>
           <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
         </section>
 
@@ -291,7 +303,9 @@ function Editor() {
             tab === "preview" ? "block" : "hidden sm:flex"
           }`}
         >
-          <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized} />
+          <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized}
+            onElements={setElements} onSelectElement={selectElement} selectedElement={selected}
+            toolbar={editable && selected ? <ElementToolbar style={normalizeLayout(doc.layout).style ?? {}} selected={selected} onChange={setStyle} onSelect={selectElement} onClose={() => setSelected("")} /> : null} />
         </section>
       </div>
 
@@ -328,6 +342,15 @@ function Editor() {
       </nav>
 
       <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
+
+      {review && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
+          <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border bg-card p-6 shadow-xl">
+            <h3 className="mb-4 text-lg font-bold">Vérifiez avant d’appliquer</h3>
+            <ImportReview draft={review} onCancel={() => setReview(null)} onAccept={() => { updateCV(mergeExtractedCV(doc.cv, review)); setReview(null); toast.success("Votre CV a été rempli."); }} />
+          </div>
+        </div>
+      )}
 
       {/* Modale avant/après IA */}
       {pending && (
