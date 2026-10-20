@@ -22,7 +22,7 @@ export async function readCVFile(file: File): Promise<string> {
       const text = pages.join("\n").trim();
       if (!text) throw new Error("Ce PDF est une image sans texte. Dictez votre parcours ou collez son contenu.");
       return text;
-    } finally { await document.destroy(); }
+    } finally { await document.cleanup(); await document.loadingTask.destroy(); }
   }
   throw new Error("Formats acceptés : PDF avec texte, Word (.docx) et texte (.txt).");
 }

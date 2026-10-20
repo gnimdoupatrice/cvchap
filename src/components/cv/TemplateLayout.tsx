@@ -6,13 +6,13 @@ type Baseline = { element: HTMLElement; style: string | null; font: number; line
 const baselines = new WeakMap<HTMLElement, Baseline[]>();
 export type CVElement = { key: string; label: string };
 export function listTemplateElements(root: HTMLElement): CVElement[] {
-  const template = root.dataset.cvTemplate ?? "cv";
+  const template = root.dataset["cvTemplate"] ?? "cv";
   const result: CVElement[] = [];
   const walk = (parent: Element, path: string) => {
     Array.from(parent.children).forEach((child, index) => {
       if (!(child instanceof HTMLElement) || ["STYLE", "SCRIPT"].includes(child.tagName)) return;
       const key = `${template}:${path}${index}`;
-      child.dataset.cvElement = key;
+      child.dataset["cvElement"] = key;
       const ownText = Array.from(child.childNodes).filter(node => node.nodeType === Node.TEXT_NODE).map(node => node.textContent?.trim()).filter(Boolean).join(" ");
       if (ownText) result.push({ key, label: ownText.slice(0, 80) });
       walk(child, `${path}${index}.`);
@@ -39,7 +39,7 @@ export function applyTemplateLayout(root: HTMLElement, value: CVLayout) {
   for (const entry of entries) {
     const { element } = entry;
     if (entry.style === null) element.removeAttribute("style"); else element.setAttribute("style", entry.style);
-    const override = settings.style?.elements?.[element.dataset.cvElement ?? ""];
+    const override = settings.style?.elements?.[element.dataset["cvElement"] ?? ""];
     const columnFont = element.closest("aside") ? settings.sidebarFontSize ?? settings.fontSize : settings.fontSize;
     const factor = (entry.font >= 24 ? Math.min(1.15, columnFont / 100) : columnFont / 100) * (override?.fontSize ?? 100) / 100;
     element.style.setProperty("font-size", `${entry.font * factor}px`, "important");

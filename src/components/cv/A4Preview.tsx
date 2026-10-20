@@ -97,7 +97,7 @@ export function A4Preview({
             <div ref={contentRef} onClick={(event) => {
               if (!(event.target instanceof Element)) return;
               const element = event.target.closest<HTMLElement>("[data-cv-element]");
-              if (element?.dataset.cvElement) onSelectElement?.(element.dataset.cvElement);
+              if (element?.dataset["cvElement"]) onSelectElement?.(element.dataset["cvElement"]);
             }} onPointerOver={(event) => {
               if (!(event.target instanceof Element)) return;
               const element = event.target.closest<HTMLElement>("[data-cv-element]");
