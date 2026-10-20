@@ -277,15 +277,15 @@ function Editor() {
           </p>
           <ContentGate key={owner ?? "discovery"} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
           <div className="mb-6 rounded-xl border bg-primary/5 p-4">
-            <span className="mb-2 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">Coach &amp; Import intelligent</span>
+            <span className="mb-2 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">Démarrage rapide : import de CV &amp; dictée vocale</span>
             <AssistantTools cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} onExtract={onExtract}
               askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} />
           </div>
           <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
           <details className="mt-6 rounded-lg border p-3">
-            <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Assistant en 3 questions</summary>
+            <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Valoriser une expérience en 3 questions</summary>
             <div className="mt-3">
-              <CoachEditor cv={doc.cv} onChange={updateCV} askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} busy={busy} />
+              <CoachEditor cv={doc.cv} onChange={updateCV} askAI={askAI} askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} busy={busy} />
             </div>
           </details>
           </ContentGate>

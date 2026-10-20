@@ -41,5 +41,17 @@ export function VoiceInput({ onTranscript, disabled, label = "Dicter une note vo
     </Button>
     {state === "transcribing" && <Button variant="ghost" size="icon" className="size-8" aria-label="Annuler la retranscription" onClick={() => abort.current?.abort()}><X className="size-3.5" /></Button>}
     <span className="sr-only" role="status">{state === "recording" ? "Vous pouvez parler" : state === "transcribing" ? "Retranscription en cours" : ""}</span>
+    {(state === "recording" || state === "transcribing") && (
+      <div className="fixed inset-x-3 bottom-24 z-50 mx-auto flex max-w-md items-center gap-3 rounded-2xl border bg-card px-4 py-3 shadow-xl no-print sm:bottom-6" role="presentation">
+        {state === "recording" ? <span className="size-3 shrink-0 rounded-full bg-destructive motion-safe:animate-pulse" /> : <Loader2 className="size-4 shrink-0 animate-spin text-primary" />}
+        <div className="min-w-0 flex-1 text-sm">
+          <p className="font-semibold">{state === "recording" ? "Enregistrement en cours…" : "Retranscription…"}</p>
+          <p className="truncate text-xs text-muted-foreground">{state === "recording" ? `Parlez naturellement · ${label}` : "Votre texte arrive dans la case."}</p>
+        </div>
+        {state === "recording"
+          ? <Button type="button" size="sm" variant="destructive" onClick={toggle}><Square className="size-3.5" />Arrêter</Button>
+          : <Button type="button" size="sm" variant="ghost" onClick={() => abort.current?.abort()}>Annuler</Button>}
+      </div>
+    )}
   </span>;
 }
