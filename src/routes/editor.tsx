@@ -277,7 +277,7 @@ function Editor() {
           </p>
           <ContentGate key={owner ?? "discovery"} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
           <div className="mb-6 rounded-xl border bg-primary/5 p-4">
-            <span className="mb-2 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">💡 Coach & Import intelligent</span>
+            <span className="mb-2 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">Coach &amp; Import intelligent</span>
             <AssistantTools cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} onExtract={onExtract}
               askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} />
           </div>
