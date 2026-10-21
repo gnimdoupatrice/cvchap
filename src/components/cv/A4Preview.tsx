@@ -101,9 +101,14 @@ export function A4Preview({
   return (
     <div ref={wrapRef} className="relative flex w-full justify-center py-4">
       {toolbar && rect && (
-        <div className="absolute z-30 no-print" style={{ top: Math.max(0, rect.top - 48), left: rect.left }} onClick={(e) => e.stopPropagation()}>
-          {toolbar}
-        </div>
+        <>
+          <div className="absolute z-30 hidden no-print sm:block" style={{ top: Math.max(0, rect.top - 48), left: rect.left }} onClick={(e) => e.stopPropagation()}>
+            {toolbar}
+          </div>
+          <div className="fixed inset-x-2 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-50 flex justify-center no-print sm:hidden" onClick={(e) => e.stopPropagation()}>
+            {toolbar}
+          </div>
+        </>
       )}
       <div style={{ width: A4_W * zoom, height: A4_H * zoom }}>
         <div

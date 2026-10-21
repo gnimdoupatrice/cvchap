@@ -300,7 +300,7 @@ function Home() {
             </div>
 
             {/* Corps défilable avec navigation */}
-            <div className="relative flex-1 overflow-auto bg-muted/40 p-6 flex justify-center">
+            <div className="relative flex flex-1 justify-center gap-2 overflow-y-auto overflow-x-hidden bg-muted/40 p-3 sm:p-6">
               <button
                 onClick={() => goToTemplate(-1)}
                 className="sticky top-1/2 left-0 z-10 -translate-y-1/2 self-start rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background"
@@ -308,14 +308,13 @@ function Home() {
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
-              <div
-                className="bg-white shadow-xl origin-top"
-                style={{ width: 794, minHeight: 1123 }}
-              >
-                <CVTemplate
-                  cv={sampleMap[exploringTemplate]}
-                  template={exploringTemplate}
-                />
+              <div className="w-full min-w-0 max-w-[794px] shrink self-start shadow-xl">
+                <A4Thumbnail>
+                  <CVTemplate
+                    cv={sampleMap[exploringTemplate]}
+                    template={exploringTemplate}
+                  />
+                </A4Thumbnail>
               </div>
               <button
                 onClick={() => goToTemplate(1)}
