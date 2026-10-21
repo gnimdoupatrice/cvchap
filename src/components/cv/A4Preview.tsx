@@ -40,14 +40,22 @@ export function A4Preview({
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
+    let lastWidth = 0;
     const ro = new ResizeObserver(() => {
-      const w = el.clientWidth - 32;
-      setZoom(Math.min(1, Math.max(0.1, w / A4_W)));
+      const width = el.clientWidth;
+      // Section masquée (onglet « Écrire ») : on garde le dernier zoom connu.
+      if (width <= 0) return;
+      // Seuil anti-oscillation (barre de défilement qui apparaît/disparaît).
+      if (lastWidth && Math.abs(width - lastWidth) < 4) return;
+      lastWidth = width;
+      const gutter = width < 640 ? 8 : 24;
+      setZoom(Math.min(1, Math.max(0.1, (width - gutter) / A4_W)));
     });
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
+  const elementsSignature = useRef("");
   useLayoutEffect(() => {
     const el = contentRef.current;
     if (!el) return;
@@ -60,12 +68,19 @@ export function A4Preview({
     };
     check();
     const layoutRoot = el.querySelector<HTMLElement>("[data-cv-layout]");
-    if (layoutRoot) onElements?.(listTemplateElements(layoutRoot));
+    if (layoutRoot && onElements) {
+      const list = listTemplateElements(layoutRoot);
+      const signature = list.map((item) => `${item.key}|${item.label}`).join("¦");
+      if (signature !== elementsSignature.current) {
+        elementsSignature.current = signature;
+        onElements(list);
+      }
+    }
     const observer = new ResizeObserver(check);
     observer.observe(el);
     void document.fonts.ready.then(check);
     return () => { active = false; observer.disconnect(); };
-  }, [doc, zoom, onOverflowChange, onElements]);
+  }, [doc, onOverflowChange, onElements]);
 
   useLayoutEffect(() => {
     const root = contentRef.current;
@@ -99,7 +114,7 @@ export function A4Preview({
   }, [optimizeRequest, doc.layout, onOptimized]);
 
   return (
-    <div ref={wrapRef} className="relative flex w-full justify-center py-4">
+    <div ref={wrapRef} className="relative flex w-full justify-center py-1 sm:py-2">
       {toolbar && rect && (
         <>
           <div className="absolute z-30 hidden no-print sm:block" style={{ top: Math.max(0, rect.top - 48), left: rect.left }} onClick={(e) => e.stopPropagation()}>
