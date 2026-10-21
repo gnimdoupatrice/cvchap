@@ -117,6 +117,7 @@ function Editor() {
   }, []);
 
   const fitToPage = () => {
+    if (!editable) { setAuthOpen(true); return; }
     setOptimizing(true);
     setOptimizeRequest((n) => n + 1);
   };
@@ -288,12 +289,12 @@ function Editor() {
               <CoachEditor cv={doc.cv} onChange={updateCV} askAI={askAI} askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} busy={busy} />
             </div>
           </details>
-          </ContentGate>
 
           <div id="style-controls">
             <StyleControls value={normalizeLayout(doc.layout).style ?? {}} onChange={setStyle} elements={elements} selected={selected} onSelect={selectElement} />
           </div>
-          <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => update({ layout })} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
+          <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => { if (!editable) { setAuthOpen(true); return; } update({ layout }); }} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
+          </ContentGate>
         </section>
 
         {/* Colonne droite : Aperçu A4 en direct */}
