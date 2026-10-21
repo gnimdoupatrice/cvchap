@@ -266,15 +266,15 @@ function Home() {
 
       {/* Modale d'exploration plein écran */}
       {exploringTemplate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 sm:p-6">
-          <div className="flex h-[92vh] w-full max-w-5xl flex-col rounded-2xl border bg-background shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 backdrop-blur-xs p-2 sm:p-6">
+          <div className="flex h-[92dvh] w-full max-w-5xl flex-col rounded-2xl border bg-background shadow-2xl overflow-hidden">
             {/* Barre supérieure */}
-            <div className="flex items-center justify-between border-b px-6 py-4 bg-card">
-              <div>
-                <h3 className="text-lg font-bold">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b bg-card px-4 py-3 sm:px-6 sm:py-4">
+              <div className="min-w-0">
+                <h3 className="truncate text-base font-bold sm:text-lg">
                   {templateMeta.find((x) => x.id === exploringTemplate)?.name}
                 </h3>
-                <p className="text-xs text-muted-foreground">
+                <p className="hidden text-xs text-muted-foreground sm:block">
                   Gabarit A4 officiel (794 × 1123 px) — Modèle {exploringIndex + 1} sur {templateMeta.length}
                 </p>
               </div>
@@ -285,7 +285,7 @@ function Home() {
                     setExploringTemplate(null);
                     start(t);
                   }}
-                  className="btn-primary px-4 py-2 text-xs font-semibold"
+                  className="btn-primary whitespace-nowrap px-3 py-2 text-xs font-semibold sm:px-4"
                 >
                   Utiliser ce modèle <ArrowRight className="h-3.5 w-3.5" />
                 </button>
@@ -300,26 +300,25 @@ function Home() {
             </div>
 
             {/* Corps défilable avec navigation */}
-            <div className="relative flex-1 overflow-auto bg-muted/40 p-6 flex justify-center">
+            <div className="relative flex flex-1 justify-center gap-2 overflow-y-auto overflow-x-hidden bg-muted/40 p-3 sm:p-6">
               <button
                 onClick={() => goToTemplate(-1)}
-                className="sticky top-1/2 left-0 z-10 -translate-y-1/2 self-start rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background"
+                className="sticky top-1/2 left-0 z-10 hidden sm:block -translate-y-1/2 self-start rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background"
                 aria-label="Modèle précédent"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
-              <div
-                className="bg-white shadow-xl origin-top"
-                style={{ width: 794, minHeight: 1123 }}
-              >
-                <CVTemplate
-                  cv={sampleMap[exploringTemplate]}
-                  template={exploringTemplate}
-                />
+              <div className="w-full min-w-0 max-w-[794px] shrink self-start shadow-xl">
+                <A4Thumbnail>
+                  <CVTemplate
+                    cv={sampleMap[exploringTemplate]}
+                    template={exploringTemplate}
+                  />
+                </A4Thumbnail>
               </div>
               <button
                 onClick={() => goToTemplate(1)}
-                className="sticky top-1/2 right-0 z-10 -translate-y-1/2 self-start rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background"
+                className="sticky top-1/2 right-0 z-10 hidden sm:block -translate-y-1/2 self-start rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background"
                 aria-label="Modèle suivant"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -327,7 +326,7 @@ function Home() {
             </div>
 
             {/* Barre inférieure de navigation */}
-            <div className="flex items-center justify-between border-t bg-card px-6 py-3">
+            <div className="flex items-center justify-between border-t bg-card px-4 py-3 sm:px-6">
               <button
                 onClick={() => goToTemplate(-1)}
                 className="btn-ghost text-xs"
