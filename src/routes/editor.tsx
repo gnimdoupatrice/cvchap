@@ -269,8 +269,8 @@ function Editor() {
       <div className="flex flex-1 overflow-hidden">
         {/* Colonne gauche : Saisie */}
         <section
-          className={`w-full overflow-y-auto border-r p-4 pb-28 sm:w-1/2 lg:w-5/12 sm:p-6 no-print ${
-            tab === "write" ? "block" : "hidden sm:block"
+          className={`w-full overflow-y-auto border-r p-4 pb-28 sm:p-6 lg:w-5/12 lg:pb-6 no-print ${
+            tab === "write" ? "block" : "hidden lg:block"
           }`}
         >
           <p className="mb-4 text-xs text-muted-foreground">
@@ -299,8 +299,8 @@ function Editor() {
 
         {/* Colonne droite : Aperçu A4 en direct */}
         <section
-          className={`flex-1 overflow-y-auto bg-muted/30 p-4 pb-28 sm:p-6 flex justify-center ${
-            tab === "preview" ? "block" : "hidden sm:flex"
+          className={`flex-1 overflow-y-auto bg-muted/30 p-4 pb-28 sm:p-6 lg:pb-6 flex justify-center ${
+            tab === "preview" ? "block" : "hidden lg:flex"
           }`}
         >
           <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized}
@@ -310,7 +310,7 @@ function Editor() {
       </div>
 
       {/* Barre d'action basse (mobile) */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2.5 shadow-soft backdrop-blur sm:hidden no-print">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2.5 shadow-soft backdrop-blur lg:hidden no-print">
         <div className="mb-2 flex items-center justify-center gap-1.5 text-[11px] font-medium">
           {overflow ? (
             <button onClick={fitToPage} disabled={optimizing} className="flex items-center gap-1 text-destructive">

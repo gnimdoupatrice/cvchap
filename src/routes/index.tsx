@@ -266,11 +266,11 @@ function Home() {
 
       {/* Modale d'exploration plein écran */}
       {exploringTemplate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 sm:p-6">
-          <div className="flex h-[92vh] w-full max-w-5xl flex-col rounded-2xl border bg-background shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 backdrop-blur-xs p-2 sm:p-6">
+          <div className="flex h-[92dvh] w-full max-w-5xl flex-col rounded-2xl border bg-background shadow-2xl overflow-hidden">
             {/* Barre supérieure */}
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b bg-card px-4 py-3 sm:px-6 sm:py-4">
-              <div>
+              <div className="min-w-0">
                 <h3 className="truncate text-base font-bold sm:text-lg">
                   {templateMeta.find((x) => x.id === exploringTemplate)?.name}
                 </h3>
@@ -285,7 +285,7 @@ function Home() {
                     setExploringTemplate(null);
                     start(t);
                   }}
-                  className="btn-primary px-4 py-2 text-xs font-semibold"
+                  className="btn-primary whitespace-nowrap px-3 py-2 text-xs font-semibold sm:px-4"
                 >
                   Utiliser ce modèle <ArrowRight className="h-3.5 w-3.5" />
                 </button>
