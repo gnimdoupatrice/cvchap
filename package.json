@@ -11,7 +11,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "verify": "bun run typecheck && vitest run && vite build",
+    "predeploy": "bun run verify"
   },
   "overrides": {
     "rolldown": "1.2.1"

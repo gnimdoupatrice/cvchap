@@ -188,7 +188,7 @@ function Editor() {
   if (!doc || !sessionReady || documentOwner !== owner) return <div className="grid min-h-screen place-items-center">Chargement…</div>;
 
   return (
-    <div className="flex h-screen flex-col bg-background">
+    <div className="flex h-dvh flex-col bg-background">
       <Toaster />
       {/* Barre supérieure */}
       <header className="flex h-14 items-center justify-between border-b px-4 no-print sm:px-6">
@@ -266,10 +266,10 @@ function Editor() {
       </header>
 
       {/* Corps Split Screen */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Colonne gauche : Saisie */}
+      <div className="flex min-h-0 flex-1 overflow-hidden">
+        {/* Colonne gauche : Saisie (largeur fixe sur ordinateur, l'aperçu prend le reste) */}
         <section
-          className={`w-full overflow-y-auto border-r p-4 pb-28 sm:p-6 lg:w-5/12 lg:pb-6 no-print ${
+          className={`w-full overflow-y-auto border-r p-4 pb-24 sm:p-6 sm:pb-24 lg:w-[440px] lg:shrink-0 lg:pb-6 xl:w-[480px] no-print ${
             tab === "write" ? "block" : "hidden lg:block"
           }`}
         >
@@ -299,8 +299,8 @@ function Editor() {
 
         {/* Colonne droite : Aperçu A4 en direct */}
         <section
-          className={`flex-1 overflow-y-auto bg-muted/30 p-4 pb-28 sm:p-6 lg:pb-6 flex justify-center ${
-            tab === "preview" ? "block" : "hidden lg:flex"
+          className={`min-w-0 flex-1 justify-center overflow-y-auto bg-muted/30 px-1 pb-24 pt-1 [scrollbar-gutter:stable] sm:px-4 sm:pt-3 lg:px-6 lg:pb-6 ${
+            tab === "preview" ? "flex" : "hidden lg:flex"
           }`}
         >
           <A4Preview doc={doc} onOverflowChange={onOverflow} optimizeRequest={optimizeRequest} onOptimized={onOptimized}
