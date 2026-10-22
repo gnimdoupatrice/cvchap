@@ -261,18 +261,6 @@ function EmeraldTech({ cv }: { cv: CV }) {
           <h1>{cv.personal.name}</h1>
           {cv.title && <div className="dev-subtitle">{cv.title}</div>}
 
-          {education.length > 0 && (
-            <>
-              <h2>Formation</h2>
-              {education.map((edu, i) => (
-                <div className={`dev-item dev-formation${i === education.length - 1 ? " last" : ""}`} key={edu.id}>
-                  <div className="dev-head"><b>{edu.degree}</b><em>{dates(edu.start, edu.end)}</em></div>
-                  {edu.school && <div className="dev-sub">{edu.school}</div>}
-                </div>
-              ))}
-            </>
-          )}
-
           {cv.summary && (
             <>
               <h2>Profil</h2>
@@ -297,6 +285,18 @@ function EmeraldTech({ cv }: { cv: CV }) {
               ))}
             </>
           )}
+          {education.length > 0 && (
+            <>
+              <h2>Formation</h2>
+              {education.map((edu, i) => (
+                <div className={`dev-item dev-formation${i === education.length - 1 ? " last" : ""}`} key={edu.id}>
+                  <div className="dev-head"><b>{edu.degree}</b><em>{dates(edu.start, edu.end)}</em></div>
+                  {edu.school && <div className="dev-sub">{edu.school}</div>}
+                </div>
+              ))}
+            </>
+          )}
+
         </div>
       </main>
     </div>
