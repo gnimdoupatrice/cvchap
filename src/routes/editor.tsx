@@ -3,16 +3,19 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useState } from "react";
 import {
   AlertTriangle,
+  ChevronDown,
   Download,
   FileText,
   LayoutTemplate,
   Maximize2,
+  Palette,
   PenLine,
   Sparkles,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { A4Preview } from "@/components/cv/A4Preview";
 import { BeforeAfter } from "@/components/cv/BeforeAfter";
 import { CoachEditor } from "@/components/cv/CoachEditor";
@@ -71,6 +74,7 @@ function Editor() {
   const [optimizing, setOptimizing] = useState(false);
   const [elements, setElements] = useState<CVElement[]>([]);
   const [selected, setSelected] = useState("");
+  const [styleOpen, setStyleOpen] = useState(false);
   const [review, setReview] = useState<ExtractedCV | null>(null);
   const extract = useServerFn(extractDraft);
   const improve = useServerFn(improveText);
@@ -186,6 +190,13 @@ function Editor() {
   };
 
   if (!doc || !sessionReady || documentOwner !== owner) return <div className="grid min-h-screen place-items-center">Chargement…</div>;
+
+  const visualControls = (
+    <>
+      <StyleControls value={normalizeLayout(doc.layout).style ?? {}} onChange={setStyle} elements={elements} selected={selected} onSelect={selectElement} />
+      <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => { if (!editable) { setAuthOpen(true); return; } update({ layout }); }} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
+    </>
+  );
 
   return (
     <div className="flex h-dvh flex-col bg-background">
