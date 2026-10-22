@@ -300,7 +300,7 @@ function Home() {
             </div>
 
             {/* Corps : page entière visible sur tablette/ordinateur, défilement vertical au téléphone */}
-            <div className="relative flex min-h-0 flex-1 items-start justify-center overflow-y-auto overflow-x-hidden bg-muted/40 p-2 sm:items-center sm:overflow-hidden sm:px-16 sm:py-4">
+            <div className="relative flex min-h-0 flex-1 justify-center overflow-y-auto overflow-x-hidden bg-muted/40 p-2 sm:items-center sm:overflow-hidden sm:px-16 sm:py-4">
               <button
                 onClick={() => goToTemplate(-1)}
                 className="absolute left-3 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background sm:block"
@@ -308,7 +308,7 @@ function Home() {
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
-              <div className="w-full min-w-0 max-w-[794px] shrink-0 shadow-xl sm:w-[min(100%,calc((92dvh_-_7.5rem)*0.707))]">
+              <div className="my-auto w-full min-w-0 max-w-[794px] shrink-0 shadow-xl sm:w-[min(100%,calc((92dvh_-_7.5rem)*0.707))]">
                 <A4Thumbnail>
                   <CVTemplate
                     cv={sampleMap[exploringTemplate]}
