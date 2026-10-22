@@ -269,7 +269,7 @@ function Editor() {
       <div className="flex min-h-0 flex-1 overflow-hidden">
         {/* Colonne gauche : Saisie (largeur fixe sur ordinateur, l'aperçu prend le reste) */}
         <section
-          className={`w-full overflow-y-auto border-r p-4 pb-4 sm:p-6 sm:pb-6 lg:w-[440px] lg:shrink-0 lg:pb-6 xl:w-[480px] no-print ${
+          className={`w-full overflow-y-auto border-r p-4 pb-[5.5rem] sm:p-6 sm:pb-[5.5rem] lg:w-[440px] lg:shrink-0 lg:pb-6 xl:w-[480px] no-print ${
             tab === "write" ? "block" : "hidden lg:block"
           }`}
         >
