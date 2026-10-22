@@ -114,7 +114,7 @@ export function A4Preview({
   }, [optimizeRequest, doc.layout, onOptimized]);
 
   return (
-    <div ref={wrapRef} className="relative flex w-full justify-center py-1 sm:py-2">
+    <div ref={wrapRef} className="relative flex h-max w-full justify-center py-1 sm:py-2">
       {toolbar && rect && (
         <>
           <div className="absolute z-30 hidden no-print sm:block" style={{ top: Math.max(0, rect.top - 48), left: rect.left }} onClick={(e) => e.stopPropagation()}>
