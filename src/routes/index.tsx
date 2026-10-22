@@ -299,16 +299,16 @@ function Home() {
               </div>
             </div>
 
-            {/* Corps défilable avec navigation */}
-            <div className="relative flex flex-1 justify-center gap-2 overflow-y-auto overflow-x-hidden bg-muted/40 p-3 sm:p-6">
+            {/* Corps : page entière visible sur tablette/ordinateur, défilement vertical au téléphone */}
+            <div className="relative flex min-h-0 flex-1 items-start justify-center overflow-y-auto overflow-x-hidden bg-muted/40 p-2 sm:items-center sm:overflow-hidden sm:px-16 sm:py-4">
               <button
                 onClick={() => goToTemplate(-1)}
-                className="sticky top-1/2 left-0 z-10 hidden sm:block -translate-y-1/2 self-start rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background"
+                className="absolute left-3 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background sm:block"
                 aria-label="Modèle précédent"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
-              <div className="w-full min-w-0 max-w-[794px] shrink self-start shadow-xl">
+              <div className="w-full min-w-0 max-w-[794px] shrink-0 shadow-xl sm:w-[min(100%,calc((92dvh_-_7.5rem)*0.707))]">
                 <A4Thumbnail>
                   <CVTemplate
                     cv={sampleMap[exploringTemplate]}
@@ -318,15 +318,15 @@ function Home() {
               </div>
               <button
                 onClick={() => goToTemplate(1)}
-                className="sticky top-1/2 right-0 z-10 hidden sm:block -translate-y-1/2 self-start rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background"
+                className="absolute right-3 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border bg-background/90 p-2.5 shadow backdrop-blur-xs hover:bg-background sm:block"
                 aria-label="Modèle suivant"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
 
-            {/* Barre inférieure de navigation */}
-            <div className="flex items-center justify-between border-t bg-card px-4 py-3 sm:px-6">
+            {/* Navigation basse : téléphone uniquement (les flèches latérales suffisent ailleurs) */}
+            <div className="flex items-center justify-between border-t bg-card px-3 py-2 sm:hidden">
               <button
                 onClick={() => goToTemplate(-1)}
                 className="btn-ghost text-xs"
@@ -334,7 +334,7 @@ function Home() {
                 <ArrowLeft className="h-3.5 w-3.5" /> Précédent
               </button>
               <span className="text-xs text-muted-foreground">
-                {templateMeta.find((x) => x.id === exploringTemplate)?.category}
+                {exploringIndex + 1} / {templateMeta.length}
               </span>
               <button
                 onClick={() => goToTemplate(1)}
