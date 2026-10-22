@@ -273,15 +273,22 @@ function Editor() {
             tab === "write" ? "block" : "hidden lg:block"
           }`}
         >
-          <p className="mb-4 text-xs text-muted-foreground">
+          <p className="mb-3 text-xs text-muted-foreground">
             {editable ? "Brouillon enregistré sur cet appareil pour votre compte. Sauvegarde en ligne non disponible." : "Connectez-vous ou créez votre compte pour remplir votre CV, utiliser l’IA et exporter."}
           </p>
           <ContentGate key={owner ?? "discovery"} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
-          <div className="mb-6 rounded-xl border bg-primary/5 p-4">
-            <span className="mb-2 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">Démarrage rapide : import de CV &amp; dictée vocale</span>
-            <AssistantTools cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} onExtract={onExtract}
-              askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} />
-          </div>
+          {/* Assistant IA replié par défaut : les champs du CV restent visibles dès l'arrivée */}
+          <details className="group mb-4 rounded-xl border bg-primary/5">
+            <summary className="flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 text-sm font-semibold text-primary [&::-webkit-details-marker]:hidden">
+              <Sparkles className="h-4 w-4 shrink-0" />
+              <span className="min-w-0 flex-1">Importer un CV ou dicter mon parcours</span>
+              <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="border-t px-3 pb-3 pt-3">
+              <AssistantTools cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} onExtract={onExtract}
+                askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} />
+            </div>
+          </details>
           <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
           <details className="mt-6 rounded-lg border p-3">
             <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Valoriser une expérience en 3 questions</summary>
@@ -290,10 +297,11 @@ function Editor() {
             </div>
           </details>
 
-          <div id="style-controls">
-            <StyleControls value={normalizeLayout(doc.layout).style ?? {}} onChange={setStyle} elements={elements} selected={selected} onSelect={selectElement} />
+          {/* Réglages visuels : à côté de l'aperçu sur ordinateur uniquement ; sur mobile/tablette ils vivent dans l'onglet Aperçu A4 */}
+          <div id="style-controls" className="mt-6 hidden space-y-4 rounded-lg border p-3 lg:block">
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Personnaliser l’apparence</h2>
+            {visualControls}
           </div>
-          <LayoutControls value={normalizeLayout(doc.layout)} onChange={(layout) => { if (!editable) { setAuthOpen(true); return; } update({ layout }); }} onOptimize={fitToPage} optimizing={optimizing} overflow={overflow} />
           </ContentGate>
         </section>
 
@@ -308,6 +316,28 @@ function Editor() {
             toolbar={editable && selected ? <ElementToolbar style={normalizeLayout(doc.layout).style ?? {}} selected={selected} onChange={setStyle} onSelect={selectElement} onClose={() => setSelected("")} /> : null} />
         </section>
       </div>
+
+      {/* Bouton des réglages visuels (mobile/tablette, onglet Aperçu A4) */}
+      {tab === "preview" && !selected && (
+        <button
+          type="button"
+          onClick={() => { if (!editable) { setAuthOpen(true); return; } setStyleOpen(true); }}
+          className="fixed right-3 top-[4.25rem] z-30 flex items-center gap-1.5 rounded-full border bg-card px-3 py-2 text-xs font-semibold text-primary shadow-soft lg:hidden no-print"
+          aria-label="Personnaliser l’apparence du CV"
+        >
+          <Palette className="h-3.5 w-3.5" /> Style
+        </button>
+      )}
+
+      <Sheet open={styleOpen} onOpenChange={setStyleOpen}>
+        <SheetContent side="bottom" className="max-h-[80dvh] overflow-y-auto rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden">
+          <SheetHeader className="mb-3 text-left">
+            <SheetTitle className="text-base">Personnaliser l’apparence</SheetTitle>
+            <SheetDescription className="text-xs">Police, couleurs et mise en page A4. Touchez un texte sur l’aperçu pour le modifier seul.</SheetDescription>
+          </SheetHeader>
+          <div className="space-y-4">{visualControls}</div>
+        </SheetContent>
+      </Sheet>
 
       {/* Barre d'action basse (mobile) */}
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2.5 shadow-soft backdrop-blur lg:hidden no-print">
