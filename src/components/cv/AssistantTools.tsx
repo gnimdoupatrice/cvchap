@@ -21,8 +21,7 @@ export function AssistantTools({ cv, onChange, askAI, askCoach, busy, onExtract 
     catch (error) { toast.error(error instanceof Error ? error.message : "Le document ne peut pas être lu."); }
     finally { setReading(false); }
   };
-  return <section className="mb-6 border-b pb-6">
-    <div className="mb-3 flex items-center gap-2"><Sparkles className="size-4 text-primary" /><h2 className="text-sm font-semibold">Assistant de rédaction</h2></div>
+  return <section>
     <div className="mb-3 flex flex-wrap items-center gap-2"><Button asChild variant="outline" size="sm" disabled={busy || reading}><label><FileUp />{reading ? "Lecture…" : "Importer un ancien CV"}<input type="file" aria-label="Importer un ancien CV" className="sr-only" accept=".pdf,.docx,.txt" disabled={busy || reading} onChange={e => { void load(e.target.files?.[0]); e.target.value = ""; }} /></label></Button>
       <VoiceInput disabled={busy || reading} label="Raconter mon parcours en note vocale" onTranscript={text => setDraft(old => old ? `${old}\n${text}` : text)} />
     </div>

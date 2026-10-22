@@ -30,3 +30,8 @@
 - [x] Formulaire à largeur fixe sur ordinateur, l'aperçu prend le reste.
 - [x] Aperçu de modèle depuis l'accueil : page entière visible, une seule navigation.
 - [x] Commande de vérification avant mise en ligne (`bun run verify`).
+
+# Onglet « Écrire » épuré
+- [x] Assistant IA replié par défaut (« Importer un CV ou dicter mon parcours ») : coordonnées visibles dès l'arrivée.
+- [x] Réglages visuels retirés de « Écrire » sur mobile/tablette : bouton « Style » dans « Aperçu A4 » ouvrant un tiroir.
+- [ ] Tester le tiroir « Style » connecté : aucun compte de test disponible.
