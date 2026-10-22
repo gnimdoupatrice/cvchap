@@ -23,3 +23,10 @@
 - [x] Isoler les brouillons par compte et protéger les appels IA.
 - [x] Corriger les promesses de sauvegarde ; 17 tests et parcours déconnecté ordinateur/téléphone vérifiés.
 - [ ] Vérifier la connexion réelle et le rechargement du brouillon connecté : aucun compte existant disponible pour ouvrir une session de test.
+
+# Stabilité et espaces vides
+- [x] Stabiliser l'aperçu A4 (zoom mémorisé, barre de défilement stable, hauteur d'écran mobile).
+- [x] Réduire les marges inutiles autour du CV et en bas du formulaire.
+- [x] Formulaire à largeur fixe sur ordinateur, l'aperçu prend le reste.
+- [x] Aperçu de modèle depuis l'accueil : page entière visible, une seule navigation.
+- [x] Commande de vérification avant mise en ligne (`bun run verify`).
