@@ -35,3 +35,4 @@
 - [x] Assistant IA replié par défaut (« Importer un CV ou dicter mon parcours ») : coordonnées visibles dès l'arrivée.
 - [x] Réglages visuels retirés de « Écrire » sur mobile/tablette : bouton « Style » dans « Aperçu A4 » ouvrant un tiroir.
 - [ ] Tester le tiroir « Style » connecté : aucun compte de test disponible.
+- [x] Supprimer le double défilement mobile (page verrouillée, seul le formulaire ou l'aperçu défile).
