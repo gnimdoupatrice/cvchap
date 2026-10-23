@@ -78,7 +78,7 @@ function Editor() {
   const [exportIssues, setExportIssues] = useState<string[] | null>(null);
   const extract = useServerFn(extractDraft);
   const improve = useServerFn(improveText);
-  const coach = useServerFn(coachExperience);
+
   const { user, ready: sessionReady } = useSession();
   const [authOpen, setAuthOpen] = useState(false);
   const [documentOwner, setDocumentOwner] = useState<string | null>(null);
