@@ -67,3 +67,14 @@ export const extractDraft = createServerFn({ method: "POST" })
     try { return { ok: true, cv: await extractCV(data.text, key) }; }
     catch (error) { return { ok: false, error: error instanceof Error ? error.message : "L’extraction du CV a échoué.", status: error instanceof AiError ? error.status : 500 }; }
   });
+
+export const compareJobOffer = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ cv: z.string().min(1).max(20000), offer: z.string().min(30).max(15000) }).parse(d))
+  .handler(async ({ data }) => {
+    const key = process.env["LOVABLE_API_KEY"];
+    if (!key) return { ok: false as const, error: "Le service IA n’est pas configuré.", status: 401 };
+    const { matchJob, AiError } = await import("./ai/gateway.server");
+    try { return { ok: true as const, match: await matchJob(data.cv, data.offer, key) }; }
+    catch (e) { return { ok: false as const, error: e instanceof Error ? e.message : "L’analyse a échoué.", status: e instanceof AiError ? e.status : 500 }; }
+  });
