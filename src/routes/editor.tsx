@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
   ChevronDown,
@@ -36,7 +36,11 @@ import { AuthDialog } from "@/components/cv/AuthDialog";
 import { ContentGate } from "@/components/cv/ContentGate";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/lib/supabase";
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, Target, UserRound } from "lucide-react";
+import { CvSwitcher, type SyncState } from "@/components/cv/CvSwitcher";
+import { JobMatch } from "@/components/cv/JobMatch";
+import { createCv, deleteCv, fetchCv, getActiveId, listCvs, renameCv, saveCv, setActiveId as storeActiveId, type CloudCV } from "@/lib/cv/cloud";
+import { defaultDoc } from "@/lib/cv/storage";
 
 export const Route = createFileRoute("/editor")({
   head: () => ({
@@ -84,6 +88,90 @@ function Editor() {
   const [documentOwner, setDocumentOwner] = useState<string | null>(null);
   const owner = user?.id ?? null;
   const editable = sessionReady && Boolean(user) && documentOwner === owner;
+  const [cvs, setCvs] = useState<CloudCV[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [sync, setSync] = useState<SyncState>("offline");
+  const [jobOpen, setJobOpen] = useState(false);
+  const loadedRef = useRef<string | null>(null);
+
+  // Online bootstrap: the account's online CVs win; the local draft seeds the first one.
+  useEffect(() => {
+    if (!sessionReady || !user) { setCvs([]); setActiveId(null); setSync("offline"); return; }
+    const uid = user.id;
+    let cancelled = false;
+    (async () => {
+      try {
+        let list = await listCvs();
+        if (!list.length) {
+          const seed = hasStoredDoc(uid) ? loadDoc(uid) : loadDoc();
+          list = [await createCv(uid, seed.cv.personal.name ? `CV ${seed.cv.personal.name}` : "Mon CV", seed)];
+        }
+        const preferred = getActiveId(uid);
+        const target = list.find((c) => c.id === preferred) ?? list[0]!;
+        const full = await fetchCv(target.id);
+        if (cancelled || !full) return;
+        loadedRef.current = JSON.stringify(full.doc);
+        setCvs(list); setActiveId(full.id); storeActiveId(uid, full.id);
+        setDoc(full.doc); saveDoc(full.doc, uid); setSync("saved");
+      } catch { if (!cancelled) { setSync("error"); toast.error("Sauvegarde en ligne indisponible : votre brouillon reste sur cet appareil."); } }
+    })();
+    return () => { cancelled = true; };
+  }, [sessionReady, user?.id]);
+
+  // Debounced online autosave of the active CV.
+  useEffect(() => {
+    if (!doc || !activeId || !user || documentOwner !== user.id) return;
+    const snapshot = JSON.stringify(doc);
+    if (snapshot === loadedRef.current) return;
+    setSync("saving");
+    const t = setTimeout(async () => {
+      try { await saveCv(activeId, doc); loadedRef.current = snapshot; setSync("saved"); }
+      catch { setSync("error"); }
+    }, 1200);
+    return () => clearTimeout(t);
+  }, [doc, activeId, user, documentOwner]);
+
+  const flush = async () => {
+    if (doc && activeId && JSON.stringify(doc) !== loadedRef.current) { await saveCv(activeId, doc); }
+  };
+  const openCv = async (id: string) => {
+    if (!user) return;
+    try {
+      await flush();
+      const full = await fetchCv(id);
+      if (!full) return;
+      loadedRef.current = JSON.stringify(full.doc);
+      setActiveId(id); storeActiveId(user.id, id); setDoc(full.doc); setSync("saved"); setSelected("");
+    } catch { toast.error("Impossible d’ouvrir ce CV."); }
+  };
+  const addCv = async (base: CVDocument, name: string) => {
+    if (!user) return;
+    try {
+      await flush();
+      const created = await createCv(user.id, name, base);
+      setCvs((l) => [created, ...l]);
+      loadedRef.current = JSON.stringify(base);
+      setActiveId(created.id); storeActiveId(user.id, created.id); setDoc(base); setSync("saved");
+      toast.success(`« ${created.name} » créé.`);
+    } catch { toast.error("Impossible de créer le CV."); }
+  };
+  const activeName = cvs.find((c) => c.id === activeId)?.name ?? "Mon CV";
+  const onRename = async (name: string) => {
+    if (!activeId || !name.trim()) return;
+    try { await renameCv(activeId, name); setCvs((l) => l.map((c) => c.id === activeId ? { ...c, name: name.trim().slice(0, 80) } : c)); }
+    catch { toast.error("Impossible de renommer ce CV."); }
+  };
+  const onDelete = async () => {
+    if (!activeId) return;
+    try {
+      await deleteCv(activeId);
+      const rest = cvs.filter((c) => c.id !== activeId);
+      setCvs(rest);
+      loadedRef.current = null;
+      if (rest[0]) await openCv(rest[0].id);
+      toast.success("CV supprimé.");
+    } catch { toast.error("Impossible de supprimer ce CV."); }
+  };
 
   useEffect(() => {
     if (!sessionReady) return;
@@ -108,6 +196,7 @@ function Editor() {
   };
   const signOut = async () => {
     if (doc && user) saveDoc(doc, user.id);
+    try { await flush(); } catch { /* local copy kept */ }
     const { error } = await supabase.auth.signOut();
     if (error) { toast.error("La déconnexion a échoué. Réessayez."); return; }
     setDoc(loadDoc());
@@ -244,6 +333,12 @@ function Editor() {
               ))}
             </select>
           </div>
+          {user && activeId && (
+            <CvSwitcher cvs={cvs} activeId={activeId} sync={sync} onSwitch={openCv}
+              onCreate={() => addCv({ ...defaultDoc(), template: doc.template }, `CV ${cvs.length + 1}`)}
+              onDuplicate={() => addCv(structuredClone(doc), `${activeName} (copie)`)}
+              onRename={onRename} onDelete={onDelete} />
+          )}
         </div>
 
         {/* Actions à droite */}
@@ -282,6 +377,10 @@ function Editor() {
             </Button>
           )}
 
+          <Button variant="outline" size="sm" onClick={() => editable ? setJobOpen(true) : setAuthOpen(true)} aria-label="Comparer avec une offre" title="Comparer avec une offre d’emploi">
+            <Target className="h-3.5 w-3.5" />
+            <span className="hidden xl:inline">Comparer à une offre</span>
+          </Button>
           <Button onClick={print} size="sm" aria-label="Exporter en PDF" title="Exporter en PDF">
             <Download className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Exporter en PDF</span>
@@ -298,7 +397,7 @@ function Editor() {
           }`}
         >
           <p className="mb-3 text-xs text-muted-foreground">
-            {editable ? "Brouillon enregistré sur cet appareil pour votre compte. Sauvegarde en ligne non disponible." : "Connectez-vous ou créez votre compte pour remplir votre CV, utiliser l’IA et exporter."}
+            {editable ? (sync === "saved" || sync === "saving" ? "Votre CV est enregistré en ligne automatiquement et retrouvable sur tous vos appareils." : "Sauvegarde en ligne indisponible pour le moment : brouillon conservé sur cet appareil.") : "Connectez-vous ou créez votre compte pour remplir votre CV, utiliser l’IA et exporter."}
           </p>
           <ContentGate key={owner ?? "discovery"} locked={!editable} onRequestAuth={() => setAuthOpen(true)}>
           {/* Assistant IA replié par défaut : les champs du CV restent visibles dès l'arrivée */}
@@ -364,7 +463,7 @@ function Editor() {
               <AlertTriangle className="h-3 w-3" /> Contenu hors page · Ajuster automatiquement
             </button>
           ) : (
-            <span className="text-muted-foreground">{editable ? `Brouillon local · ${credits} essais IA` : "Exploration des modèles"}</span>
+            <span className="text-muted-foreground">{editable ? `${sync === "saved" ? "Enregistré en ligne" : sync === "saving" ? "Enregistrement…" : "Brouillon local"} · ${credits} essais IA` : "Exploration des modèles"}</span>
           )}
         </div>
         <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
@@ -389,6 +488,7 @@ function Editor() {
       </nav>
 
       <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
+      {editable && <JobMatch open={jobOpen} onOpenChange={setJobOpen} cv={doc.cv} />}
 
       {missing.length > 0 && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
