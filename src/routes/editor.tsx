@@ -18,15 +18,14 @@ import { Toaster } from "@/components/ui/sonner";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { A4Preview } from "@/components/cv/A4Preview";
 import { BeforeAfter } from "@/components/cv/BeforeAfter";
-import { CoachEditor } from "@/components/cv/CoachEditor";
 import { FormEditor, type AskAI } from "@/components/cv/FormEditor";
-import { coachExperience, extractDraft, improveText } from "@/lib/ai.functions";
-import { AssistantTools, ImportReview } from "@/components/cv/AssistantTools";
+import { extractDraft, improveText } from "@/lib/ai.functions";
+import { AssistantTools, MissingInfo } from "@/components/cv/AssistantTools";
 import { StyleControls } from "@/components/cv/StyleControls";
 import { ElementToolbar } from "@/components/cv/ElementToolbar";
 import type { CVElement } from "@/components/cv/TemplateLayout";
-import { mergeExtractedCV, type ExtractedCV } from "@/lib/cv/extraction";
-import type { CVStyle } from "@/lib/cv/style";
+import { applyAnswers, mergeExtractedCV, missingEssentials, type MissingField } from "@/lib/cv/extraction";
+import { auditStyle, harmonizeStyle, type CVStyle } from "@/lib/cv/style";
 import { FREE_CREDITS, hasStoredDoc, loadCredits, loadDoc, saveCredits, saveDoc } from "@/lib/cv/storage";
 import type { CVDocument, TemplateId } from "@/lib/cv/types";
 import { templateMeta } from "@/components/cv/templates";
@@ -75,7 +74,8 @@ function Editor() {
   const [elements, setElements] = useState<CVElement[]>([]);
   const [selected, setSelected] = useState("");
   const [styleOpen, setStyleOpen] = useState(false);
-  const [review, setReview] = useState<ExtractedCV | null>(null);
+  const [missing, setMissing] = useState<MissingField[]>([]);
+  const [exportIssues, setExportIssues] = useState<string[] | null>(null);
   const extract = useServerFn(extractDraft);
   const improve = useServerFn(improveText);
   const coach = useServerFn(coachExperience);
@@ -174,19 +174,32 @@ function Editor() {
     requestAnimationFrame(() => document.getElementById("style-controls")?.scrollIntoView({ behavior: "smooth", block: "nearest" }));
   };
   const onExtract = async (text: string) => {
-    if (!editable || !user) { setAuthOpen(true); return; }
+    if (!editable || !user || !doc) { setAuthOpen(true); return; }
     setBusy(true);
     try {
       const r = await extract({ data: { text } });
       if (!r.ok) { toast.error(r.error); return; }
-      setReview(r.cv);
+      const next = mergeExtractedCV(doc.cv, r.cv);
+      updateCV(next);
+      const gaps = missingEssentials(next);
+      setMissing(gaps);
+      if (!gaps.length) toast.success("Votre CV a été rempli automatiquement.");
     } catch { toast.error("Impossible de joindre le service IA."); }
     finally { setBusy(false); }
   };
 
   const print = () => {
-    if (!editable) { setAuthOpen(true); return; }
+    if (!editable || !doc) { setAuthOpen(true); return; }
+    const issues = [...(overflow ? ["Le contenu dépasse la page A4 unique."] : []), ...auditStyle(normalizeLayout(doc.layout).style)];
+    if (issues.length) { setExportIssues(issues); return; }
     window.print();
+  };
+  const harmonize = () => {
+    if (!doc) return;
+    setStyle(harmonizeStyle(normalizeLayout(doc.layout).style));
+    setExportIssues(null);
+    if (overflow) fitToPage();
+    toast.success("Styles harmonisés. Vérifiez l’aperçu puis exportez.");
   };
 
   if (!doc || !sessionReady || documentOwner !== owner) return <div className="grid min-h-screen place-items-center">Chargement…</div>;
@@ -296,17 +309,10 @@ function Editor() {
               <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" />
             </summary>
             <div className="border-t px-3 pb-3 pt-3">
-              <AssistantTools cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} onExtract={onExtract}
-                askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} />
+              <AssistantTools askAI={askAI} busy={busy} onExtract={onExtract} />
             </div>
           </details>
           <FormEditor cv={doc.cv} onChange={updateCV} askAI={askAI} busy={busy} />
-          <details className="mt-6 rounded-lg border p-3">
-            <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Valoriser une expérience en 3 questions</summary>
-            <div className="mt-3">
-              <CoachEditor cv={doc.cv} onChange={updateCV} askAI={askAI} askCoach={(input, before, apply) => { void spend(() => coach({ data: input }), before, apply); }} busy={busy} />
-            </div>
-          </details>
 
           {/* Réglages visuels : à côté de l'aperçu sur ordinateur uniquement ; sur mobile/tablette ils vivent dans l'onglet Aperçu A4 */}
           <div id="style-controls" className="mt-6 hidden space-y-4 rounded-lg border p-3 lg:block">
@@ -384,11 +390,25 @@ function Editor() {
 
       <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
 
-      {review && (
+      {missing.length > 0 && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
           <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border bg-card p-6 shadow-xl">
-            <h3 className="mb-4 text-lg font-bold">Vérifiez avant d’appliquer</h3>
-            <ImportReview draft={review} onCancel={() => setReview(null)} onAccept={() => { updateCV(mergeExtractedCV(doc.cv, review)); setReview(null); toast.success("Votre CV a été rempli."); }} />
+            <h3 className="mb-4 text-lg font-bold">Encore quelques détails</h3>
+            <MissingInfo fields={missing} onSkip={() => setMissing([])} onApply={(answers) => { updateCV(applyAnswers(doc.cv, answers)); setMissing([]); toast.success("Votre CV est complété."); }} />
+          </div>
+        </div>
+      )}
+
+      {exportIssues && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
+          <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border bg-card p-6 shadow-xl">
+            <h3 className="mb-2 text-lg font-bold">Vérification avant export</h3>
+            <p className="mb-3 text-sm text-muted-foreground">Quelques points peuvent nuire à la lisibilité de votre CV :</p>
+            <ul className="mb-4 list-disc space-y-1 pl-5 text-sm">{exportIssues.map((x) => <li key={x}>{x}</li>)}</ul>
+            <div className="flex flex-wrap justify-end gap-2 border-t pt-3">
+              <Button variant="outline" onClick={() => { setExportIssues(null); window.print(); }}>Exporter quand même</Button>
+              <Button onClick={harmonize}><Sparkles className="h-3.5 w-3.5" />Harmoniser{overflow ? " et adapter à 1 page" : ""}</Button>
+            </div>
           </div>
         </div>
       )}
