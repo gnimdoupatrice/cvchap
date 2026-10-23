@@ -42,8 +42,17 @@ export function hasStoredDoc(userId: string): boolean {
 export function loadDoc(userId?: string): CVDocument {
   try {
     const raw = localStorage.getItem(scopedKey("doc", userId));
-    if (raw) {
-      const stored = JSON.parse(raw) as Partial<CVDocument>;
+    if (raw) return normalizeDoc(JSON.parse(raw) as Partial<CVDocument>);
+  } catch (e) {
+    console.error("Impossible de lire le CV depuis le stockage :", e);
+  }
+  return defaultDoc();
+}
+
+export function normalizeDoc(stored: Partial<CVDocument> | null | undefined): CVDocument {
+  if (!stored || typeof stored !== "object") return defaultDoc();
+  {
+    {
       const fallback = defaultDoc();
       const validTemplate: TemplateId =
         stored.template && VALID_TEMPLATES.includes(stored.template as TemplateId)
@@ -82,10 +91,7 @@ export function loadDoc(userId?: string): CVDocument {
         },
       };
     }
-  } catch (e) {
-    console.error("Impossible de lire le CV depuis le stockage :", e);
   }
-  return defaultDoc();
 }
 
 export function saveDoc(doc: CVDocument, userId?: string) {

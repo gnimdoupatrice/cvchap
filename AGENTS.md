@@ -11,6 +11,7 @@
 
 ## CV platform architecture
 - CV data model lives in `src/lib/cv/types.ts`; templates render from it only, so new features (ATS score, application pack, interview simulator) plug in as new modules reading the same `CV` type.
+- Signed-in CVs persist online in the owner-only `cvs` table via `src/lib/cv/cloud.ts` (debounced autosave, local draft kept as offline cache); the active CV id is stored per account locally.
 - Discovery mode only persists sample/layout choices; content editing, AI and export require a session. Local documents and trial counters use account-scoped keys to prevent accidental cross-account loading.
 - AI calls go through server functions in `src/lib/ai.functions.ts` → `src/lib/ai/gateway.server.ts`; never call the model from the browser.
 - PDF export uses the browser print engine with A4 `@page` CSS so text stays vector/selectable (ATS-friendly).

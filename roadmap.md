@@ -36,3 +36,10 @@
 - [x] Réglages visuels retirés de « Écrire » sur mobile/tablette : bouton « Style » dans « Aperçu A4 » ouvrant un tiroir.
 - [ ] Tester le tiroir « Style » connecté : aucun compte de test disponible.
 - [x] Supprimer le double défilement mobile (page verrouillée, seul le formulaire ou l'aperçu défile).
+
+# Sprint « tout implémenter »
+- [x] Sauvegarde en ligne automatique des CV (par compte, cache local conservé).
+- [x] Mes CV : créer, renommer, dupliquer, supprimer, basculer.
+- [x] Comparateur d'offre d'emploi avec score ATS et mots-clés manquants.
+- [ ] Retouche d'un mot isolé directement sur la feuille A4 pour les 15 modèles (prochaine étape).
+- [ ] Tester la sauvegarde en ligne avec un vrai compte connecté.
